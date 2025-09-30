@@ -6,6 +6,9 @@
   <title>CITI | Modern Banking for Startups & Innovators</title>
   <meta name="description" content="CITI is the banking platform built for modern companies. Open an account in minutes, move money globally, and manage spend with confidence." />
 
+  <!-- Favicon -->
+  <link rel="icon" href="assets/favicon.png" type="image/png" />
+
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
 
@@ -14,17 +17,16 @@
 
   <!-- Styles -->
   <link rel="stylesheet" href="styles.css" />
-
 </head>
 <body>
 
   <!-- NAVIGATION -->
   <header class="nav">
     <div class="container nav__inner">
-      <a href="/" class="nav__logo">
+      <a href="/" class="nav__logo" aria-label="CITI Home">
         <img src="assets/citi-logo.png" alt="CITI Logo" />
       </a>
-      <nav class="nav__menu">
+      <nav class="nav__menu" aria-label="Main navigation">
         <a href="#features">Features</a>
         <a href="#pricing">Pricing</a>
         <a href="#about">About</a>
@@ -50,21 +52,21 @@
     <div class="container">
       <h2 class="section__title">What You Get</h2>
       <div class="grid grid--3cols">
-        <div class="card">
-          <i class="fas fa-globe card__icon"></i>
+        <article class="card">
+          <i class="fas fa-globe card__icon" aria-hidden="true"></i>
           <h3 class="card__title">Global Accounts</h3>
           <p class="card__text">Multi‑currency accounts with instant transfers and FX at real rates.</p>
-        </div>
-        <div class="card">
-          <i class="fas fa-credit-card card__icon"></i>
+        </article>
+        <article class="card">
+          <i class="fas fa-credit-card card__icon" aria-hidden="true"></i>
           <h3 class="card__title">Smart Cards</h3>
           <p class="card__text">Issue virtual and physical cards with spend controls and real‑time tracking.</p>
-        </div>
-        <div class="card">
-          <i class="fas fa-chart-line card__icon"></i>
+        </article>
+        <article class="card">
+          <i class="fas fa-chart-line card__icon" aria-hidden="true"></i>
           <h3 class="card__title">Cash Management</h3>
           <p class="card__text">Automated treasury tools to grow idle cash and extend your runway.</p>
-        </div>
+        </article>
       </div>
     </div>
   </section>
@@ -103,14 +105,14 @@
     <div class="container">
       <h2 class="section__title">Loved by Founders</h2>
       <div class="testimonial-slider">
-        <div class="testimonial active">
+        <blockquote class="testimonial active">
           <p>“CITI gave us global accounts in minutes. We scaled across 3 continents without friction.”</p>
           <footer>— Sarah K., CEO of NovaTech</footer>
-        </div>
-        <div class="testimonial">
+        </blockquote>
+        <blockquote class="testimonial">
           <p>“The spend controls and real‑time insights are a game‑changer for our finance team.”</p>
           <footer>— Daniel R., CFO of ScaleUp</footer>
-        </div>
+        </blockquote>
       </div>
     </div>
   </section>
@@ -138,7 +140,7 @@
   <footer class="footer">
     <div class="container footer__inner">
       <p>© 2025 CITI. Banking for the future of business.</p>
-      <nav class="footer__nav">
+      <nav class="footer__nav" aria-label="Footer navigation">
         <a href="/privacy">Privacy Policy</a>
         <a href="/terms">Terms & Conditions</a>
       </nav>
