@@ -1,4 +1,8 @@
 import React from 'react'
+import Button from '../components/Button'
+// …inside your component’s return:
+<Button title="View Accounts" onPress={() => {/* navigate */}} />
+
 import { View, Text, StyleSheet } from 'react-native'
 
 export default function Dashboard() {
