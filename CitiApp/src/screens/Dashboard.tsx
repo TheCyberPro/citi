@@ -1,14 +1,14 @@
 import React from 'react'
-import Button from '../components/Button'
-// …inside your component’s return:
-<Button title="View Accounts" onPress={() => {/* navigate */}} />
+import { View, StyleSheet } from 'react-native'
+import Button from '../components/Button'     // ← import your new Button
 
-import { View, Text, StyleSheet } from 'react-native'
-
-export default function Dashboard() {
+export default function Dashboard({ navigation }) {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Dashboard</Text>
+      <Button
+        title="View Accounts"
+        onPress={() => navigation.navigate('Accounts')}
+      />
     </View>
   )
 }
@@ -16,11 +16,8 @@ export default function Dashboard() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    backgroundColor: '#F5F7FA',
   },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold'
-  }
 })
+
