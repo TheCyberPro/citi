@@ -1,8 +1,12 @@
 import React from 'react'
 import { View, StyleSheet } from 'react-native'
-import Button from '../components/Button'     // ← import your new Button
+import Button from '../components/Button'
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
+import { RootStackParamList } from '../navigation/AppNavigator'
 
-export default function Dashboard({ navigation }) {
+type Props = NativeStackScreenProps<RootStackParamList, 'Dashboard'>
+
+export default function Dashboard({ navigation }: Props) {
   return (
     <View style={styles.container}>
       <Button
@@ -20,4 +24,3 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5F7FA',
   },
 })
-

@@ -14,7 +14,11 @@ type ButtonProps = {
 
 export default function Button({ title, onPress }: ButtonProps) {
   return (
-    <TouchableOpacity style={styles.button} activeOpacity={0.8} onPress={onPress}>
+    <TouchableOpacity
+      style={styles.button}
+      activeOpacity={0.8}
+      onPress={onPress}
+    >
       <Text style={styles.text}>{title}</Text>
     </TouchableOpacity>
   )
@@ -29,7 +33,6 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginTop: 20,
 
-    // Cross-platform glow
     ...Platform.select({
       ios: {
         shadowColor: '#0A6BE6',
@@ -46,7 +49,7 @@ const styles = StyleSheet.create({
     }),
   },
   text: {
-    color: '#FFF',
+    color: '#FFFFFF',
     fontSize: 16,
     fontWeight: '600',
     letterSpacing: 0.5,
