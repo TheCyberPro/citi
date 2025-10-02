@@ -275,32 +275,61 @@ a {
   display: flex;
   justify-content: center;
 }
-/* Login Form */
-.login-section {
-  max-width: 400px;
+
+/* Dashboard Layout */
+.dashboard { margin-top: 40px; }
+.dashboard-section { margin-bottom: 60px; }
+.transactions {
+  width: 100%;
+  border-collapse: collapse;
+}
+.transactions th,
+.transactions td {
+  text-align: left;
+  padding: 12px;
+  border-bottom: 1px solid #e5e7eb;
+}
+.cards-list { list-style: none; padding: 0; }
+.cards-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+/* Forms (Login, Signup, Settings) */
+.login-section,
+.signup-section {
+  max-width: 480px;
   margin: 80px auto;
   padding: 40px;
   background: #fff;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
-.login-form label {
+.login-form label,
+.signup-form label,
+.settings-form label {
   display: block;
   margin-top: 16px;
   font-weight: 500;
 }
-.login-form input {
+.login-form input,
+.signup-form input,
+.settings-form input {
   width: 100%;
   padding: 8px;
   margin-top: 4px;
   border: 1px solid #d1d5db;
   border-radius: 4px;
 }
-.login-form button {
+.login-form button,
+.signup-form button,
+.settings-form button {
   width: 100%;
   margin-top: 24px;
 }
-.login-form p {
+.login-form p,
+.signup-form p {
   text-align: center;
   margin-top: 16px;
   color: var(--muted);
@@ -309,10 +338,4 @@ a {
   color: var(--primary);
   text-decoration: none;
 }
-.link:hover {
-  text-decoration: underline;
-}
-
-/* Dashboard Layout (if not already added) */
-.dashboard { margin-top: 40px; }
-.dashboard-section { margin-bottom: 60px; }
+.link:hover { text-decoration: underline; }
