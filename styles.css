@@ -263,3 +263,15 @@ a {
   color: #fff;
 }
 
+.btn-secondary {
+  background: transparent;
+  color: var(--primary);
+  border: 2px solid var(--primary);
+  margin-left: 12px;
+}
+
+.hero-cta-group {
+  margin-top: 24px;
+  display: flex;
+  justify-content: center;
+}
