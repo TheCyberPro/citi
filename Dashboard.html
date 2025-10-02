@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>CITI Dashboard</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav container">
+      <a href="index.html" class="logo">CITI</a>
+      <ul class="menu">
+        <li><a href="#transactions" class="menu-link">Transactions</a></li>
+        <li><a href="#cards" class="menu-link">Cards</a></li>
+        <li><a href="#cash-management" class="menu-link">Cash Mgmt</a></li>
+        <li><a href="#settings" class="menu-link">Settings</a></li>
+        <li><a href="index.html" class="btn">Logout</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="dashboard container">
+    <!-- Transactions -->
+    <section id="transactions" class="dashboard-section">
+      <h2>Transaction History</h2>
+      <table class="transactions">
+        <thead>
+          <tr>
+            <th>Date</th><th>Description</th><th>Amount</th><th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>2025-10-01</td>
+            <td>Acme Corp Invoice</td>
+            <td>+$5,000.00</td>
+            <td>Completed</td>
+          </tr>
+          <tr>
+            <td>2025-09-28</td>
+            <td>Office Supplies</td>
+            <td>-$150.45</td>
+            <td>Completed</td>
+          </tr>
+          <!-- More rows... -->
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Cards -->
+    <section id="cards" class="dashboard-section">
+      <h2>Your Cards</h2>
+      <ul class="cards-list">
+        <li>Visa •••• 1234 <button class="btn">Freeze</button></li>
+        <li>Mastercard •••• 5678 <button class="btn">Freeze</button></li>
+        <!-- More cards... -->
+      </ul>
+    </section>
+
+    <!-- Cash Management -->
+    <section id="cash-management" class="dashboard-section">
+      <h2>Cash Management</h2>
+      <p>Current Balance: <strong>$12,345.67</strong></p>
+      <button class="btn btn-primary">Move Funds</button>
+    </section>
+
+    <!-- Settings -->
+    <section id="settings" class="dashboard-section">
+      <h2>Account Settings</h2>
+      <form class="settings-form">
+        <label for="email">Email</label>
+        <input id="email" type="email" placeholder="you@example.com" />
+
+        <label for="password">Change Password</label>
+        <input id="password" type="password" placeholder="••••••••" />
+
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+      </form>
+    </section>
+  </div>
+</body>
+</html>

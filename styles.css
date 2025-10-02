@@ -275,3 +275,44 @@ a {
   display: flex;
   justify-content: center;
 }
+/* Login Form */
+.login-section {
+  max-width: 400px;
+  margin: 80px auto;
+  padding: 40px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+.login-form label {
+  display: block;
+  margin-top: 16px;
+  font-weight: 500;
+}
+.login-form input {
+  width: 100%;
+  padding: 8px;
+  margin-top: 4px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+}
+.login-form button {
+  width: 100%;
+  margin-top: 24px;
+}
+.login-form p {
+  text-align: center;
+  margin-top: 16px;
+  color: var(--muted);
+}
+.link {
+  color: var(--primary);
+  text-decoration: none;
+}
+.link:hover {
+  text-decoration: underline;
+}
+
+/* Dashboard Layout (if not already added) */
+.dashboard { margin-top: 40px; }
+.dashboard-section { margin-bottom: 60px; }
