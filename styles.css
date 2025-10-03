@@ -1,25 +1,23 @@
 /*────────────────────────────────────────────────────────
-  1. Root Variables & Global Reset
+  1. Variables & Global Reset
 ────────────────────────────────────────────────────────*/
 :root {
   --primary:       #5266eb;
   --primary-dark:  #3442a6;
-  --accent:        #f5a623;
   --background:    #fbfcfd;
   --surface:       #ffffff;
   --text:          #1e1e2a;
   --muted:         #6b7280;
   --border:        #e5e7eb;
-  --shadow-light:  rgba(0, 0, 0, 0.05);
-  --shadow-medium: rgba(0, 0, 0, 0.1);
+  --shadow:        rgba(0, 0, 0, 0.05);
 }
 
 *,
 *::before,
 *::after {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
 }
 
 html {
@@ -52,7 +50,6 @@ a {
   width: 90%;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 20px;
 }
 
 .section {
@@ -69,19 +66,19 @@ a {
 }
 
 .section--accent {
-  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  background: linear-gradient(135deg, #5266eb, #3442a6);
   color: #fff;
 }
 
 /*────────────────────────────────────────────────────────
-  3. Navigation
+  3. Site Header & Navigation
 ────────────────────────────────────────────────────────*/
 .site-header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
   position: sticky;
   top: 0;
   z-index: 1000;
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
 }
 
 .nav,
@@ -92,32 +89,34 @@ a {
   padding: 1rem 0;
 }
 
-.logo,
-.nav__logo img {
+.nav__logo img,
+.logo {
   height: 40px;
   font-size: 1.25rem;
   font-weight: 700;
   color: var(--primary);
+  text-decoration: none;
 }
 
-.menu,
-.nav__menu {
+.nav__menu,
+.menu {
+  list-style: none;
   display: flex;
   gap: 1.5rem;
   align-items: center;
 }
 
-.menu-link,
-.nav__menu a {
+.nav__menu a,
+.menu-link {
   font-weight: 600;
   color: var(--text);
-  padding: 0.5rem 0.75rem;
+  padding: 8px;
   border-radius: 4px;
   transition: background 0.2s ease, color 0.2s ease;
 }
 
-.menu-link:hover,
-.nav__menu a:hover {
+.nav__menu a:hover,
+.menu-link:hover {
   background: var(--border);
 }
 
@@ -131,30 +130,32 @@ a {
   padding: 0.75rem 1.5rem;
   border-radius: 8px;
   cursor: pointer;
-  transition: background 0.2s ease, color 0.2s ease, transform 0.1s ease;
+  transition: background 0.2s ease, color 0.2s ease;
 }
 
-.btn--primary {
+.btn--primary,
+.btn-primary {
   background: var(--primary);
   color: #fff;
   border: none;
 }
 
-.btn--primary:hover {
+.btn--primary:hover,
+.btn-primary:hover {
   background: var(--primary-dark);
-  transform: translateY(-1px);
 }
 
-.btn--secondary {
-  background: #fff;
+.btn--secondary,
+.btn-secondary {
+  background: transparent;
   color: var(--primary);
   border: 2px solid var(--primary);
 }
 
-.btn--secondary:hover {
+.btn--secondary:hover,
+.btn-secondary:hover {
   background: var(--primary);
   color: #fff;
-  transform: translateY(-1px);
 }
 
 /*────────────────────────────────────────────────────────
@@ -182,20 +183,12 @@ a {
 }
 
 .hero__trust {
-  margin-top: 1rem;
   font-size: 0.9rem;
   color: rgba(255,255,255,0.7);
 }
 
-.hero-cta-group {
-  margin-top: 24px;
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-}
-
 /*────────────────────────────────────────────────────────
-  6. Forms (Login, Signup, Settings)
+  6. Forms: Login, Signup, Settings
 ────────────────────────────────────────────────────────*/
 .login-section,
 .signup-section {
@@ -204,13 +197,19 @@ a {
   margin: 5rem auto;
   padding: 2.5rem;
   border-radius: 8px;
-  box-shadow: 0 4px 12px var(--shadow-light);
+  box-shadow: 0 4px 12px var(--shadow);
 }
 
 .login-section h1,
 .signup-section h1 {
   font-size: 1.75rem;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.login-form,
+.signup-form,
+.settings-form {
+  margin-top: 1rem;
 }
 
 .login-form label,
@@ -225,18 +224,10 @@ a {
 .signup-form input,
 .settings-form input {
   width: 100%;
-  padding: 0.75rem;
   margin-top: 0.5rem;
+  padding: 0.75rem;
   border: 1px solid var(--border);
   border-radius: 4px;
-  transition: border-color 0.2s ease;
-}
-
-.login-form input:focus,
-.signup-form input:focus,
-.settings-form input:focus {
-  border-color: var(--primary);
-  outline: none;
 }
 
 .login-form button,
@@ -254,7 +245,7 @@ a {
 }
 
 /*────────────────────────────────────────────────────────
-  7. Dashboard Layout
+  7. Dashboard Layout & Widgets
 ────────────────────────────────────────────────────────*/
 .dashboard {
   margin-top: 2.5rem;
@@ -275,13 +266,13 @@ a {
   background: var(--surface);
   padding: 1.5rem;
   border-radius: 8px;
-  box-shadow: 0 2px 8px var(--shadow-light);
+  box-shadow: 0 2px 8px var(--shadow);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .balance-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 4px 16px var(--shadow-medium);
+  box-shadow: 0 4px 16px var(--shadow);
 }
 
 .transactions {
@@ -300,6 +291,7 @@ a {
 .transactions th {
   background: var(--background);
   color: var(--muted);
+  font-weight: 500;
 }
 
 .transactions tbody tr:hover {
@@ -308,8 +300,8 @@ a {
 
 .cards-list {
   list-style: none;
-  margin-top: 1rem;
   padding: 0;
+  margin-top: 1rem;
 }
 
 .cards-list li {
@@ -319,17 +311,100 @@ a {
   background: var(--surface);
   padding: 1rem;
   border-radius: 6px;
-  box-shadow: 0 2px 8px var(--shadow-light);
+  margin-bottom: 0.75rem;
+  box-shadow: 0 2px 8px var(--shadow);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .cards-list li:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px var(--shadow-medium);
+  box-shadow: 0 4px 12px var(--shadow);
 }
 
 /*────────────────────────────────────────────────────────
-  8. Footer
+  8. Grid & Cards (Home / Pricing)
+────────────────────────────────────────────────────────*/
+.grid {
+  display: grid;
+  gap: 2rem;
+}
+
+.grid--3cols {
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+.grid--2cols {
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.card,
+.pricing-card {
+  background: var(--surface);
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover,
+.pricing-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.1);
+}
+
+.card__icon {
+  font-size: 2rem;
+  color: var(--primary);
+  margin-bottom: 1rem;
+}
+
+.card__title {
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.pricing-card {
+  text-align: center;
+}
+
+.pricing-card .price {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 1rem 0;
+}
+
+.pricing-card.featured {
+  border: 2px solid var(--primary);
+  box-shadow: 0 12px 40px rgba(82,102,235,0.2);
+}
+
+/*────────────────────────────────────────────────────────
+  9. Testimonials
+────────────────────────────────────────────────────────*/
+.testimonial-slider {
+  max-width: 700px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.testimonial {
+  display: none;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.testimonial.active {
+  display: block;
+}
+
+.testimonial footer {
+  margin-top: 1rem;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+/*────────────────────────────────────────────────────────
+ 10. Footer
 ────────────────────────────────────────────────────────*/
 .site-footer,
 .footer {
@@ -337,23 +412,79 @@ a {
   border-top: 1px solid var(--border);
   padding: 3rem 0;
   text-align: center;
-}
-
-.footer-text {
   color: var(--muted);
-  font-size: 0.875rem;
-  margin-bottom: 1rem;
 }
 
-.footer-links,
-.footer__nav {
+.footer__nav,
+.footer-links {
   list-style: none;
   display: flex;
   justify-content: center;
   gap: 1.5rem;
+  margin-top: 1rem;
 }
 
-.footer-links .link,
-.footer__nav a {
-  font-size: 0.875rem;
-  transition: color
+.footer__nav a,
+.footer-links .link {
+  color: var(--muted);
+  transition: color 0.2s ease;
+}
+
+.footer__nav a:hover,
+.footer-links .link:hover {
+  color: var(--text);
+}
+
+/*────────────────────────────────────────────────────────
+ 11. Responsive Breakpoints
+────────────────────────────────────────────────────────*/
+@media (max-width: 768px) {
+  .nav,
+  .nav__inner {
+    flex-direction: column;
+    padding: 1rem 0;
+  }
+  .nav__menu,
+  .menu {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .balances {
+    flex-direction: column;
+  }
+}
+/* ──────────────────────────────────────────────────────
+   Mercury-Style Header Overrides for CITI
+──────────────────────────────────────────────────────── */
+.site-header {
+  background: var(--surface);
+  box-shadow: 0 2px 4px var(--shadow-light);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 72px;
+}
+.menu {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+.menu li {
+  list-style: none;
+}
+.menu-link {
+  color: var(--text);
+  font-weight: 500;
+  padding: 0.5rem 0.75rem;
+  border-radius: 4px;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.menu-link:hover {
+  background: var(--background);
+  color: var(--primary);
+}
