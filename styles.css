@@ -453,38 +453,76 @@ a {
     flex-direction: column;
   }
 }
-/* ──────────────────────────────────────────────────────
-   Mercury-Style Header Overrides for CITI
-──────────────────────────────────────────────────────── */
-.site-header {
-  background: var(--surface);
-  box-shadow: 0 2px 4px var(--shadow-light);
-  position: sticky;
-  top: 0;
-  z-index: 1000;
+/* Hamburger button */
+.nav-toggle {
+  background: none;
+  border: none;
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  cursor: pointer;
 }
-.nav {
+.nav-toggle span {
+  width: 24px;
+  height: 3px;
+  background: var(--text);
+  border-radius: 2px;
+}
+
+/* Overlay */
+.menu-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.8);
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  height: 72px;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
 }
-.menu {
-  display: flex;
-  gap: 2rem;
-  align-items: center;
+.menu-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
 }
-.menu li {
+.overlay-close {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: #fff;
+  cursor: pointer;
+}
+.overlay-menu {
   list-style: none;
+  text-align: center;
+  margin-bottom: 2rem;
 }
-.menu-link {
-  color: var(--text);
-  font-weight: 500;
-  padding: 0.5rem 0.75rem;
-  border-radius: 4px;
-  transition: background 0.2s ease, color 0.2s ease;
+.overlay-menu li + li {
+  margin-top: 1.5rem;
 }
-.menu-link:hover {
-  background: var(--background);
-  color: var(--primary);
+.overlay-menu a {
+  color: #fff;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+.overlay-cta a {
+  display: block;
+  margin-top: 1rem;
+  width: 200px;
+  text-align: center;
+}
+
+/* Mobile-only rules */
+@media (max-width: 768px) {
+  .menu,
+  .cta-group {
+    display: none;
+  }
+  .nav-toggle {
+    display: flex;
+  }
 }

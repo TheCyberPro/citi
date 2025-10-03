@@ -40,19 +40,43 @@
         <img src="assets/citi_logo.png" alt="CITI Logo" />
       </a>
       <nav class="nav__menu" aria-label="Main navigation">
-      <!-- Prominent Login button -->
-      <li><a href="login.html" class="btn btn-secondary">Login</a></li>
-      <!-- Primary Open Account button -->
-        <a href="dashboard.html" class="btn btn--primary">Open Account</a>
+    <!-- Desktop Menu -->
     <ul class="menu">
-      <li><a href="#"        class="menu-link">Products</a></li>
-      <li><a href="#"        class="menu-link">Solutions</a></li>
-      <li><a href="#"        class="menu-link">Resources</a></li>
-      <li><a href="#about"   class="menu-link">About</a></li>
-      <li><a href="#pricing" class="menu-link">Pricing</a></li>
-      <li><a href="login.html"  class="btn btn-secondary">Log In</a></li>
-      <li><a href="signup.html" class="btn btn-primary">Open Account</a></li>
+      <li><a href="#products"  class="menu-link">Products</a></li>
+      <li><a href="#solutions" class="menu-link">Solutions</a></li>
+      <li><a href="#resources" class="menu-link">Resources</a></li>
+      <li><a href="#about"     class="menu-link">About</a></li>
+      <li><a href="#pricing"   class="menu-link">Pricing</a></li>
     </ul>
+
+    <div class="cta-group">
+      <a href="login.html"  class="btn btn--secondary">Log In</a>
+      <a href="signup.html" class="btn btn--primary">Open Account</a>
+    </div>
+
+    <!-- Mobile Toggler -->
+    <button class="nav-toggle" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- Mobile Overlay -->
+  <div class="menu-overlay" aria-hidden="true">
+    <button class="overlay-close" aria-label="Close menu">&times;</button>
+    <ul class="overlay-menu">
+      <li><a href="#products">Products</a></li>
+      <li><a href="#solutions">Solutions</a></li>
+      <li><a href="#resources">Resources</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+    </ul>
+    <div class="overlay-cta">
+      <a href="login.html"  class="btn btn--secondary">Log In</a>
+      <a href="signup.html" class="btn btn--primary">Open Account</a>
+    </div>
+  </div>
+</header>
+
 
       </nav>
     </div>
@@ -170,6 +194,29 @@
       </nav>
     </div>
   </footer>
+<script>
+  const toggle = document.querySelector('.nav-toggle');
+  const overlay = document.querySelector('.menu-overlay');
+  const closeBtn = document.querySelector('.overlay-close');
+
+  toggle.addEventListener('click', () => {
+    overlay.classList.add('open');
+    overlay.setAttribute('aria-hidden', 'false');
+  });
+
+  closeBtn.addEventListener('click', () => {
+    overlay.classList.remove('open');
+    overlay.setAttribute('aria-hidden', 'true');
+  });
+
+  // Close when clicking outside menu
+  overlay.addEventListener('click', e => {
+    if (e.target === overlay) {
+      overlay.classList.remove('open');
+      overlay.setAttribute('aria-hidden', 'true');
+    }
+  });
+</script>
 
 </body>
 </html>
