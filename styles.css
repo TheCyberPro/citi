@@ -456,159 +456,40 @@ a {
 
 
 /*────────────────────────────────────────────────────────
-  Core Header Layout (All Devices)
+  Force one-line logo + hamburger
 ────────────────────────────────────────────────────────*/
-.site-header {
-  position: sticky;
-  top: 0;
+.site-header .nav {
+  display: flex !important;
+  flex-wrap: nowrap !important;        /* never wrap children */
+  justify-content: space-between !important;
+  align-items: center !important;
+  width: 100%;
+  padding: 0 16px;                     /* adjust side padding */
+  height: 64px;                        /* match your header height */
   background: var(--surface);
   border-bottom: 1px solid var(--border);
-  z-index: 1000;
+  white-space: nowrap;                 /* safeguard against wrapping */
 }
 
-.nav {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 64px;
-  padding: 0 20px;
-}
-
-/* Logo left */
-.logo img {
-  height: 32px;
-}
-
-/* Always-hide desktop nav/CTA placeholders */
-.nav .menu,
-.nav .cta-group {
-  display: none !important;
-}
-
-/* Hamburger always visible */
+/* Pin both items to their intrinsic size */
+.logo,
 .nav-toggle {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  background: none;
-  border: none;
-  cursor: pointer;
-}
-.nav-toggle span {
-  width: 24px;
-  height: 3px;
-  background: var(--text);
-  border-radius: 2px;
+  flex: 0 0 auto !important;
 }
 
-/*────────────────────────────────────────────────────────
-  Overlay Styles
-────────────────────────────────────────────────────────*/
-.menu-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.85);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s ease;
-}
-.menu-overlay.open {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.overlay-close {
-  position: absolute;
-  top: 1.5rem;
-  right: 1.5rem;
-  background: none;
-  border: none;
-  font-size: 2rem;
-  color: #fff;
-  cursor: pointer;
-}
-
-.overlay-menu {
-  list-style: none;
-  text-align: center;
-  margin-bottom: 2rem;
-}
-.overlay-menu li + li {
-  margin-top: 1.5rem;
-}
-.overlay-menu a {
-  color: #fff;
-  font-size: 1.5rem;
-  font-weight: 600;
-  text-decoration: none;
-}
-
-.overlay-cta {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  text-align: center;
-}
-.overlay-cta .login-link {
-  color: #fff;
-  font-size: 1.1rem;
-  text-decoration: underline;
-}
-.overlay-cta .btn-primary {
-  background: #0051ff;
-  color: #fff;
-  padding: 0.75rem 1.5rem;
-  border-radius: 4px;
-  font-weight: 600;
-  text-decoration: none;
-}
-.overlay-cta .btn-primary:hover {
-  background: #0041cc;
-}
-/*────────────────────────────────────────────────────────
-  1. Sticky Header & Flex Container (no wrap)
-────────────────────────────────────────────────────────*/
-.site-header {
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
-}
-
-.nav.container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: nowrap;       /* prevent wrapping */
-  height: 64px;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 16px;
-}
-
-/* Logo never grows or shrinks */
-.logo {
-  flex: 0 0 auto;
-}
+/* Logo styling */
 .logo img {
   display: block;
-  height: 32px;
+  height: 32px;                        /* adjust as needed */
 }
 
-/* Hamburger button stuck to right */
+/* Hamburger styling */
 .nav-toggle {
-  flex: 0 0 auto;
-  display: flex;
+  display: flex !important;
   flex-direction: column;
   gap: 4px;
   background: none;
   border: none;
-  padding: 0;
   cursor: pointer;
 }
 .nav-toggle span {
@@ -616,87 +497,4 @@ a {
   height: 3px;
   background: var(--text);
   border-radius: 2px;
-}
-
-/* Hide any leftover desktop nav/CTA */
-.nav .menu,
-.nav .cta-group {
-  display: none !important;
-}
-
-/*────────────────────────────────────────────────────────
-  2. Overlay Styles
-────────────────────────────────────────────────────────*/
-.menu-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.85);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s ease;
-}
-.menu-overlay.open {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-/* Overlay header: logo top-left, close top-right */
-.overlay-header {
-  position: absolute;
-  top: 1rem;
-  left: 1rem;
-  right: 1rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.overlay-logo img {
-  height: 24px;
-}
-.overlay-close {
-  background: none;
-  border: none;
-  font-size: 2rem;
-  color: #fff;
-  cursor: pointer;
-}
-
-/* Overlay menu & CTAs */
-.overlay-menu {
-  list-style: none;
-  text-align: center;
-  margin-bottom: 2rem;
-}
-.overlay-menu li + li {
-  margin-top: 1.5rem;
-}
-.overlay-menu a {
-  color: #fff;
-  font-size: 1.5rem;
-  font-weight: 600;
-}
-
-.overlay-cta {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  text-align: center;
-}
-.overlay-cta .login-link {
-  color: #fff;
-  text-decoration: underline;
-}
-.overlay-cta .btn-primary {
-  background: #0051ff;
-  color: #fff;
-  padding: 0.75rem 1.5rem;
-  border-radius: 4px;
-  font-weight: 600;
-}
-.overlay-cta .btn-primary:hover {
-  background: #0041cc;
 }
