@@ -455,56 +455,67 @@ a {
 }
 
 
-/* 1) Container & Flex Setup */
+/*────────────────────────────────────────────────────────
+  CORE NAV LAYOUT: no wrapping, full-width, aligned ends
+────────────────────────────────────────────────────────*/
 .site-header {
   position: sticky;
   top: 0;
-  background: #fff;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
   z-index: 1000;
-  border-bottom: 1px solid #e5e7eb;
 }
 
 .nav {
-  display: flex;
-  flex-wrap: nowrap;               /* never wrap children */
-  justify-content: space-between;  /* logo far left, toggle far right */
-  align-items: center;             /* vertical center */
-  padding: 0 16px;
-  height: 64px;
   width: 100%;
 }
 
-/* 2) Logo & Toggle Never Grow or Shrink */
-.logo,
-.nav-toggle {
+.nav-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: nowrap;      /* never wrap the two children */
+  max-width: 1200px;      /* your desktop max width */
+  margin: 0 auto;         /* center on large screens */
+  padding: 0 16px;        /* gutter on small screens */
+  height: 64px;
+  box-sizing: border-box; /* ensure padding is included in width */
+}
+
+/* Logo stays left, never grows or shrinks */
+.logo {
   flex: 0 0 auto;
 }
-
 .logo img {
-  height: 32px;
   display: block;
+  height: 32px;
 }
 
-/* 3) Hamburger Styling */
+/* Hamburger stays right, never wraps */
 .nav-toggle {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0;
+  flex: 0 0 auto;
   display: flex;
   flex-direction: column;
   gap: 4px;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
 }
-
 .nav-toggle span {
   width: 24px;
   height: 3px;
-  background: #1e1e2a;
+  background: var(--text);
   border-radius: 2px;
 }
 
-/* 4) Hide any leftover nav items */
+/* hide any old menu/cta elements */
 .nav .menu,
 .nav .cta-group {
   display: none !important;
 }
+
+/*────────────────────────────────────────────────────────
+  OVERLAY (unchanged from prior snippet)
+────────────────────────────────────────────────────────*/
+/* … your existing .menu-overlay, .overlay-header, .overlay-menu, .overlay-cta styles … */
