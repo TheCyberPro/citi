@@ -455,46 +455,56 @@ a {
 }
 
 
-/*────────────────────────────────────────────────────────
-  Force one-line logo + hamburger
-────────────────────────────────────────────────────────*/
-.site-header .nav {
-  display: flex !important;
-  flex-wrap: nowrap !important;        /* never wrap children */
-  justify-content: space-between !important;
-  align-items: center !important;
-  width: 100%;
-  padding: 0 16px;                     /* adjust side padding */
-  height: 64px;                        /* match your header height */
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
-  white-space: nowrap;                 /* safeguard against wrapping */
+/* 1) Container & Flex Setup */
+.site-header {
+  position: sticky;
+  top: 0;
+  background: #fff;
+  z-index: 1000;
+  border-bottom: 1px solid #e5e7eb;
 }
 
-/* Pin both items to their intrinsic size */
+.nav {
+  display: flex;
+  flex-wrap: nowrap;               /* never wrap children */
+  justify-content: space-between;  /* logo far left, toggle far right */
+  align-items: center;             /* vertical center */
+  padding: 0 16px;
+  height: 64px;
+  width: 100%;
+}
+
+/* 2) Logo & Toggle Never Grow or Shrink */
 .logo,
 .nav-toggle {
-  flex: 0 0 auto !important;
+  flex: 0 0 auto;
 }
 
-/* Logo styling */
 .logo img {
+  height: 32px;
   display: block;
-  height: 32px;                        /* adjust as needed */
 }
 
-/* Hamburger styling */
+/* 3) Hamburger Styling */
 .nav-toggle {
-  display: flex !important;
-  flex-direction: column;
-  gap: 4px;
   background: none;
   border: none;
   cursor: pointer;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
+
 .nav-toggle span {
   width: 24px;
   height: 3px;
-  background: var(--text);
+  background: #1e1e2a;
   border-radius: 2px;
+}
+
+/* 4) Hide any leftover nav items */
+.nav .menu,
+.nav .cta-group {
+  display: none !important;
 }
