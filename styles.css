@@ -569,3 +569,107 @@ a {
 .overlay-cta .btn-primary:hover {
   background: #0041cc;
 }
+/* 1. Make nav a no-wrap flex container */
+.site-header .nav {
+  display: flex;
+  flex-wrap: nowrap;       /* never wrap children */
+  align-items: center;
+  justify-content: space-between; /* logo left, toggle right */
+  padding: 0 20px;
+  height: 64px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+/* 2. Logo stays left, never grows or shrinks */
+.nav .logo {
+  flex: 0 0 auto;
+}
+.nav .logo img {
+  height: 32px;
+}
+
+/* 3. Toggle always on the right, never wraps */
+.nav-toggle {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-left: auto;       /* extra insurance */
+}
+.nav-toggle span {
+  width: 24px;
+  height: 3px;
+  background: var(--text);
+  border-radius: 2px;
+}
+
+/* 4. Hide any leftover desktop nav/CTAs */
+.nav .menu,
+.nav .cta-group {
+  display: none !important;
+}
+
+/* 5. Overlay styles (unchanged) */
+.menu-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.menu-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+.overlay-close {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: #fff;
+  cursor: pointer;
+}
+.overlay-menu {
+  list-style: none;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+.overlay-menu li + li {
+  margin-top: 1.5rem;
+}
+.overlay-menu a {
+  color: #fff;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+.overlay-cta {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  text-align: center;
+}
+.overlay-cta .login-link {
+  color: #fff;
+  text-decoration: underline;
+}
+.overlay-cta .btn-primary {
+  background: #0051ff;
+  color: #fff;
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  font-weight: 600;
+}
+.overlay-cta .btn-primary:hover {
+  background: #0041cc;
+}
