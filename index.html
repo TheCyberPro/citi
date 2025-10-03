@@ -175,24 +175,22 @@
     </div>
   </footer>
 <script>
-  const toggleBtn  = document.querySelector('.nav-toggle');
-  const overlay    = document.querySelector('.menu-overlay');
-  const closeBtn   = document.querySelector('.overlay-close');
+  const btn = document.querySelector('.nav-toggle');
+  const ov  = document.querySelector('.menu-overlay');
+  const x   = document.querySelector('.overlay-close');
 
-  toggleBtn.addEventListener('click', () => {
-    overlay.classList.add('open');
-    overlay.setAttribute('aria-hidden', 'false');
+  btn.addEventListener('click', () => {
+    ov.classList.add('open');
+    ov.setAttribute('aria-hidden','false');
   });
-
-  closeBtn.addEventListener('click', () => {
-    overlay.classList.remove('open');
-    overlay.setAttribute('aria-hidden', 'true');
+  x.addEventListener('click', () => {
+    ov.classList.remove('open');
+    ov.setAttribute('aria-hidden','true');
   });
-
-  overlay.addEventListener('click', e => {
-    if (e.target === overlay) {
-      overlay.classList.remove('open');
-      overlay.setAttribute('aria-hidden', 'true');
+  ov.addEventListener('click', e => {
+    if (e.target === ov) {
+      ov.classList.remove('open');
+      ov.setAttribute('aria-hidden','true');
     }
   });
 </script>
