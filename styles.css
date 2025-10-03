@@ -453,13 +453,77 @@ a {
     flex-direction: column;
   }
 }
-/* Hamburger button */
+
+
+/*───────────────────────────────────────────────────
+  Header & Mobile Menu
+───────────────────────────────────────────────────*/
+.site-header {
+  position: sticky;
+  top: 0;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  z-index: 1000;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+}
+
+/* Logo at far left */
+.logo img {
+  height: 32px;
+}
+
+/* Desktop nav */
+.menu {
+  list-style: none;
+  display: flex;
+  gap: 2rem;
+}
+.menu-link {
+  color: var(--text);
+  font-weight: 500;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+.menu-link:hover {
+  opacity: 0.7;
+}
+
+/* Desktop CTA group at far right */
+.cta-group {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+.login-link {
+  color: var(--text);
+  font-weight: 600;
+  text-decoration: none;
+}
+.btn-primary {
+  background: #0051ff;
+  color: #fff;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-weight: 600;
+  text-decoration: none;
+}
+.btn-primary:hover {
+  background: #0041cc;
+}
+
+/* Hamburger (mobile) */
 .nav-toggle {
-  background: none;
-  border: none;
   display: none;
   flex-direction: column;
   gap: 4px;
+  background: none;
+  border: none;
   cursor: pointer;
 }
 .nav-toggle span {
@@ -469,11 +533,11 @@ a {
   border-radius: 2px;
 }
 
-/* Overlay */
+/* Mobile overlay */
 .menu-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.8);
+  background: rgba(0,0,0,0.85);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -516,7 +580,7 @@ a {
   text-align: center;
 }
 
-/* Mobile-only rules */
+/* Responsive breakpoints */
 @media (max-width: 768px) {
   .menu,
   .cta-group {

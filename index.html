@@ -34,13 +34,14 @@
 <body>
 
   <!-- NAVIGATION -->
-  <header class="nav">
-    <div class="container nav__inner">
-      <a href="/" class="nav__logo" aria-label="CITI Home">
+<header class="site-header">
+  <nav class="nav container">
+    <!-- Logo -->
+     <a href="/" class="nav__logo" aria-label="CITI Home">
         <img src="assets/citi_logo.png" alt="CITI Logo" />
       </a>
-      <nav class="nav__menu" aria-label="Main navigation">
-    <!-- Desktop Menu -->
+
+    <!-- Desktop Menu Links -->
     <ul class="menu">
       <li><a href="#products"  class="menu-link">Products</a></li>
       <li><a href="#solutions" class="menu-link">Solutions</a></li>
@@ -49,12 +50,13 @@
       <li><a href="#pricing"   class="menu-link">Pricing</a></li>
     </ul>
 
+    <!-- Desktop CTAs -->
     <div class="cta-group">
-      <a href="login.html"  class="btn btn--secondary">Log In</a>
-      <a href="signup.html" class="btn btn--primary">Open Account</a>
+      <a href="login.html"  class="login-link">Log In</a>
+      <a href="signup.html" class="btn-primary">Open Account</a>
     </div>
 
-    <!-- Mobile Toggler -->
+    <!-- Mobile Hamburger -->
     <button class="nav-toggle" aria-label="Open menu">
       <span></span><span></span><span></span>
     </button>
@@ -71,17 +73,11 @@
       <li><a href="#pricing">Pricing</a></li>
     </ul>
     <div class="overlay-cta">
-      <a href="login.html"  class="btn btn--secondary">Log In</a>
-      <a href="signup.html" class="btn btn--primary">Open Account</a>
+      <a href="login.html"  class="login-link">Log In</a>
+      <a href="signup.html" class="btn-primary">Open Account</a>
     </div>
   </div>
 </header>
-
-
-      </nav>
-    </div>
-  </header>
-
   <!-- HERO -->
   <section class="hero hero--luxury">
     <div class="container hero__inner">
