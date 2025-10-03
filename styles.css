@@ -34,8 +34,19 @@ body {
   background-color: var(--background);
 }
 
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
 /*────────────────────────────────────────────────────────
-  2. Utility & Containers
+  2. Layout Containers & Sections
 ────────────────────────────────────────────────────────*/
 .container {
   width: 90%;
@@ -48,14 +59,18 @@ body {
   padding: 5rem 0;
 }
 
-.link {
-  color: var(--primary);
-  text-decoration: none;
-  font-weight: 500;
-  transition: color 0.2s ease;
+.section--light {
+  background: #f9f9ff;
 }
-.link:hover {
-  color: var(--primary-dark);
+
+.section--dark {
+  background: #0d052d;
+  color: #fff;
+}
+
+.section--accent {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: #fff;
 }
 
 /*────────────────────────────────────────────────────────
@@ -74,45 +89,42 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-}
-
-.nav {
   padding: 1rem 0;
 }
 
-.nav__logo img,
-.logo {
+.logo,
+.nav__logo img {
   height: 40px;
   font-size: 1.25rem;
   font-weight: 700;
   color: var(--primary);
 }
 
-.nav__menu,
-.menu {
+.menu,
+.nav__menu {
   display: flex;
   gap: 1.5rem;
+  align-items: center;
 }
 
-.nav__menu a,
-.menu-link {
+.menu-link,
+.nav__menu a {
   font-weight: 600;
   color: var(--text);
   padding: 0.5rem 0.75rem;
   border-radius: 4px;
   transition: background 0.2s ease, color 0.2s ease;
 }
-.nav__menu a:hover,
-.menu-link:hover {
+
+.menu-link:hover,
+.nav__menu a:hover {
   background: var(--border);
 }
 
 /*────────────────────────────────────────────────────────
   4. Buttons
 ────────────────────────────────────────────────────────*/
-.btn,
-.btn--primary,
-.btn--secondary {
+.btn {
   display: inline-block;
   font-weight: 600;
   text-align: center;
@@ -127,16 +139,18 @@ body {
   color: #fff;
   border: none;
 }
+
 .btn--primary:hover {
   background: var(--primary-dark);
   transform: translateY(-1px);
 }
 
 .btn--secondary {
-  background: transparent;
+  background: #fff;
   color: var(--primary);
   border: 2px solid var(--primary);
 }
+
 .btn--secondary:hover {
   background: var(--primary);
   color: #fff;
@@ -144,16 +158,13 @@ body {
 }
 
 /*────────────────────────────────────────────────────────
-  5. Hero
+  5. Hero Section
 ────────────────────────────────────────────────────────*/
 .hero {
   text-align: center;
   padding: 8rem 2rem 6rem;
-  background: linear-gradient(
-      rgba(13,5,45,0.85),
-      rgba(13,5,45,0.85)
-    ),
-    url("assets/hero-bg.jpg") center/cover no-repeat;
+  background: linear-gradient(rgba(13,5,45,0.85), rgba(13,5,45,0.85)),
+              url("assets/hero-bg.jpg") center/cover no-repeat;
   color: #fff;
 }
 
@@ -164,14 +175,27 @@ body {
   text-shadow: 0 0 20px rgba(82,102,235,0.6);
 }
 
-.hero__subtitle,
-.hero__trust {
+.hero__subtitle {
+  font-size: 1.25rem;
+  margin-bottom: 2rem;
   color: rgba(255,255,255,0.9);
-  margin-bottom: 1.5rem;
+}
+
+.hero__trust {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: rgba(255,255,255,0.7);
+}
+
+.hero-cta-group {
+  margin-top: 24px;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
 }
 
 /*────────────────────────────────────────────────────────
-  6. Forms (Login, Signup)
+  6. Forms (Login, Signup, Settings)
 ────────────────────────────────────────────────────────*/
 .login-section,
 .signup-section {
@@ -190,14 +214,16 @@ body {
 }
 
 .login-form label,
-.signup-form label {
+.signup-form label,
+.settings-form label {
   display: block;
   margin-top: 1.25rem;
   font-weight: 500;
 }
 
 .login-form input,
-.signup-form input {
+.signup-form input,
+.settings-form input {
   width: 100%;
   padding: 0.75rem;
   margin-top: 0.5rem;
@@ -205,14 +231,30 @@ body {
   border-radius: 4px;
   transition: border-color 0.2s ease;
 }
+
 .login-form input:focus,
-.signup-form input:focus {
+.signup-form input:focus,
+.settings-form input:focus {
   border-color: var(--primary);
   outline: none;
 }
 
+.login-form button,
+.signup-form button,
+.settings-form button {
+  width: 100%;
+  margin-top: 1.5rem;
+}
+
+.login-form p,
+.signup-form p {
+  text-align: center;
+  margin-top: 1rem;
+  color: var(--muted);
+}
+
 /*────────────────────────────────────────────────────────
-  7. Dashboard
+  7. Dashboard Layout
 ────────────────────────────────────────────────────────*/
 .dashboard {
   margin-top: 2.5rem;
@@ -236,6 +278,7 @@ body {
   box-shadow: 0 2px 8px var(--shadow-light);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
+
 .balance-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 4px 16px var(--shadow-medium);
@@ -246,16 +289,19 @@ body {
   border-collapse: collapse;
   margin-top: 1rem;
 }
+
 .transactions th,
 .transactions td {
   text-align: left;
   padding: 0.75rem;
   border-bottom: 1px solid var(--border);
 }
+
 .transactions th {
   background: var(--background);
   color: var(--muted);
 }
+
 .transactions tbody tr:hover {
   background: rgba(82,102,235,0.05);
 }
@@ -265,6 +311,7 @@ body {
   margin-top: 1rem;
   padding: 0;
 }
+
 .cards-list li {
   display: flex;
   justify-content: space-between;
@@ -275,6 +322,7 @@ body {
   box-shadow: 0 2px 8px var(--shadow-light);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
+
 .cards-list li:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px var(--shadow-medium);
@@ -308,30 +356,4 @@ body {
 .footer-links .link,
 .footer__nav a {
   font-size: 0.875rem;
-  transition: color 0.2s ease;
-}
-.footer-links .link:hover,
-.footer__nav a:hover {
-  color: var(--text);
-}
-
-/*────────────────────────────────────────────────────────
-  9. Responsiveness
-────────────────────────────────────────────────────────*/
-@media (max-width: 768px) {
-  .nav,
-  .nav__inner {
-    flex-direction: column;
-    padding: 1rem 0;
-  }
-
-  .nav__menu,
-  .menu {
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .balances {
-    flex-direction: column;
-  }
-}
+  transition: color
