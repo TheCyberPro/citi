@@ -6,65 +6,83 @@
 </head>
 <body>
   <header class="site-header">
-    <nav class="nav container">
+    <nav class="nav-wrapper">
+      <div class="nav-inner">
       <a href="/" class="nav__logo" aria-label="CITI Home">
         <img src="assets/citi_logo.png" alt="CITI Logo" />
       </a>
-      <ul class="menu">
-        <li><a href="#transactions" class="menu-link">Transactions</a></li>
-        <li><a href="#cards" class="menu-link">Cards</a></li>
-        <li><a href="#cash-management" class="menu-link">Cash Mgmt</a></li>
-        <li><a href="#settings" class="menu-link">Settings</a></li>
-        <li><a href="index.html" class="btn">Logout</a></li>
+        <button class="overlay-close" aria-label="Close menu">&times;</button>
+      </div>
+      <ul class="overlay-menu">
+        <li><a href="index.html#products">Products</a></li>
+        <li><a href="index.html#solutions">Solutions</a></li>
+        <li><a href="index.html#resources">Resources</a></li>
+        <li><a href="index.html#about">About</a></li>
+        <li><a href="index.html#pricing">Pricing</a></li>
       </ul>
-    </nav>
+      <div class="overlay-cta">
+        <a href="login.html" class="login-link">Log In</a>
+        <a href="signup.html" class="btn-primary">Open Account</a>
+      </div>
+    </div>
   </header>
 
-  <div class="dashboard container">
-    <!-- Transactions -->
-    <section id="transactions" class="dashboard-section">
-      <h2>Transaction History</h2>
+  <!-- DASHBOARD CONTENT -->
+  <main class="dashboard container">
+    <h1>Account Overview</h1>
+
+    <section class="dashboard-section balances">
+      <div class="balance-card">
+        <h3>USD Balance</h3>
+        <p>$12,345.67</p>
+      </div>
+      <div class="balance-card">
+        <h3>EUR Balance</h3>
+        <p>€8,910.11</p>
+      </div>
+    </section>
+
+    <section class="dashboard-section">
+      <h2>Recent Transactions</h2>
       <table class="transactions">
         <thead>
           <tr>
-            <th>Date</th><th>Description</th><th>Amount</th><th>Status</th>
+            <th>Date</th>
+            <th>Description</th>
+            <th>Amount</th>
+            <th>Balance</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td>2025-10-01</td>
-            <td>Acme Corp Invoice</td>
-            <td>+$5,000.00</td>
-            <td>Completed</td>
+            <td>Oct 1, 2025</td>
+            <td>Transfer to ACME Inc.</td>
+            <td>−$500.00</td>
+            <td>$11,845.67</td>
           </tr>
           <tr>
-            <td>2025-09-28</td>
-            <td>Office Supplies</td>
-            <td>-$150.45</td>
-            <td>Completed</td>
+            <td>Sep 30, 2025</td>
+            <td>Received from Stripe</td>
+            <td>+$2,000.00</td>
+            <td>$12,345.67</td>
           </tr>
-          <!-- More rows... -->
         </tbody>
       </table>
     </section>
 
-    <!-- Cards -->
-    <section id="cards" class="dashboard-section">
-      <h2>Your Cards</h2>
+    <section class="dashboard-section">
+      <h2>Cards</h2>
       <ul class="cards-list">
-        <li>Visa •••• 1234 <button class="btn">Freeze</button></li>
-        <li>Mastercard •••• 5678 <button class="btn">Freeze</button></li>
-        <!-- More cards... -->
+        <li>
+          <span>Primary Card •••• 1234</span>
+          <a href="#" class="link">Manage</a>
+        </li>
+        <li>
+          <span>Team Card •••• 5678</span>
+          <a href="#" class="link">Manage</a>
+        </li>
       </ul>
     </section>
-
-    <!-- Cash Management -->
-    <section id="cash-management" class="dashboard-section">
-      <h2>Cash Management</h2>
-      <p>Current Balance: <strong>$12,345.67</strong></p>
-      <button class="btn btn-primary">Move Funds</button>
-    </section>
-
     <!-- Settings -->
     <section id="settings" class="dashboard-section">
       <h2>Account Settings</h2>
@@ -78,6 +96,29 @@
         <button type="submit" class="btn btn-primary">Save Changes</button>
       </form>
     </section>
-  </div>
+
+  </main>
+
+  <!-- NAV TOGGLE SCRIPT -->
+  <script>
+    const btn    = document.querySelector('.nav-toggle');
+    const overlay = document.querySelector('.menu-overlay');
+    const close   = document.querySelector('.overlay-close');
+
+    btn.addEventListener('click', () => {
+      overlay.classList.add('open');
+      overlay.setAttribute('aria-hidden','false');
+    });
+    close.addEventListener('click', () => {
+      overlay.classList.remove('open');
+      overlay.setAttribute('aria-hidden','true');
+    });
+    overlay.addEventListener('click', e => {
+      if (e.target === overlay) {
+        overlay.classList.remove('open');
+        overlay.setAttribute('aria-hidden','true');
+      }
+    });
+  </script>
 </body>
 </html>

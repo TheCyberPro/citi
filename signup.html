@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CITI — Open Account</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- HEADER (same as login) -->
+  <header class="site-header">
+    <nav class="nav-wrapper">
+      <div class="nav-inner">
+        <button class="nav-toggle" aria-label="Open menu">
+          <span></span><span></span><span></span>
+        </button>
+        <a href="index.html" class="logo">
+          <img src="assets/citibank-logo.svg" alt="Citibank Logo" />
+        </a>
+      </div>
+    </nav>
+    <div class="menu-overlay" aria-hidden="true">
+      <div class="overlay-header">
+        <a href="index.html" class="overlay-logo">
+          <img src="assets/citibank-logo.svg" alt="Citibank Logo" />
+        </a>
+        <button class="overlay-close" aria-label="Close menu">&times;</button>
+      </div>
+      <ul class="overlay-menu">
+        <li><a href="index.html#products">Products</a></li>
+        <li><a href="index.html#solutions">Solutions</a></li>
+        <li><a href="index.html#resources">Resources</a></li>
+        <li><a href="index.html#about">About</a></li>
+        <li><a href="index.html#pricing">Pricing</a></li>
+      </ul>
+      <div class="overlay-cta">
+        <a href="login.html" class="login-link">Log In</a>
+        <a href="signup.html" class="btn-primary">Open Account</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- SIGNUP FORM -->
+  <main>
+    <section class="signup-section">
+      <h1>Create Your Account</h1>
+      <form class="signup-form">
+        <label for="full-name">Full Name</label>
+        <input id="full-name" type="text" placeholder="Jane Doe" required />
+
+        <label for="email">Email address</label>
+        <input id="email" type="email" placeholder="you@example.com" required />
+
+        <label for="company">Company Name</label>
+        <input id="company" type="text" placeholder="Your Startup, Inc." required />
+
+        <label for="password">Password</label>
+        <input id="password" type="password" placeholder="••••••••" required />
+
+        <button type="submit" class="btn btn--primary">Open Account</button>
+      </form>
+      <p>
+        Already have an account?
+        <a href="login.html" class="link">Log in now</a>
+      </p>
+    </section>
+  </main>
+
+  <!-- NAV TOGGLE SCRIPT (same) -->
+  <script>
+    const btn    = document.querySelector('.nav-toggle');
+    const overlay = document.querySelector('.menu-overlay');
+    const close   = document.querySelector('.overlay-close');
+
+    btn.addEventListener('click', () => {
+      overlay.classList.add('open');
+      overlay.setAttribute('aria-hidden','false');
+    });
+    close.addEventListener('click', () => {
+      overlay.classList.remove('open');
+      overlay.setAttribute('aria-hidden','true');
+    });
+    overlay.addEventListener('click', e => {
+      if (e.target === overlay) {
+        overlay.classList.remove('open');
+        overlay.setAttribute('aria-hidden','true');
+      }
+    });
+  </script>
+</body>
+</html>
