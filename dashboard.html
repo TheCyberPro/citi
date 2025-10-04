@@ -5,14 +5,11 @@
   <title>CITI — Dashboard</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
 
-  <!-- Inter -->
+  <!-- Inter font -->
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 
   <style>
-    /* -----------------------
-       Design tokens
-       ----------------------- */
     :root{
       --bg:#0b1220; --panel:#07101a; --card:#0f1724;
       --muted:#98A0AD; --text:#E9F2FF; --accent:#9C7CFF; --accent-2:#00D4FF;
@@ -21,47 +18,53 @@
       font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
     }
     *{box-sizing:border-box}
+    html,body{height:100%}
     body{
-      margin:0; min-height:100vh;
+      margin:0;
       background:
         radial-gradient(600px 380px at 10% 10%, rgba(156,124,255,0.06), transparent 6%),
         radial-gradient(500px 300px at 90% 85%, rgba(0,212,255,0.03), transparent 8%),
         var(--bg);
-      color:var(--text); -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
-      line-height:1.45; padding-bottom:92px;
+      color:var(--text);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.45;
+      letter-spacing:-0.01em;
+      padding-bottom:100px;
     }
     .container{max-width:var(--container);margin:0 auto;padding:0 20px}
 
-    /* Header */
-    header.site-header{
-      position:sticky;top:0;z-index:1200;padding:16px 0;
-      background:linear-gradient(180deg, rgba(6,10,18,0.6), rgba(6,10,18,0.45));
-      border-bottom:1px solid rgba(255,255,255,0.02);
-      backdrop-filter:blur(6px);
-    }
-    .nav-wrapper{display:flex;align-items:center;justify-content:space-between}
-    .nav-left{display:flex;align-items:center;gap:12px}
+    /* Header: top row and sub row */
+    header.site-header{position:sticky;top:0;z-index:1200;padding-top:8px}
+    .header-top{display:flex;align-items:center;justify-content:space-between;padding:10px 0;background:linear-gradient(180deg, rgba(6,10,18,0.6), rgba(6,10,18,0.45));border-bottom:1px solid rgba(255,255,255,0.02);backdrop-filter:blur(6px)}
     .nav-toggle{width:44px;height:44px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);display:grid;place-items:center;background:transparent;cursor:pointer}
     .nav-toggle span{display:block;width:18px;height:2px;background:var(--muted);border-radius:2px}
-    .logo img{height:34px}
-    .nav-actions{display:flex;align-items:center;gap:12px}
-    .profile-compact{display:flex;align-items:center;gap:10px;padding:6px 10px;border-radius:10px;border:1px solid rgba(255,255,255,0.03)}
-    .avatar{width:40px;height:40px;border-radius:50%;object-fit:cover}
+    .header-right .logo img{height:36px}
+
+    .header-sub{display:flex;align-items:center;padding:10px 0}
+    .secure-inline{display:flex;gap:12px;align-items:center}
+    .secure-line{font-size:0.95rem;color:var(--muted)}
+    .member-line{font-size:0.88rem;color:var(--muted)}
+
+    /* Overlay (kept simple) */
+    .menu-overlay{display:none;position:fixed;inset:0;z-index:1500}
+    .overlay-panel{position:relative;max-width:360px;height:100%;right:0;background:var(--card);padding:18px;border-left:1px solid rgba(255,255,255,0.02)}
 
     /* Secure banner */
     .secure-banner{margin:16px auto;display:flex;align-items:center;gap:12px;padding:10px 20px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);border:1px solid rgba(255,255,255,0.02);color:var(--muted);font-size:0.95rem}
     .lock-icon{width:18px;height:18px;color:var(--accent)}
 
-    /* Main grid */
-    main.dashboard{padding:20px 0}
+    /* Layout */
+    main.dashboard{padding:18px 0}
     .grid{display:grid;grid-template-columns:1fr 380px;gap:20px;align-items:start}
 
-    /* Panels */
+    /* Panel */
     .panel{padding:18px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);border:1px solid rgba(255,255,255,0.03)}
     .dashboard__title{font-size:1.5rem;margin:12px 0 18px;font-weight:600}
 
     /* User */
     .user-profile{display:flex;gap:12px;align-items:center}
+    .avatar{width:56px;height:56px;border-radius:50%;object-fit:cover;border:1px solid rgba(255,255,255,0.04)}
     .greeting{font-size:1rem;color:var(--muted)}
     .last-login{font-size:0.9rem;color:var(--muted)}
 
@@ -71,16 +74,25 @@
     .balance-card h3{font-size:0.95rem;color:var(--muted);margin-bottom:8px}
     .balance-amount{font-size:1.45rem;font-weight:700}
 
-    /* Actions */
-    .actions-row{display:flex;gap:12px;margin-top:12px}
-    .action-item{text-align:center}
-    .action-btn{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;border:1px solid rgba(255,255,255,0.03);background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);cursor:pointer;transition:transform .12s}
-    .action-btn:hover{transform:translateY(-6px)}
-    .action-icon{width:20px;height:20px}
-    .action-label{font-size:0.78rem;color:var(--muted);margin-top:8px}
+    /* Primary actions (centered) */
+    .primary-actions{margin:20px 0}
+    .actions-wrap{display:flex;flex-direction:column;align-items:center;gap:14px}
 
-    /* Transactions */
-    .transactions-section{margin-top:18px}
+    .secondary-actions{display:flex;gap:12px}
+    .btn-ghost.action-small{display:flex;flex-direction:column;align-items:center;padding:8px 12px;border-radius:12px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--text);cursor:pointer}
+    .icon-sm{width:18px;height:18px;margin-bottom:6px}
+    .label-sm{font-size:0.82rem;color:var(--muted)}
+
+    .primary-pair{display:flex;align-items:center;gap:18px;justify-content:center;flex-wrap:wrap}
+    .btn-primary-large{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:160px;padding:18px;border-radius:14px;border:none;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#07101a;font-weight:700;font-size:1rem;cursor:pointer;box-shadow:0 18px 40px rgba(12,12,40,0.45);transition:transform .12s}
+    .btn-primary-large.alt{background:linear-gradient(90deg,var(--accent-2),var(--accent))}
+    .btn-primary-large:active{transform:translateY(1px)}
+    .icon-large{width:28px;height:28px;margin-bottom:8px}
+    .label-large{font-size:1rem}
+    .primary-spacer{width:18px}
+
+    /* Transactions (kept exactly as requested in structure and content) */
+    .transactions-section{margin-top:12px}
     .section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
     .btn-secondary{background:none;border:1px solid rgba(255,255,255,0.04);padding:8px 12px;border-radius:10px;color:var(--text);cursor:pointer}
     .transactions-table-wrapper{overflow:auto;border-radius:10px}
@@ -95,26 +107,30 @@
     .tx-date{font-size:0.9rem;color:var(--muted)}
     .tx-desc{font-weight:600}
 
-    /* Drawer */
-    .transactions-drawer{position:fixed;top:0;right:-520px;height:100%;width:520px;background:linear-gradient(180deg, rgba(2,6,23,0.9), rgba(2,6,23,0.96));box-shadow:-28px 0 80px rgba(0,0,0,0.7);transition:right .28s;z-index:1400;padding:20px;border-left:1px solid rgba(255,255,255,0.03)}
-    .transactions-drawer.open{right:0}
-    .drawer-close{position:absolute;top:18px;right:18px;background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer}
-
-    /* Side */
-    .side-column{display:flex;flex-direction:column;gap:14px}
-    .mini-panel{padding:14px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);border:1px solid rgba(255,255,255,0.02)}
-    .card-preview{height:120px;border-radius:12px;padding:14px;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#07101a;display:flex;flex-direction:column;justify-content:space-between}
-
     /* Settings */
-    .settings-section{margin-top:20px}
+    .settings-section{margin-top:18px}
     .settings-form{display:grid;gap:10px;max-width:520px}
     .settings-form input{padding:10px;border:1px solid rgba(255,255,255,0.04);border-radius:8px;background:transparent;color:var(--text)}
     .btn-primary{background:linear-gradient(90deg,var(--accent),var(--accent-2));border:none;color:#07101a;padding:10px 14px;border-radius:8px;cursor:pointer;font-weight:700}
     .security-note{font-size:0.9rem;color:var(--muted);margin-top:8px}
 
+    /* Drawer */
+    .transactions-drawer{position:fixed;top:0;right:-520px;height:100%;width:520px;background:linear-gradient(180deg, rgba(2,6,23,0.92), rgba(2,6,23,0.98));box-shadow:-28px 0 80px rgba(0,0,0,0.7);transition:right .28s;z-index:1400;padding:20px;border-left:1px solid rgba(255,255,255,0.03)}
+    .transactions-drawer.open{right:0}
+    .drawer-close{position:absolute;top:18px;right:18px;background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer}
+
+    /* Side panels */
+    .side-column{display:flex;flex-direction:column;gap:14px}
+    .mini-panel{padding:14px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);border:1px solid rgba(255,255,255,0.02)}
+    .card-preview{height:120px;border-radius:12px;padding:14px;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#07101a;display:flex;flex-direction:column;justify-content:space-between}
+
     /* Footer */
-    footer.site-footer{position:fixed;left:0;right:0;bottom:0;background:linear-gradient(180deg, rgba(2,6,23,0.95), rgba(2,6,23,0.98));border-top:1px solid rgba(255,255,255,0.02);padding:12px 20px;display:flex;justify-content:center}
-    .footer-inner{max-width:var(--container);width:100%;display:flex;align-items:center;justify-content:space-between;color:var(--muted);font-size:0.9rem}
+    footer.site-footer{position:fixed;left:0;right:0;bottom:0;background:linear-gradient(180deg, rgba(2,6,23,0.95), rgba(2,6,23,0.98));border-top:1px solid rgba(255,255,255,0.02);padding:14px 20px;display:flex;justify-content:center}
+    .footer-inner{max-width:var(--container);width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;color:var(--muted);font-size:0.95rem}
+    .trust-badge{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);border:1px solid rgba(255,255,255,0.03);color:var(--accent);margin-right:12px}
+    .footer-meta{display:flex;flex-direction:column;font-size:0.92rem}
+    .footer-sub{font-size:0.82rem;color:var(--muted);margin-top:4px}
+    .footer-links a{color:var(--muted);text-decoration:none;margin-left:18px;font-weight:500}
 
     /* Responsive */
     @media (max-width:1100px){
@@ -122,100 +138,48 @@
       .tx-cards{display:block}
       .transactions-table-wrapper{display:none}
       .transactions-drawer{width:100%}
+      .overlay-panel{max-width:100%}
     }
-    @media (max-width:640px){
-      .action-btn{width:48px;height:48px}
-      .avatar{width:36px;height:36px}
-      .container{padding:0 14px}
+    @media (max-width:720px){
+      .primary-pair{flex-direction:column}
+      .btn-primary-large{min-width:220px;width:86%}
+      .secondary-actions{order:2;margin-top:6px}
+      .avatar{width:48px;height:48px}
+      .container{padding:0 16px}
     }
-/* Header adjustments */
-.header-top{display:flex;align-items:center;justify-content:space-between;padding:12px 0}
-.header-top .nav-toggle{width:44px;height:44px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);display:grid;place-items:center;background:transparent;cursor:pointer}
-.header-top .logo img{height:36px}
-.header-sub{display:flex;align-items:center;padding:8px 0}
-.secure-inline{display:flex;gap:12px;align-items:center}
-.secure-text{display:flex;flex-direction:column}
-.secure-line{font-size:0.95rem;color:var(--muted)}
-.member-line{font-size:0.88rem;color:var(--muted)}
 
-/* Primary actions layout */
-.primary-actions{margin:18px auto}
-.actions-wrap{display:flex;flex-direction:column;align-items:center;gap:14px}
-
-/* Secondary small ghost buttons */
-.secondary-actions{display:flex;gap:12px}
-.btn-ghost.action-small{
-  display:flex;flex-direction:column;align-items:center;padding:8px 12px;border-radius:12px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--text);cursor:pointer;
-}
-.icon-sm{width:18px;height:18px;margin-bottom:6px}
-.label-sm{font-size:0.82rem;color:var(--muted)}
-
-/* Primary pair: centered, large, obvious taps */
-.primary-pair{display:flex;align-items:center;gap:18px;justify-content:center;flex-wrap:wrap}
-.btn-primary-large{
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  min-width:160px;padding:18px;border-radius:14px;border:none;background:linear-gradient(90deg,var(--accent),var(--accent-2));
-  color:#07101a;font-weight:700;font-size:1rem;cursor:pointer;box-shadow:0 18px 40px rgba(12,12,40,0.45);transition:transform .12s;
-}
-.btn-primary-large.alt{background:linear-gradient(90deg,var(--accent-2),var(--accent))}
-.btn-primary-large:active{transform:translateY(1px)}
-.icon-large{width:28px;height:28px;margin-bottom:8px}
-.label-large{font-size:1rem}
-
-/* small spacer between primary buttons on narrow screens */
-.primary-spacer{width:18px}
-
-/* Center everything on small screens and stack primary buttons */
-@media (max-width:720px){
-  .secondary-actions{order:2;margin-top:6px}
-  .primary-pair{flex-direction:column;gap:12px}
-  .primary-spacer{display:none}
-  .btn-primary-large{min-width:220px;width:86%}
-  .actions-wrap{gap:10px}
-}
-
-/* Luxurious footer */
-.site-footer{background:linear-gradient(180deg, rgba(2,6,23,0.95), rgba(2,6,23,0.98));border-top:1px solid rgba(255,255,255,0.02);padding:18px 0;color:var(--muted)}
-.footer-inner{display:flex;align-items:center;justify-content:space-between;gap:16px}
-.trust-badge{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);border:1px solid rgba(255,255,255,0.03);margin-right:12px;color:var(--accent)}
-.footer-meta{display:flex;flex-direction:column;font-size:0.92rem;color:var(--muted)}
-.footer-sub{font-size:0.82rem;color:var(--muted);margin-top:4px}
-.footer-links a{color:var(--muted);text-decoration:none;margin-left:18px;font-weight:500}
-
-/* Accessibility focus */
-button:focus, a:focus{outline:2px solid rgba(156,124,255,0.16);outline-offset:2px}
-
+    button:focus, a:focus{outline:2px solid rgba(156,124,255,0.14);outline-offset:2px}
   </style>
 </head>
 <body>
   <!-- Header -->
-<header class="site-header">
-  <div class="container header-top">
-    <button id="nav-toggle" class="nav-toggle" aria-label="Open menu">
-      <span aria-hidden="true"></span>
-    </button>
-
-    <div class="header-right">
-      <a class="logo" href="index.html" aria-label="CITI Home">
-        <img src="assets/citi_logo.png" alt="CITI Logo" />
-      </a>
-    </div>
-
-
-      <div class="nav-actions">
-        <div class="secure-inline" style="display:flex;align-items:center;gap:8px;color:var(--muted)"><svg class="lock-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1a5 5 0 0 0-5 5v4H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-1V6a5 5 0 0 0-5-5z" fill="currentColor"/></svg><div style="font-size:0.92rem">Secure session</div></div>
-        <div class="profile-compact" title="Account"><img src="assets/passport1.png" alt="User" class="avatar"/><div style="text-align:right"><div style="font-weight:600">Hart Gijs</div><div style="font-size:0.78rem;color:var(--muted)">Member since 2024</div></div></div>
+  <header class="site-header" role="banner">
+    <div class="container header-top">
+      <button id="nav-toggle" class="nav-toggle" aria-label="Open menu"><span aria-hidden="true"></span></button>
+      <div class="header-right">
+        <a class="logo" href="index.html" aria-label="CITI Home"><img src="assets/citi_logo.png" alt="CITI Logo" /></a>
       </div>
     </div>
 
-    <!-- Overlay -->
-    <div class="menu-overlay" id="menu-overlay" aria-hidden="true" style="display:none;position:fixed;inset:0;z-index:1500;">
+    <div class="container header-sub">
+      <div class="secure-inline">
+        <svg class="lock-icon" viewBox="0 0 24 24" aria-hidden="true" width="18" height="18"><path d="M12 1a5 5 0 0 0-5 5v4H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-1V6a5 5 0 0 0-5-5z" fill="currentColor"/></svg>
+        <div>
+          <div class="secure-line">Secure session — data encrypted end-to-end</div>
+          <div class="member-line"><strong>Hart Gijs</strong> · Member since 2024</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- overlay panel -->
+    <div class="menu-overlay" id="menu-overlay" aria-hidden="true">
       <div id="overlay-backdrop" style="position:absolute;inset:0;background:rgba(2,6,23,0.6)"></div>
-      <div style="position:relative;max-width:340px;background:var(--card);height:100%;right:0;padding:18px;border-left:1px solid rgba(255,255,255,0.02)">
+      <div class="overlay-panel" role="dialog" aria-modal="true">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
           <a href="index.html"><img src="assets/citi_logo.png" alt="CITI Logo" style="height:28px"/></a>
           <button class="overlay-close" id="overlay-close" aria-label="Close" style="background:none;border:none;color:var(--muted);font-size:22px">&times;</button>
         </div>
+
         <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:12px">
           <li><a href="index.html#products" style="color:var(--text);text-decoration:none">Products</a></li>
           <li><a href="index.html#solutions" style="color:var(--text);text-decoration:none">Solutions</a></li>
@@ -223,6 +187,7 @@ button:focus, a:focus{outline:2px solid rgba(156,124,255,0.16);outline-offset:2p
           <li><a href="index.html#about" style="color:var(--text);text-decoration:none">About</a></li>
           <li><a href="index.html#pricing" style="color:var(--text);text-decoration:none">Pricing</a></li>
         </ul>
+
         <div style="margin-top:24px;display:flex;flex-direction:column;gap:10px">
           <a href="login.html" style="padding:10px;border-radius:8px;text-align:center;border:1px solid rgba(255,255,255,0.03);color:var(--text);text-decoration:none">Log out</a>
           <a href="signup.html" style="padding:10px;border-radius:8px;text-align:center;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#07101a;text-decoration:none;font-weight:700">Open Account</a>
@@ -231,21 +196,20 @@ button:focus, a:focus{outline:2px solid rgba(156,124,255,0.16);outline-offset:2p
     </div>
   </header>
 
-  <!-- Secure banner -->
+  <!-- Optional repeating secure banner -->
   <div class="secure-banner container" role="status" aria-live="polite">
-    <svg class="lock-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1a5 5 0 0 0-5 5v4H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-1V6a5 5 0 0 0-5-5z" fill="currentColor"/></svg>
+    <svg class="lock-icon" viewBox="0 0 24 24" aria-hidden="true" width="18" height="18"><path d="M12 1a5 5 0 0 0-5 5v4H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-1V6a5 5 0 0 0-5-5z" fill="currentColor"/></svg>
     <span>You’re in a secure session — data is encrypted end-to-end.</span>
   </div>
 
-  <!-- MAIN -->
   <main class="dashboard container" role="main">
     <div class="grid">
-      <!-- LEFT -->
+      <!-- LEFT / MAIN -->
       <section class="panel" aria-labelledby="account-overview">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap">
-          <div>
+        <div style="display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap">
+          <div style="flex:1">
             <div class="user-profile">
-              <img src="assets/passport1.png" alt="User Avatar" class="avatar" style="width:56px;height:56px"/>
+              <img src="assets/passport1.png" alt="User Avatar" class="avatar" />
               <div style="margin-left:12px">
                 <p class="greeting">Hello, <strong>Hart Gijs</strong></p>
                 <p class="last-login" id="last-login">Last login: —</p>
@@ -259,46 +223,51 @@ button:focus, a:focus{outline:2px solid rgba(156,124,255,0.16);outline-offset:2p
               <div class="balance-card" role="listitem"><h3>Savings</h3><p class="balance-amount" id="savings-balance">$758,910.11</p></div>
             </div>
 
-<!-- PRIMARY ACTIONS (drop-in) -->
-<section class="primary-actions container" aria-label="Primary account actions">
-  <div class="actions-wrap">
+            <!-- Primary actions (centered) -->
+            <section class="primary-actions" aria-label="Primary account actions">
+              <div class="actions-wrap">
 
-    <!-- Secondary actions row (Deposit, Trade) -->
-    <div class="secondary-actions" role="toolbar" aria-label="Secondary actions">
-      <button class="btn-ghost action-small" id="act-deposit" aria-label="Deposit">
-        <img src="assets/icons/deposit.svg" alt="" class="icon-sm" />
-        <span class="label-sm">Deposit</span>
-      </button>
-    <!-- Primary pair (centered) -->
-    <div class="primary-pair" role="group" aria-label="Primary transfers">
-      <button class="btn-primary-large" id="act-withdraw" aria-label="Withdraw">
-        <img src="assets/withdraw.svg" alt="" class="icon-large" />
-        <span class="label-large">Withdraw</span>
-      </button>
 
-      <div class="primary-spacer" aria-hidden="true"></div>
+                <div class="secondary-actions" role="toolbar" aria-label="Secondary actions">
 
-      <button class="btn-primary-large alt" id="act-transfer" aria-label="Transfer">
-        <img src="assets/transfer.png" alt="" class="icon-large" />
-        <span class="label-large">Transfer</span>
-      </button>
-    </div>
+
+                <div class="primary-pair" role="group" aria-label="Primary transfers">
+                  <button class="btn-primary-large" id="act-withdraw" aria-label="Withdraw">
+                    <img src="assets/withdraw.svg" alt="" class="icon-large" />
+                    <span class="label-large">Withdraw</span>
+                  </button>
+
+                  <div class="primary-spacer" aria-hidden="true"></div>
+
+                  <button class="btn-primary-large alt" id="act-transfer" aria-label="Transfer">
+                    <img src="assets/transfer.png" alt="" class="icon-large" />
+                    <span class="label-large">Transfer</span>
+
+                  </button>
+                </div>
+              </div>
+            </section>
+
+            <!-- TRANSACTIONS -->
+            <section class="transactions-section container">
+  <!-- Header with title + View All -->
+  <div class="section-header">
+    <h2>Recent Transactions</h2>
+    <button id="tx-toggle" class="btn-secondary">View All</button>
   </div>
-</section>
 
-
-
-        <!-- Transactions -->
-        <section class="transactions-section" aria-labelledby="recent-tx">
-          <div class="section-header">
-            <h2 id="recent-tx">Recent Transactions</h2>
-            <button id="tx-toggle" class="btn-secondary" aria-expanded="false">View All</button>
-          </div>
-
-          <div class="transactions-table-wrapper" id="tx-table-wrapper" aria-hidden="false">
-            <table class="transactions" role="table" aria-label="Recent transactions">
-              <thead><tr><th>Date</th><th>Description</th><th>Amount</th><th>Balance</th></tr></thead>
-	<tbody>
+  <!-- Desktop / Large Screens: Table -->
+  <div class="transactions-table-wrapper">
+    <table class="transactions">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Description</th>
+          <th>Amount</th>
+          <th>Balance</th>
+        </tr>
+      </thead>
+      <tbody>
         <tr>
           <td>Oct 4, 2025</td>
           <td>Debit</td>
@@ -346,91 +315,91 @@ button:focus, a:focus{outline:2px solid rgba(156,124,255,0.16);outline-offset:2p
   </aside>
 </section>
 
-        <!-- Settings -->
-        <section id="settings" class="settings-section">
-          <h2>Account Settings</h2>
-          <form class="settings-form" id="settings-form" novalidate>
-            <label for="email">Email</label>
-            <input id="email" type="email" placeholder="you@example.com" />
+            <!-- Settings -->
+            <section id="settings" class="settings-section">
+              <h2>Account Settings</h2>
+              <form class="settings-form" id="settings-form" novalidate>
+                <label for="email">Email</label>
+                <input id="email" type="email" placeholder="you@example.com" />
 
-            <label for="password">New Password</label>
-            <input id="password" type="password" placeholder="••••••••" />
+                <label for="password">New Password</label>
+                <input id="password" type="password" placeholder="••••••••" />
 
-            <button type="submit" class="btn-primary">Save Changes</button>
+                <button type="submit" class="btn-primary">Save Changes</button>
 
-            <p class="security-note">CITI uses bank-level TLS 1.3 encryption and supports two-factor authentication.</p>
-          </form>
-        </section>
+                <p class="security-note">CITI uses bank-level TLS 1.3 encryption and supports two-factor authentication.</p>
+              </form>
+            </section>
+          </div>
+        </div>
       </section>
 
-      <!-- RIGHT -->
+      <!-- RIGHT / SIDE -->
       <aside class="side-column">
         <div class="mini-panel">
           <h4>Cards</h4>
-          <div class="card-preview" role="group" aria-label="Primary card"><div style="display:flex;justify-content:space-between"><div style="opacity:0.9">Primary</div><div style="font-weight:700">•••• 3364</div></div><div style="font-weight:700">$12,345.67</div></div>
+          <div class="card-preview" role="group" aria-label="Primary card">
+            <div style="display:flex;justify-content:space-between">
+              <div style="opacity:0.9">Primary</div>
+              <div style="font-weight:700">•••• 3364</div>
+            </div>
+            <div style="font-weight:700">$12,345.67</div>
+          </div>
         </div>
 
         <div class="mini-panel">
           <h4>Quick actions</h4>
-          <div style="display:flex;flex-direction:column;gap:8px"><a href="#security" style="text-decoration:none;color:var(--text)">Security & Privacy</a><a href="#limits" style="text-decoration:none;color:var(--text)">Transaction limits</a><a href="#banking" style="text-decoration:none;color:var(--text)">Bank details</a></div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <a href="#security" style="text-decoration:none;color:var(--text)">Security & Privacy</a>
+            <a href="#limits" style="text-decoration:none;color:var(--text)">Transaction limits</a>
+            <a href="#banking" style="text-decoration:none;color:var(--text)">Bank details</a>
+          </div>
         </div>
 
         <div class="mini-panel">
           <h4>Two Factor Authentication</h4>
           <div style="color:var(--muted);margin-top:8px">Protect your account with 2FA. Recommended.</div>
-          <div style="margin-top:12px;display:flex;gap:10px"><button class="btn-secondary" id="enable-2fa">Get Started</button><button class="btn-secondary" id="learn-2fa">Learn</button></div>
+          <div style="margin-top:12px;display:flex;gap:10px">
+            <button class="btn-secondary" id="enable-2fa">Get Started</button>
+            <button class="btn-secondary" id="learn-2fa">Learn</button>
+          </div>
         </div>
       </aside>
     </div>
   </main>
 
-  <!-- Drawer -->
+  <!-- Drawer for All Transactions -->
   <aside class="transactions-drawer" id="tx-drawer" aria-hidden="true">
     <button class="drawer-close" id="drawer-close" aria-label="Close transactions">&times;</button>
     <h3>All Transactions</h3>
     <div id="drawer-list" style="margin-top:14px;display:grid;gap:10px;max-height:72vh;overflow:auto"></div>
   </aside>
 
-<!-- FOOTER (drop-in) -->
-<footer class="site-footer" role="contentinfo">
-  <div class="footer-inner container">
-    <div class="footer-left">
-      <div class="trust-badge" aria-hidden="true">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 1.5l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.77 5.82 22 7 14.14 2 9.27l6.91-1.51L12 1.5z" fill="currentColor"/></svg>
+  <!-- Footer (luxury) -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="footer-inner container">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="trust-badge" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 1.5l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.77 5.82 22 7 14.14 2 9.27l6.91-1.51L12 1.5z" fill="currentColor"/></svg>
+        </div>
+        <div class="footer-meta">
+          <div>© <span id="year">2025</span> CITI</div>
+          <div class="footer-sub">Bank-grade TLS 1.3 · Two-Factor Authentication available</div>
+        </div>
       </div>
-      <div class="footer-meta">
-        <div>© <span id="footer-year"></span> CITI</div>
-        <div class="footer-sub">Bank-grade TLS 1.3 · Two-Factor Authentication available</div>
+
+      <div class="footer-links">
+        <a href="/privacy.html">Privacy</a>
+        <a href="/terms.html">Terms</a>
+        <a href="/support.html">Support</a>
       </div>
     </div>
+  </footer>
 
-    <div class="footer-links">
-      <a href="/privacy.html">Privacy</a>
-      <a href="/terms.html">Terms</a>
-      <a href="/support.html">Support</a>
-    </div>
-  </div>
-</footer>
-
-  <!-- Scripts: preserve and merge your logic -->
   <script>
-    // Format login time
-    function formatLoginTime(date) {
-      const opts = { month:'short', day:'numeric', year:'numeric', hour:'numeric', minute:'2-digit', hour12:true };
-      return new Intl.DateTimeFormat('en-US', opts).format(date).replace(',', '').replace(' ', ' @ ');
-    }
-
-    // Last login read/write
-    (function() {
-      const stored = localStorage.getItem('lastLogin');
-      const lastLoginDate = stored ? new Date(stored) : new Date();
-      const loginEl = document.getElementById('last-login');
-      if (loginEl) loginEl.textContent = 'Last login: ' + formatLoginTime(lastLoginDate);
-      // update stored on page load (represents "after successful login")
-      try { localStorage.setItem('lastLogin', new Date().toISOString()); } catch(e){}
-    })();
-
-    // Transactions sample (merge)
+    /* -----------------------
+       Data + helpers
+       ----------------------- */
     const transactions = [
       { date:'Sep 28, 2025', time:'8:16 PM', desc:'Withdrawal', amount:-2900.00, currency:'USD', status:'Successful', balance:62000.00 },
       { date:'Sep 27, 2025', time:'', desc:'—', amount:0, currency:'', status:'Pending', balance:64900.00 },
@@ -491,29 +460,43 @@ button:focus, a:focus{outline:2px solid rgba(156,124,255,0.16);outline-offset:2p
       `).join('');
     }
 
+    /* -----------------------
+       DOM interactions
+       ----------------------- */
     document.addEventListener('DOMContentLoaded', () => {
-      // year in footer
+      // Footer year
       document.getElementById('year').textContent = new Date().getFullYear();
 
-      // render txs
+      // Last login (read/write)
+      const stored = localStorage.getItem('lastLogin');
+      const lastLoginDate = stored ? new Date(stored) : new Date();
+      const opts = { month:'short', day:'numeric', year:'numeric', hour:'numeric', minute:'2-digit', hour12:true };
+      const formatted = new Intl.DateTimeFormat('en-US', opts).format(lastLoginDate).replace(',', '').replace(' ', ' @ ');
+      const loginEl = document.getElementById('last-login');
+      if (loginEl) loginEl.textContent = 'Last login: ' + formatted;
+      try { localStorage.setItem('lastLogin', new Date().toISOString()); } catch(e){}
+
+      // Render transactions
       renderTxTable();
       renderTxCards();
       renderDrawerList();
 
-      // Drawer toggle
-      const txBtn = document.getElementById('tx-toggle');
-      const drawer = document.getElementById('tx-drawer');
-      const drawerX = document.getElementById('drawer-close');
-      if (txBtn && drawer) {
-        txBtn.addEventListener('click', () => {
-          const open = drawer.classList.toggle('open');
-          txBtn.setAttribute('aria-expanded', String(open));
-          drawer.setAttribute('aria-hidden', String(!open));
+      // Drawer toggle (for the slide-out drawer used on mobile)
+      const txToggle = document.getElementById('tx-toggle');
+      const drawer = document.querySelector('.transactions-drawer');
+      const drawerClose = document.querySelector('.drawer-close');
+      if (txToggle && drawer) {
+        txToggle.addEventListener('click', () => {
+          drawer.classList.add('open');
+          drawer.setAttribute('aria-hidden','false');
         });
       }
-      if (drawerX) drawerX.addEventListener('click', () => { drawer.classList.remove('open'); drawer.setAttribute('aria-hidden','true'); document.getElementById('tx-toggle').setAttribute('aria-expanded','false'); });
+      if (drawerClose) drawerClose.addEventListener('click', () => {
+        drawer.classList.remove('open');
+        drawer.setAttribute('aria-hidden','true');
+      });
 
-      // Header overlay
+      // Overlay menu toggle
       const navBtn = document.getElementById('nav-toggle');
       const menuOverlay = document.getElementById('menu-overlay');
       const overlayClose = document.getElementById('overlay-close');
@@ -524,55 +507,55 @@ button:focus, a:focus{outline:2px solid rgba(156,124,255,0.16);outline-offset:2p
       if (overlayClose) overlayClose.addEventListener('click', () => { menuOverlay.style.display = 'none'; menuOverlay.setAttribute('aria-hidden','true'); });
       if (overlayBackdrop) overlayBackdrop.addEventListener('click', () => { menuOverlay.style.display = 'none'; menuOverlay.setAttribute('aria-hidden','true'); });
 
-      // Settings form submit (basic)
+      // Settings save
       const settingsForm = document.getElementById('settings-form');
       if (settingsForm) {
         settingsForm.addEventListener('submit', (e) => {
           e.preventDefault();
           const email = settingsForm.querySelector('#email').value;
-          // perform validation / API call here
           alert('Settings saved for ' + (email || 'your account'));
         });
       }
 
-      // Action buttons (wire to flows)
+      // Primary action wiring
       const map = { 'act-deposit':'/deposit.html', 'act-withdraw':'/withdraw.html', 'act-transfer':'/transfer.html', 'act-trade':'/trade.html' };
       Object.keys(map).forEach(id => {
         const el = document.getElementById(id);
         if (el) el.addEventListener('click', () => { window.location.href = map[id]; });
       });
 
-      // 2FA enable
+      // 2FA
       const enable2fa = document.getElementById('enable-2fa');
       if (enable2fa) enable2fa.addEventListener('click', () => { alert('Begin 2FA setup flow'); });
 
       // Responsive tx presentation
       function syncTxPresentation(){
         const small = window.matchMedia('(max-width:1100px)').matches;
-        document.getElementById('tx-table-wrapper').style.display = small ? 'none' : 'block';
-        document.getElementById('tx-cards').style.display = small ? 'block' : 'none';
+        const tableWrapper = document.querySelector('.transactions-table-wrapper');
+        const txCards = document.getElementById('tx-cards');
+        if (tableWrapper) tableWrapper.style.display = small ? 'none' : 'block';
+        if (txCards) txCards.style.display = small ? 'block' : 'none';
       }
       window.addEventListener('resize', syncTxPresentation);
       syncTxPresentation();
     });
-<script>
-  // ensure footer year
-  const fy = document.getElementById('footer-year');
-  if (fy) fy.textContent = new Date().getFullYear();
-
-  // keep overlay toggle behavior as before (nav-toggle opens #menu-overlay)
-  document.getElementById('nav-toggle').addEventListener('click', () => {
-    const el = document.getElementById('menu-overlay');
-    if (el) el.style.display = 'block';
-  });
-
-  // wire primary actions if not already wired
-  document.getElementById('act-withdraw')?.addEventListener('click', () => window.location.href = '/withdraw.html');
-  document.getElementById('act-transfer')?.addEventListener('click', () => window.location.href = '/transfer.html');
-  document.getElementById('act-deposit')?.addEventListener('click', () => window.location.href = '/deposit.html');
-  document.getElementById('act-trade')?.addEventListener('click', () => window.location.href = '/trade.html');
-</script>
-
   </script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
