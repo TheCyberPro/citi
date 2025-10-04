@@ -298,12 +298,53 @@ button:focus, a:focus{outline:2px solid rgba(156,124,255,0.16);outline-offset:2p
           <div class="transactions-table-wrapper" id="tx-table-wrapper" aria-hidden="false">
             <table class="transactions" role="table" aria-label="Recent transactions">
               <thead><tr><th>Date</th><th>Description</th><th>Amount</th><th>Balance</th></tr></thead>
-              <tbody id="tx-tbody"><!-- injected --></tbody>
-            </table>
-          </div>
+	<tbody>
+        <tr>
+          <td>Oct 4, 2025</td>
+          <td>Debit</td>
+          <td class="amount negative">−$500.00</td>
+          <td>$64,345.67</td>
+        </tr>
+        <tr>
+          <td>Sep 30, 2025</td>
+          <td>Credit</td>
+          <td class="amount positive">+$2,000.00</td>
+          <td>$62,345.67</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
-          <div class="tx-cards" id="tx-cards" aria-hidden="true"><!-- injected --></div>
-        </section>
+  <!-- Mobile / All Devices: Slide-Out Drawer -->
+  <aside class="transactions-drawer" aria-hidden="true">
+    <div class="drawer-container container">
+      <button class="drawer-close" aria-label="Close">&times;</button>
+      <h3 class="drawer-title">All Transactions</h3>
+      <ul class="transactions-list">
+        <li>
+          <span class="date">Sep 29, 2025</span>
+          <span class="desc">Credit</span>
+          <span class="amount negative">−$6,500.00</span>
+        </li>
+        <li>
+          <span class="date">Sep 30, 2025</span>
+          <span class="desc">Received from Stripe</span>
+          <span class="amount positive">+$2,000.00</span>
+        </li>
+        <li>
+          <span class="date">Oct 2, 2025</span>
+          <span class="desc">Transfer to ACME Inc.</span>
+          <span class="amount negative">−$500.00</span>
+        </li>
+        <li>
+          <span class="date">Oct 4, 2025</span>
+          <span class="desc">Cargo Vessel Repairs and Miscellaneous</span>
+          <span class="amount positive">+$52,000.00</span>
+        </li>
+      </ul>
+    </div>
+  </aside>
+</section>
 
         <!-- Settings -->
         <section id="settings" class="settings-section">
