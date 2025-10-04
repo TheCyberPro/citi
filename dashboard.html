@@ -224,6 +224,63 @@
   .card-preview-wrap{order: -1;padding-top:6px}
   .card-controls{max-width:100%}
 }
+/* Account Settings advanced layout */
+.settings-wrap { margin-top:20px; margin-bottom:36px; }
+.settings-grid { display:grid; grid-template-columns: 1fr 360px; gap:20px; align-items:start; }
+
+/* Panels */
+.panel { padding:18px; border-radius:12px; background: linear-gradient(180deg, rgba(255,255,255,0.01), transparent); border:1px solid rgba(255,255,255,0.03); box-shadow: 0 18px 50px rgba(2,6,23,0.6); }
+.side-panel { display:flex; flex-direction:column; gap:14px; }
+
+/* Form */
+.settings-form { display:flex; flex-direction:column; gap:12px; max-width:640px; }
+.field { display:flex; flex-direction:column; gap:6px; }
+.field label { font-weight:600; font-size:0.95rem; }
+.field input { padding:10px 12px; border-radius:10px; border:1px solid rgba(255,255,255,0.04); background:transparent; color:var(--text); }
+.field-help { font-size:0.85rem; color:var(--muted); }
+
+/* Buttons */
+.form-row { display:flex; align-items:center; gap:12px; margin-top:6px; }
+.btn-primary { background:linear-gradient(90deg,var(--accent),var(--accent-2)); border:none; color:#07101a; padding:10px 14px; border-radius:10px; cursor:pointer; font-weight:700; }
+.btn-primary-compact { background:linear-gradient(90deg,var(--accent),var(--accent-2)); border:none; color:#07101a; padding:8px 10px; border-radius:8px; cursor:pointer; font-weight:700; font-size:0.95rem; }
+.btn-ghost-compact { background:transparent; border:1px solid rgba(255,255,255,0.04); color:var(--text); padding:8px 10px; border-radius:8px; cursor:pointer; }
+
+/* Status */
+.settings-status { font-size:0.95rem; color:var(--muted); }
+
+/* Mini cards */
+.mini-card { padding:14px; border-radius:12px; background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent); border:1px solid rgba(255,255,255,0.03); }
+.mini-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+.mini-title { font-weight:700; }
+.mini-sub { font-size:0.88rem; color:var(--muted); }
+
+/* Cards list */
+.card-list { display:flex; flex-direction:column; gap:10px; }
+.card-item { display:flex; justify-content:space-between; align-items:center; padding:10px; border-radius:10px; background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent); border:1px solid rgba(255,255,255,0.02); }
+.card-name { font-weight:700; }
+.card-pan { color:var(--muted); }
+.card-balance { font-weight:700; }
+
+/* Quick actions */
+.quick-actions { display:flex; flex-direction:column; gap:8px; }
+.quick-link { display:block; padding:10px; border-radius:8px; text-decoration:none; color:var(--text); background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent); border:1px solid rgba(255,255,255,0.02); }
+
+/* 2FA */
+.twofa-body { display:flex; flex-direction:column; gap:8px; }
+.twofa-ctas { display:flex; gap:8px; margin-top:6px; }
+
+/* Footer advanced */
+.site-footer-adv { position:relative; background:linear-gradient(180deg, rgba(2,6,23,0.95), rgba(2,6,23,0.98)); border-top:1px solid rgba(255,255,255,0.02); padding:16px 0; margin-top:32px; }
+.footer-inner { display:flex; align-items:center; justify-content:space-between; gap:12px; color:var(--muted); }
+.trust-row { display:flex; align-items:center; gap:12px; }
+.trust-badge { width:44px; height:44px; border-radius:50%; background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent); display:grid; place-items:center; color:var(--accent); border:1px solid rgba(255,255,255,0.03); }
+.footer-links a { color:var(--muted); text-decoration:none; margin-left:16px; }
+
+/* Small devices */
+@media (max-width: 980px) {
+  .settings-grid { grid-template-columns: 1fr; }
+  .side-panel { order: 2; }
+}
 
   </style>
 </head>
