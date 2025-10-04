@@ -1,288 +1,171 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <title>CITI — Dashboard</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta charset="utf-8"/>
+<title>CITI — Dashboard</title>
+<meta name="viewport" content="width=device-width,initial-scale=1" />
 
-  <!-- Inter -->
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 
-  <style>
-    :root{
-      --bg:#0b1220; --panel:#07101a; --card:#0f1724;
-      --muted:#98A0AD; --text:#E9F2FF; --accent:#9C7CFF; --accent-2:#00D4FF;
-      --success:#7CFFCC; --danger:#FF7A7A;
-      --radius:12px; --container:1180px; --gap:16px;
-      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      background:
-        radial-gradient(600px 380px at 10% 10%, rgba(156,124,255,0.06), transparent 6%),
-        radial-gradient(500px 300px at 90% 85%, rgba(0,212,255,0.03), transparent 8%),
-        var(--bg);
-      color:var(--text);
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
-      line-height:1.45;
-      letter-spacing:-0.01em;
-      padding-bottom:100px;
-    }
-    .container{max-width:var(--container);margin:0 auto;padding:0 20px}
-
-    /* Header: top row and sub row */
-    header.site-header{position:sticky;top:0;z-index:1200;padding-top:8px}
-    .header-top{display:flex;align-items:center;justify-content:space-between;padding:10px 0;background:linear-gradient(180deg, rgba(6,10,18,0.6), rgba(6,10,18,0.45));border-bottom:1px solid rgba(255,255,255,0.02);backdrop-filter:blur(6px)}
-    .nav-toggle{width:44px;height:44px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);display:grid;place-items:center;background:transparent;cursor:pointer}
-    .nav-toggle span{display:block;width:18px;height:2px;background:var(--muted);border-radius:2px}
-    .header-right .logo img{height:36px}
-
-    .header-sub{display:flex;align-items:center;padding:10px 0}
-    .secure-inline{display:flex;gap:12px;align-items:center}
-    .secure-line{font-size:0.95rem;color:var(--muted)}
-    .member-line{font-size:0.88rem;color:var(--muted)}
-
-    /* Overlay (kept simple) */
-    .menu-overlay{display:none;position:fixed;inset:0;z-index:1500}
-    .overlay-panel{position:relative;max-width:360px;height:100%;right:0;background:var(--card);padding:18px;border-left:1px solid rgba(255,255,255,0.02)}
-
-    /* Secure banner */
-    .secure-banner{margin:16px auto;display:flex;align-items:center;gap:12px;padding:10px 20px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);border:1px solid rgba(255,255,255,0.02);color:var(--muted);font-size:0.95rem}
-
-    /* Layout */
-    main.dashboard{padding:18px 0}
-    .grid{display:grid;grid-template-columns:1fr 380px;gap:20px;align-items:start}
-
-    /* Panel */
-    .panel{padding:18px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);border:1px solid rgba(255,255,255,0.03)}
-    .dashboard__title{font-size:1.5rem;margin:12px 0 18px;font-weight:600}
-
-    /* User */
-    .user-profile{display:flex;gap:12px;align-items:center}
-    .avatar{width:56px;height:56px;border-radius:50%;object-fit:cover;border:1px solid rgba(255,255,255,0.04)}
-    .greeting{font-size:1rem;color:var(--muted)}
-    .last-login{font-size:0.9rem;color:var(--muted)}
-
-    /* Balances */
-    .balances{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin:14px 0}
-    .balance-card{padding:16px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);border:1px solid rgba(255,255,255,0.02)}
-    .balance-card h3{font-size:0.95rem;color:var(--muted);margin-bottom:8px}
-    .balance-amount{font-size:1.45rem;font-weight:700}
-
-    /* Primary actions (centered) */
-    .primary-actions{margin:20px 0}
-    .actions-wrap{display:flex;flex-direction:column;align-items:center;gap:14px}
-    .secondary-actions{display:flex;gap:12px}
-    .btn-ghost.action-small{display:flex;flex-direction:column;align-items:center;padding:8px 12px;border-radius:12px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--text);cursor:pointer}
-    .icon-sm{width:18px;height:18px;margin-bottom:6px}
-    .label-sm{font-size:0.82rem;color:var(--muted)}
-    .primary-pair{display:flex;align-items:center;gap:18px;justify-content:center;flex-wrap:wrap}
-    .btn-primary-large{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:160px;padding:18px;border-radius:14px;border:none;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#07101a;font-weight:700;font-size:1rem;cursor:pointer;box-shadow:0 18px 40px rgba(12,12,40,0.45);transition:transform .12s}
-    .btn-primary-large.alt{background:linear-gradient(90deg,var(--accent-2),var(--accent))}
-    .btn-primary-large:active{transform:translateY(1px)}
-    .icon-large{width:28px;height:28px;margin-bottom:8px}
-    .label-large{font-size:1rem}
-    .primary-spacer{width:18px}
-
-    /* Transactions: table and cards */
-    .transactions-section { margin-top:18px; }
-    .section-header { display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px; }
-    .section-controls { display:flex;align-items:center;gap:10px; }
-    .tx-mini-search { padding:8px 10px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--text);min-width:160px }
-    .transactions-table-wrapper { border-radius:12px; overflow:auto; border:1px solid rgba(255,255,255,0.02); background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent); }
-    table.transactions { width:100%; border-collapse:collapse; min-width:680px; }
-    table.transactions thead th { padding:14px 16px; text-align:left; color:var(--muted); font-size:0.9rem; border-bottom:1px solid rgba(255,255,255,0.02); }
-    table.transactions tbody td { padding:12px 16px; font-size:0.95rem; border-top:1px solid rgba(255,255,255,0.02); }
-    .text-right { text-align:right; }
-
-    .tx-cards { display:none; gap:10px; margin-top:8px; }
-    .tx-card { display:flex; justify-content:space-between; align-items:center; padding:12px; border-radius:10px; background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent); border:1px solid rgba(255,255,255,0.02) }
-    .tx-date { font-size:0.9rem; color:var(--muted) }
-    .tx-desc { font-weight:600 }
-
-    .amount.negative, .tx-amount.negative { color:var(--danger); font-weight:700 }
-    .amount.positive, .tx-amount.positive { color:var(--success); font-weight:700 }
-
-    /* Drawer: luxury shell */
-    .transactions-drawer { position:fixed; inset:0; z-index:1800; display:none; }
-    .transactions-drawer.open { display:block; }
-    .drawer-backdrop { position:absolute; inset:0; background:rgba(2,6,23,0.6); backdrop-filter: blur(6px); }
-    .drawer-shell { position:absolute; right:0; top:6vh; bottom:6vh; width:560px; max-width:96%; background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border-left:1px solid rgba(255,255,255,0.03); border-radius:12px 0 0 12px; box-shadow:-30px 40px 120px rgba(2,6,23,0.7); display:flex; flex-direction:column; overflow:hidden; }
-    .drawer-head { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; padding:18px; border-bottom:1px solid rgba(255,255,255,0.02) }
-    .drawer-title { margin:0; font-size:1.15rem }
-    .drawer-sub { color:var(--muted); font-size:0.85rem; margin-top:4px }
-    .search-wrap { position:relative; }
-    .tx-search { padding:10px 36px 10px 12px; border-radius:10px; border:1px solid rgba(255,255,255,0.04); background:transparent; color:var(--text); min-width:220px; }
-    .btn-icon { position:absolute; right:6px; top:50%; transform:translateY(-50%); background:none; border:none; color:var(--muted); cursor:pointer; padding:6px; }
-    .filters { display:flex; gap:8px; align-items:center; margin-left:8px }
-    .date-input { padding:8px 10px; border-radius:8px; border:1px solid rgba(255,255,255,0.04); background:transparent; color:var(--text) }
-    .drawer-body { padding:12px 16px 18px; display:flex; flex-direction:column; gap:12px; flex:1; overflow:hidden }
-    .drawer-table-wrap { overflow:auto; border-radius:8px; border:1px solid rgba(255,255,255,0.02); }
-    .drawer-table { width:100%; border-collapse:collapse; min-width:480px; }
-    .drawer-table thead th { padding:12px 14px; text-align:left; color:var(--muted); font-size:0.9rem; border-bottom:1px solid rgba(255,255,255,0.02) }
-    .drawer-table tbody td { padding:12px 14px; border-top:1px solid rgba(255,255,255,0.02); font-size:0.95rem }
-    .drawer-footer { display:flex; align-items:center; justify-content:space-between; gap:12px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.02) }
-    .pager { display:flex; align-items:center; gap:8px }
-    .pager-btn { padding:8px 10px; border-radius:8px; background:transparent; border:1px solid rgba(255,255,255,0.03); color:var(--text); cursor:pointer }
-    .pager-info { font-size:0.95rem; color:var(--muted) }
-
-    /* Settings */
-    .settings-section{margin-top:18px}
-    .settings-form{display:grid;gap:10px;max-width:520px}
-    .settings-form input{padding:10px;border:1px solid rgba(255,255,255,0.04);border-radius:8px;background:transparent;color:var(--text)}
-    .btn-primary{background:linear-gradient(90deg,var(--accent),var(--accent-2));border:none;color:#07101a;padding:10px 14px;border-radius:8px;cursor:pointer;font-weight:700}
-    .security-note{font-size:0.9rem;color:var(--muted);margin-top:8px}
-
-    /* Footer */
-    footer.site-footer{position:fixed;left:0;right:0;bottom:0;background:linear-gradient(180deg, rgba(2,6,23,0.95), rgba(2,6,23,0.98));border-top:1px solid rgba(255,255,255,0.02);padding:14px 20px;display:flex;justify-content:center}
-    .footer-inner{max-width:var(--container);width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;color:var(--muted);font-size:0.95rem}
-    .trust-badge{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);border:1px solid rgba(255,255,255,0.03);color:var(--accent);margin-right:12px}
-    .footer-meta{display:flex;flex-direction:column;font-size:0.92rem}
-    .footer-sub{font-size:0.82rem;color:var(--muted);margin-top:4px}
-    .footer-links a{color:var(--muted);text-decoration:none;margin-left:18px;font-weight:500}
-
-    /* Responsive */
-    @media (max-width:1100px){
-      .grid{grid-template-columns:1fr}
-      .tx-cards{display:block}
-      .transactions-table-wrapper{display:none}
-      .transactions-drawer{width:100%}
-    }
-    @media (max-width:720px){
-      .primary-pair{flex-direction:column}
-      .btn-primary-large{min-width:220px;width:86%}
-      .secondary-actions{order:2;margin-top:6px}
-      .avatar{width:48px;height:48px}
-      .container{padding:0 16px}
-    }
-
-    button:focus, a:focus{outline:2px solid rgba(156,124,255,0.14);outline-offset:2px}
-/* Component tokens (match your luxury theme) */
+<style>
 :root{
-  --cg-width: 420px;
-  --cg-radius: 16px;
-  --cg-bg1: #071833;
-  --cg-bg2: #0b2a4b;
-  --cg-glass: rgba(255,255,255,0.04);
-  --cg-muted: rgba(255,255,255,0.85);
-  --cg-accent: rgba(156,124,255,0.12);
-  --cg-shadow: 0 22px 60px rgba(2,6,23,0.7);
+  --bg:#0b1220; --panel:#07101a; --card:#0f1724;
+  --muted:#98A0AD; --text:#E9F2FF; --accent:#9C7CFF; --accent-2:#00D4FF;
+  --success:#7CFFCC; --danger:#FF7A7A;
+  --radius:12px; --container:1180px; --gap:16px;
   font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
 }
 
-/* Layout */
-.card-generator{display:flex;gap:22px;align-items:flex-start;flex-wrap:wrap}
-.card-controls{min-width:260px;max-width:360px;display:flex;flex-direction:column;gap:10px}
-.card-controls label{display:flex;flex-direction:column;font-size:0.9rem;color:var(--cg-muted)}
-.card-controls input[type="text"], .card-controls input[type="month"], .card-controls input[type="search"]{
-  margin-top:8px;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--cg-muted);
+/* Reset + base */
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  background:
+    radial-gradient(600px 380px at 10% 10%, rgba(156,124,255,0.06), transparent 6%),
+    radial-gradient(500px 300px at 90% 85%, rgba(0,212,255,0.03), transparent 8%),
+    var(--bg);
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  line-height:1.45;
+  letter-spacing:-0.01em;
+  padding-bottom:100px;
 }
-.controls-row{display:flex;gap:10px;margin-top:6px}
-.btn-primary{background:linear-gradient(90deg,#9C7CFF,#00D4FF);color:#07101a;padding:10px 12px;border-radius:10px;border:none;cursor:pointer;font-weight:700}
-.btn-ghost{background:transparent;border:1px solid rgba(255,255,255,0.03);color:var(--cg-muted);padding:10px 12px;border-radius:10px;cursor:pointer}
+.container{max-width:var(--container);margin:0 auto;padding:0 20px}
 
-/* card preview wrap */
-.card-preview-wrap{flex:1;display:flex;align-items:center;justify-content:center;min-width:var(--cg-width)}
-.cg-card{
-  width:var(--cg-width);max-width:92%;border-radius:var(--cg-radius);padding:22px;background:
-  radial-gradient(600px 200px at -10% -10%, rgba(156,124,255,0.06), transparent 10%),
-  linear-gradient(135deg, var(--cg-bg1), var(--cg-bg2));
-  color:#fff;position:relative;box-shadow:var(--cg-shadow);border:1px solid rgba(255,255,255,0.04);overflow:hidden;
-}
+/* Header */
+header.site-header{position:sticky;top:0;z-index:1200;padding-top:8px}
+.header-top{display:flex;align-items:center;justify-content:space-between;padding:10px 0;background:linear-gradient(180deg, rgba(6,10,18,0.6), rgba(6,10,18,0.45));border-bottom:1px solid rgba(255,255,255,0.02);backdrop-filter:blur(6px)}
+.nav-toggle{width:44px;height:44px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);display:grid;place-items:center;background:transparent;cursor:pointer}
+.nav-toggle span{display:block;width:18px;height:2px;background:var(--muted);border-radius:2px}
+.header-right .logo img{height:36px}
+.header-sub{display:flex;align-items:center;padding:10px 0}
+.secure-inline{display:flex;gap:12px;align-items:center}
+.secure-line{font-size:0.95rem;color:var(--muted)}
+.member-line{font-size:0.88rem;color:var(--muted)}
 
-/* subtle texture */
-.cg-card::before{content:'';position:absolute;inset:0;background-image:linear-gradient(90deg, rgba(255,255,255,0.01) 1px, transparent 1px);background-size:20px 20px;mix-blend-mode:overlay;opacity:0.06;pointer-events:none}
+/* Overlay */
+.menu-overlay{display:none;position:fixed;inset:0;z-index:1500}
+.overlay-panel{position:relative;max-width:360px;height:100%;right:0;background:var(--card);padding:18px;border-left:1px solid rgba(255,255,255,0.02)}
 
-/* Badge */
-.cg-badge{position:absolute;left:18px;top:14px;background:linear-gradient(90deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));padding:6px 10px;border-radius:8px;font-weight:600;font-size:12px;color:#fff;border:1px solid rgba(255,255,255,0.04);box-shadow:0 8px 24px rgba(0,0,0,0.35)}
+/* Secure banner */
+.secure-banner{margin:16px auto;display:flex;align-items:center;gap:12px;padding:10px 20px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);border:1px solid rgba(255,255,255,0.02);color:var(--muted);font-size:0.95rem}
 
-/* top row */
-.cg-top{display:flex;justify-content:space-between;align-items:center}
-.cg-chip{width:46px;height:34px;border-radius:4px;background:linear-gradient(180deg,#d9caa8,#b89f6b);box-shadow:inset 0 1px 0 rgba(255,255,255,0.4);border:1px solid rgba(0,0,0,0.18)}
-.cg-contactless{opacity:0.9;font-weight:600;font-size:10px}
-.cg-issuer{font-weight:700;letter-spacing:0.06em;color:#fff;font-size:20px}
+/* Layout grid */
+main.dashboard{padding:18px 0}
+.grid{display:grid;grid-template-columns:1fr 380px;gap:20px;align-items:start}
 
-/* number */
-.cg-number{display:flex;justify-content:space-between;gap:12px;margin:28px 0 18px;font-size:20px;letter-spacing:2px;font-weight:600}
-.cg-number .g-n{min-width:56px;text-align:center}
-.cg-number .g-last{background:linear-gradient(90deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));padding:2px 6px;border-radius:6px}
+/* Panels & tokens */
+.panel{padding:18px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);border:1px solid rgba(255,255,255,0.03)}
+.dashboard__title{font-size:1.5rem;margin:12px 0 18px;font-weight:600}
 
-/* bottom */
-.cg-bottom{display:flex;justify-content:space-between;align-items:end;gap:12px}
-.cg-label{font-size:10px;color:var(--cg-muted);text-transform:uppercase;letter-spacing:0.06em}
-.cg-name{font-weight:700;letter-spacing:0.02em}
-.cg-dates{font-weight:600;color:#fff}
-.cg-brand{margin-top:6px}
+/* Profile */
+.user-profile{display:flex;gap:12px;align-items:center}
+.avatar{width:56px;height:56px;border-radius:50%;object-fit:cover;border:1px solid rgba(255,255,255,0.04)}
+.greeting{font-size:1rem;color:var(--muted)}
+.last-login{font-size:0.9rem;color:var(--muted)}
 
-/* responsiveness */
-@media (max-width:880px){
-  .card-generator{flex-direction:column;align-items:stretch}
-  .card-preview-wrap{order: -1;padding-top:6px}
-  .card-controls{max-width:100%}
-}
-/* Account Settings advanced layout */
+/* Balances */
+.balances{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin:14px 0}
+.balance-card{padding:16px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);border:1px solid rgba(255,255,255,0.02)}
+.balance-card h3{font-size:0.95rem;color:var(--muted);margin-bottom:8px}
+.balance-amount{font-size:1.45rem;font-weight:700}
+
+/* Actions */
+.primary-actions{margin:20px 0}
+.actions-wrap{display:flex;flex-direction:column;align-items:center;gap:14px}
+.primary-pair{display:flex;align-items:center;gap:18px;justify-content:center;flex-wrap:wrap}
+.btn-primary-large{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:160px;padding:18px;border-radius:14px;border:none;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#07101a;font-weight:700;font-size:1rem;cursor:pointer;box-shadow:0 18px 40px rgba(12,12,40,0.45);transition:transform .12s}
+.btn-primary-large.alt{background:linear-gradient(90deg,var(--accent-2),var(--accent))}
+.icon-large{width:28px;height:28px;margin-bottom:8px}
+
+/* Transactions (table & cards) */
+.transactions-section { margin-top:18px; }
+.section-header { display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px; }
+.section-controls { display:flex;align-items:center;gap:10px; }
+.tx-mini-search { padding:8px 10px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--text);min-width:160px }
+.transactions-table-wrapper { border-radius:12px; overflow:auto; border:1px solid rgba(255,255,255,0.02); background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent); }
+table.transactions { width:100%; border-collapse:collapse; min-width:680px; }
+table.transactions thead th { padding:14px 16px; text-align:left; color:var(--muted); font-size:0.9rem; border-bottom:1px solid rgba(255,255,255,0.02); }
+table.transactions tbody td { padding:12px 16px; font-size:0.95rem; border-top:1px solid rgba(255,255,255,0.02); }
+.text-right { text-align:right; }
+
+.tx-cards { display:none; gap:10px; margin-top:8px; }
+.tx-card { display:flex; justify-content:space-between; align-items:center; padding:12px; border-radius:10px; background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent); border:1px solid rgba(255,255,255,0.02) }
+.tx-date { font-size:0.9rem; color:var(--muted) }
+.tx-desc { font-weight:600 }
+
+.amount.negative, .tx-amount.negative { color:var(--danger); font-weight:700 }
+.amount.positive, .tx-amount.positive { color:var(--success); font-weight:700 }
+
+/* Drawer */
+.transactions-drawer { position:fixed; inset:0; z-index:1800; display:none; }
+.transactions-drawer.open { display:block; }
+.drawer-backdrop { position:absolute; inset:0; background:rgba(2,6,23,0.6); backdrop-filter: blur(6px); }
+.drawer-shell { position:absolute; right:0; top:6vh; bottom:6vh; width:560px; max-width:96%; background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border-left:1px solid rgba(255,255,255,0.03); border-radius:12px 0 0 12px; box-shadow:-30px 40px 120px rgba(2,6,23,0.7); display:flex; flex-direction:column; overflow:hidden; }
+.drawer-head { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; padding:18px; border-bottom:1px solid rgba(255,255,255,0.02) }
+.drawer-title { margin:0; font-size:1.15rem }
+.drawer-sub { color:var(--muted); font-size:0.85rem; margin-top:4px }
+.search-wrap { position:relative; }
+.tx-search { padding:10px 36px 10px 12px; border-radius:10px; border:1px solid rgba(255,255,255,0.04); background:transparent; color:var(--text); min-width:220px; }
+.btn-icon { position:absolute; right:6px; top:50%; transform:translateY(-50%); background:none; border:none; color:var(--muted); cursor:pointer; padding:6px; }
+.filters { display:flex; gap:8px; align-items:center; margin-left:8px }
+.date-input { padding:8px 10px; border-radius:8px; border:1px solid rgba(255,255,255,0.04); background:transparent; color:var(--text) }
+.drawer-body { padding:12px 16px 18px; display:flex; flex-direction:column; gap:12px; flex:1; overflow:hidden }
+.drawer-table-wrap { overflow:auto; border-radius:8px; border:1px solid rgba(255,255,255,0.02); }
+.drawer-table { width:100%; border-collapse:collapse; min-width:480px; }
+.drawer-table thead th { padding:12px 14px; text-align:left; color:var(--muted); font-size:0.9rem; border-bottom:1px solid rgba(255,255,255,0.02) }
+.drawer-table tbody td { padding:12px 14px; border-top:1px solid rgba(255,255,255,0.02); font-size:0.95rem }
+.drawer-footer { display:flex; align-items:center; justify-content:space-between; gap:12px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.02) }
+.pager { display:flex; align-items:center; gap:8px }
+.pager-btn { padding:8px 10px; border-radius:8px; background:transparent; border:1px solid rgba(255,255,255,0.03); color:var(--text); cursor:pointer }
+.pager-info { font-size:0.95rem; color:var(--muted) }
+
+/* Settings + side */
 .settings-wrap { margin-top:20px; margin-bottom:36px; }
 .settings-grid { display:grid; grid-template-columns: 1fr 360px; gap:20px; align-items:start; }
-
-/* Panels */
-.panel { padding:18px; border-radius:12px; background: linear-gradient(180deg, rgba(255,255,255,0.01), transparent); border:1px solid rgba(255,255,255,0.03); box-shadow: 0 18px 50px rgba(2,6,23,0.6); }
-.side-panel { display:flex; flex-direction:column; gap:14px; }
-
-/* Form */
+.settings-panel .panel{padding:18px}
 .settings-form { display:flex; flex-direction:column; gap:12px; max-width:640px; }
 .field { display:flex; flex-direction:column; gap:6px; }
-.field label { font-weight:600; font-size:0.95rem; }
 .field input { padding:10px 12px; border-radius:10px; border:1px solid rgba(255,255,255,0.04); background:transparent; color:var(--text); }
 .field-help { font-size:0.85rem; color:var(--muted); }
-
-/* Buttons */
 .form-row { display:flex; align-items:center; gap:12px; margin-top:6px; }
-.btn-primary { background:linear-gradient(90deg,var(--accent),var(--accent-2)); border:none; color:#07101a; padding:10px 14px; border-radius:10px; cursor:pointer; font-weight:700; }
-.btn-primary-compact { background:linear-gradient(90deg,var(--accent),var(--accent-2)); border:none; color:#07101a; padding:8px 10px; border-radius:8px; cursor:pointer; font-weight:700; font-size:0.95rem; }
-.btn-ghost-compact { background:transparent; border:1px solid rgba(255,255,255,0.04); color:var(--text); padding:8px 10px; border-radius:8px; cursor:pointer; }
-
-/* Status */
-.settings-status { font-size:0.95rem; color:var(--muted); }
-
-/* Mini cards */
+.btn-primary { background:linear-gradient(90deg,var(--accent),var(--accent-2)); border:none; color:#07101a; padding:10px 14px; border-radius:10px; cursor:pointer; font-weight:700 }
 .mini-card { padding:14px; border-radius:12px; background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent); border:1px solid rgba(255,255,255,0.03); }
 .mini-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
-.mini-title { font-weight:700; }
-.mini-sub { font-size:0.88rem; color:var(--muted); }
-
-/* Cards list */
-.card-list { display:flex; flex-direction:column; gap:10px; }
-.card-item { display:flex; justify-content:space-between; align-items:center; padding:10px; border-radius:10px; background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent); border:1px solid rgba(255,255,255,0.02); }
-.card-name { font-weight:700; }
-.card-pan { color:var(--muted); }
-.card-balance { font-weight:700; }
-
-/* Quick actions */
-.quick-actions { display:flex; flex-direction:column; gap:8px; }
 .quick-link { display:block; padding:10px; border-radius:8px; text-decoration:none; color:var(--text); background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent); border:1px solid rgba(255,255,255,0.02); }
 
-/* 2FA */
-.twofa-body { display:flex; flex-direction:column; gap:8px; }
-.twofa-ctas { display:flex; gap:8px; margin-top:6px; }
+/* Card generator / preview tokens */
+:root{
+  --cg-width:420px; --cg-radius:16px; --cg-bg1:#071833; --cg-bg2:#0b2a4b; --cg-muted:rgba(255,255,255,0.85);
+  --cg-shadow:0 22px 60px rgba(2,6,23,0.7);
+}
+.cg-card{ width:var(--cg-width); max-width:92%; border-radius:var(--cg-radius); padding:22px; background: radial-gradient(600px 200px at -10% -10%, rgba(156,124,255,0.06), transparent 10%), linear-gradient(135deg, var(--cg-bg1), var(--cg-bg2)); color:#fff; position:relative; box-shadow:var(--cg-shadow); border:1px solid rgba(255,255,255,0.04); overflow:hidden; }
+.cg-card::before{content:'';position:absolute;inset:0;background-image:linear-gradient(90deg, rgba(255,255,255,0.01) 1px, transparent 1px);background-size:20px 20px;mix-blend-mode:overlay;opacity:0.06;pointer-events:none}
 
-/* Footer advanced */
+/* Footer */
 .site-footer-adv { position:relative; background:linear-gradient(180deg, rgba(2,6,23,0.95), rgba(2,6,23,0.98)); border-top:1px solid rgba(255,255,255,0.02); padding:16px 0; margin-top:32px; }
-.footer-inner { display:flex; align-items:center; justify-content:space-between; gap:12px; color:var(--muted); }
-.trust-row { display:flex; align-items:center; gap:12px; }
-.trust-badge { width:44px; height:44px; border-radius:50%; background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent); display:grid; place-items:center; color:var(--accent); border:1px solid rgba(255,255,255,0.03); }
-.footer-links a { color:var(--muted); text-decoration:none; margin-left:16px; }
+.footer-inner { display:flex; align-items:center; justify-content:space-between; gap:12px; color:var(--muted); max-width:var(--container); margin:0 auto; padding:0 20px; }
 
-/* Small devices */
-@media (max-width: 980px) {
-  .settings-grid { grid-template-columns: 1fr; }
-  .side-panel { order: 2; }
+/* Responsive */
+@media (max-width:1100px){
+  .grid{grid-template-columns:1fr}
+  .tx-cards{display:block}
+  .transactions-table-wrapper{display:none}
+  .transactions-drawer{width:100%}
+}
+@media (max-width:720px){
+  .primary-pair{flex-direction:column}
+  .btn-primary-large{min-width:220px;width:86%}
+  .avatar{width:48px;height:48px}
+  .container{padding:0 16px}
 }
 
-  </style>
+/* Focus outlines */
+button:focus, a:focus{outline:2px solid rgba(156,124,255,0.14);outline-offset:2px}
+</style>
 </head>
 <body>
   <!-- Header -->
@@ -302,7 +185,6 @@
           <a href="index.html"><img src="assets/citi_logo.png" alt="CITI Logo" style="height:28px"/></a>
           <button class="overlay-close" id="overlay-close" aria-label="Close" style="background:none;border:none;color:var(--muted);font-size:22px">&times;</button>
         </div>
-
         <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:12px">
           <li><a href="index.html#products" style="color:var(--text);text-decoration:none">Commercial Banking</a></li>
           <li><a href="index.html#solutions" style="color:var(--text);text-decoration:none">Offshore Banking</a></li>
@@ -327,14 +209,14 @@
 
   <main class="dashboard container" role="main">
     <div class="grid">
-      <!-- LEFT -->
+      <!-- LEFT COLUMN -->
       <section class="panel" aria-labelledby="account-overview">
         <div style="display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap">
           <div style="flex:1">
             <div class="user-profile">
               <img src="assets/passport1.png" alt="User Avatar" class="avatar" />
               <div style="margin-left:12px">
-                <p class="greeting">Hello, <strong>Hart Gijs</strong></p>
+                <p class="greeting">Hello, <strong id="greeting-name">Hart Gijs</strong></p>
                 <p class="last-login" id="last-login">Last login: —</p>
               </div>
             </div>
@@ -348,27 +230,23 @@
 
             <!-- Primary actions -->
             <section class="primary-actions" aria-label="Primary account actions">
+              <div class="primary-pair" role="group" aria-label="Primary transfers">
+                <button class="btn-primary-large" id="act-withdraw" aria-label="Withdraw">
+                  <img src="assets/withdraw.svg" alt="" class="icon-large" />
+                  <span class="label-large">Withdraw</span>
+                </button>
 
+                <div class="primary-spacer" aria-hidden="true"></div>
 
-
-                <div class="primary-pair" role="group" aria-label="Primary transfers">
-                  <button class="btn-primary-large" id="act-withdraw" aria-label="Withdraw">
-                    <img src="assets/withdraw.svg" alt="" class="icon-large" />
-                    <span class="label-large">Withdraw</span>
-                  </button>
-
-                  <div class="primary-spacer" aria-hidden="true"></div>
-
-                  <button class="btn-primary-large alt" id="act-transfer" aria-label="Transfer">
-                    <img src="assets/transfer.png" alt="" class="icon-large" />
-                    <span class="label-large">Transfer</span>
-                  </button>
-                </div>
+                <button class="btn-primary-large alt" id="act-transfer" aria-label="Transfer">
+                  <img src="assets/transfer.png" alt="" class="icon-large" />
+                  <span class="label-large">Transfer</span>
+                </button>
               </div>
             </section>
 
             <!-- TRANSACTIONS -->
-            <section class="transactions-section container" aria-labelledby="recent-tx">
+            <section class="transactions-section" aria-labelledby="recent-tx">
               <div class="section-header">
                 <h2 id="recent-tx">Recent Transactions</h2>
                 <div class="section-controls">
@@ -377,866 +255,439 @@
                 </div>
               </div>
 
-              <div class="transactions-table-wrapper" aria-hidden="false">
+              <div class="transactions-table-wrapper" id="tx-table-wrapper" aria-hidden="false">
                 <table class="transactions" role="table" aria-label="Recent transactions">
                   <thead>
-                    <tr>
-                      <th scope="col">Date</th>
-                      <th scope="col">Description</th>
-                      <th scope="col" class="text-right">Amount</th>
-                      <th scope="col" class="text-right">Balance</th>
-                    </tr>
+                    <tr><th scope="col">Date</th><th scope="col">Description</th><th scope="col" class="text-right">Amount</th><th scope="col" class="text-right">Balance</th></tr>
                   </thead>
-                  <tbody id="tx-tbody">
-                    <tr>
-                      <td>Oct 4, 2025 • 11:44 PM</td>
-                      <td>Debit</td>
-                      <td class="amount negative text-right">−$500.00</td>
-                      <td class="text-right">$64,345.67</td>
-                   </tr>
-                    <tr>
-                      <td>Sep 30, 2025 • 09:12 AM</td>
-                      <td>Credit</td>
-                      <td class="amount positive text-right">+$2,000.00</td>
-                      <td class="text-right">$62,345.67</td>
-                    </tr>
-                  </tbody>
+                  <tbody id="tx-tbody"><!-- injected by script --></tbody>
                 </table>
               </div>
 
-              <div class="tx-cards" id="tx-cards" aria-hidden="true"></div>
+              <div class="tx-cards" id="tx-cards" aria-hidden="true"><!-- injected by script --></div>
 
-              <!-- All Transactions Drawer (luxury) -->
-              <aside class="transactions-drawer" id="tx-drawer" aria-hidden="true" role="dialog" aria-label="All transactions">
-                <div class="drawer-backdrop" id="tx-backdrop" tabindex="-1"></div>
-
-                <div class="drawer-shell" role="document" aria-modal="true">
-                  <header class="drawer-head">
-                    <div>
-                      <h3 class="drawer-title">All Transactions</h3>
-                      <div class="drawer-sub muted">Search, filter, and export your full history</div>
+              <!-- Card preview -->
+              <section class="card-section" aria-label="Card preview" style="margin-top:14px">
+                <div class="card-wrap">
+                  <figure class="cg-card" id="cg-card" role="img" aria-label="Credit card preview">
+                    <div class="cg-top">
+                      <div class="cg-chip" aria-hidden="true"></div>
+                      <div class="cg-contactless" aria-hidden="true">•••</div>
+                      <div class="cg-issuer">CITI</div>
                     </div>
 
-                    <div class="drawer-actions">
-                      <div class="search-wrap">
-                        <input id="tx-search" class="tx-search" type="search" placeholder="Search description, amount or date" aria-label="Search transactions" />
-                        <button id="tx-clear-search" class="btn-icon" title="Clear search" aria-label="Clear search">✕</button>
-                      </div>
-
-                      <div class="filters">
-                        <select id="tx-filter-type" aria-label="Filter by type">
-                          <option value="all">All</option>
-                          <option value="credit">Credit</option>
-                          <option value="debit">Debit</option>
-                          <option value="pending">Pending</option>
-                        </select>
-
-                        <input id="tx-date-from" type="date" class="date-input" aria-label="Date from" />
-                        <input id="tx-date-to" type="date" class="date-input" aria-label="Date to" />
-                      </div>
-
-                      <div class="drawer-ctas">
-                        <button id="tx-export" class="btn-ghost" aria-label="Export transactions">Export</button>
-                        <button id="drawer-close" class="btn-close" aria-label="Close transactions">&times;</button>
-                      </div>
-                    </div>
-                  </header>
-
-                  <div class="drawer-body" id="tx-drawer-body">
-                    <div class="drawer-table-wrap">
-                      <table class="drawer-table" id="drawer-table" role="table" aria-label="Transaction history">
-                        <thead>
-                          <tr><th>Date</th><th>Description</th><th class="text-right">Amount</th><th class="text-right">Balance</th></tr>
-                        </thead>
-                        <tbody id="drawer-tbody"><!-- injected --></tbody>
-                      </table>
+                    <div class="cg-number" id="cg-number" aria-hidden="true">
+                      <span class="g-n">5429</span><span class="g-n">****</span><span class="g-n">****</span><span class="g-last" id="cg-last">8002</span>
                     </div>
 
-                    <div class="drawer-footer">
-                      <div class="pager">
-                        <button id="tx-prev" class="pager-btn" aria-label="Previous page">‹</button>
-                        <div class="pager-info"><span id="tx-page">1</span> / <span id="tx-pages">1</span></div>
-                        <button id="tx-next" class="pager-btn" aria-label="Next page">›</button>
+                    <div class="cg-bottom">
+                      <div class="cg-left">
+                        <div class="cg-label">Cardholder</div>
+                        <div class="cg-name" id="cg-name-display">HART GIJS</div>
                       </div>
-                      <div class="drawer-note muted">Showing <span id="tx-count">0</span> transactions</div>
+                      <div class="cg-right">
+                        <div class="cg-label">Valid</div>
+                        <div class="cg-dates" id="cg-dates">05/27</div>
+                        <div class="cg-brand" aria-hidden="true">
+                          <svg width="56" height="36" viewBox="0 0 56 36"><circle cx="20" cy="18" r="12" fill="#ff4b3e"/><circle cx="36" cy="18" r="12" fill="#ffcd00" opacity="0.95"/></svg>
+                        </div>
+                      </div>
                     </div>
-                  </div>
+                  </figure>
                 </div>
-              </aside>
+              </section>
             </section>
 
-    <!-- The live card (HTML/CSS/SVG) -->
-    <figure id="cg-card" class="cg-card" role="img" aria-label="Credit card preview">
+            <!-- Settings -->
+            <section id="settings" class="settings-section" style="margin-top:18px">
+              <h2>Account Settings</h2>
+              <form class="settings-form" id="settings-form" novalidate>
+                <label for="email">Email</label>
+                <input id="email" type="email" placeholder="you@example.com" />
+                <label for="password">New Password</label>
+                <input id="password" type="password" placeholder="••••••••" />
+                <button type="submit" class="btn-primary">Save Changes</button>
+                <p class="security-note">CITI uses bank-level TLS 1.3 encryption and supports two-factor authentication.</p>
+              </form>
+            </section>
 
-      <div class="cg-top">
-        <div class="cg-chip" aria-hidden="true"></div>
-        <div class="cg-contactless" aria-hidden="true">•••</div>
-        <div class="cg-issuer">CITI</div>
-      </div>
-
-      <div class="cg-number" id="cg-number" aria-hidden="true">
-        <span class="g-n">5429</span>
-        <span class="g-n">****</span>
-        <span class="g-n">****</span>
-        <span class="g-last" id="cg-last">8002</span>
-      </div>
-
-      <div class="cg-bottom">
-        <div class="cg-left">
-          <div class="cg-label">Cardholder</div>
-          <div class="cg-name" id="cg-name-display">HART GIJS</div>
-        </div>
-        <div class="cg-right">
-          <div class="cg-label">Valid</div>
-          <div class="cg-dates" id="cg-dates">05/27</div>
-          <div class="cg-brand" aria-hidden="true">
-            <svg width="56" height="36" viewBox="0 0 56 36">
-              <circle cx="20" cy="18" r="12" fill="#ff4b3e"/>
-              <circle cx="36" cy="18" r="12" fill="#ffcd00" opacity="0.95"/>
-            </svg>
           </div>
         </div>
-      </div>
-    </figure>
-  </div>
-</section>
-<!-- BEGIN: Advanced Account Settings + Cards + 2FA + Footer (drop-in) -->
-<section id="account-settings" class="settings-wrap container" aria-labelledby="settings-title">
-  <div class="settings-grid">
+      </section>
 
-    <!-- Settings column -->
-    <div class="settings-panel panel" role="region" aria-labelledby="settings-title">
-      <h2 id="settings-title">Account Settings</h2>
-
-      <form id="settings-form-advanced" class="settings-form" novalidate>
-        <div class="field">
-          <label for="settings-email">Email</label>
-          <input id="settings-email" name="email" type="email" placeholder="you@example.com" aria-describedby="email-help" />
-          <div id="email-help" class="field-help">Primary contact for statements and security alerts</div>
+      <!-- RIGHT COLUMN -->
+      <aside class="side-column">
+        <div class="mini-card">
+          <h4>Cards</h4>
+          <div class="card-preview" role="group" aria-label="Primary card">
+            <div style="display:flex;justify-content:space-between"><div style="opacity:0.9">Primary</div><div style="font-weight:700">•••• 3364</div></div>
+            <div style="font-weight:700">$12,345.67</div>
+          </div>
         </div>
 
-        <div class="field">
-          <label for="settings-password">New Password</label>
-          <input id="settings-password" name="password" type="password" placeholder="••••••••" aria-describedby="pwd-help" />
-          <div id="pwd-help" class="field-help">Use at least 12 characters with numbers and symbols</div>
+        <div class="mini-card account-utilities">
+          <button class="utilities-toggle" id="utilities-toggle" aria-expanded="false" style="display:none">Account Utilities</button>
+          <div class="utilities-inner" id="utilities-inner">
+            <h4>Quick actions</h4>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <a href="#security" class="quick-link">Security & Privacy</a>
+              <a href="#limits" class="quick-link">Transaction limits</a>
+              <a href="#banking" class="quick-link">Bank details</a>
+            </div>
+          </div>
         </div>
 
-        <div class="form-row">
-          <button type="submit" class="btn-primary" id="settings-save">Save Changes</button>
-          <div id="settings-status" role="status" aria-live="polite" class="settings-status"></div>
+        <div class="mini-card">
+          <h4>Two Factor Authentication</h4>
+          <div style="color:var(--muted);margin-top:8px">Protect your account with 2FA. Recommended.</div>
+          <div style="margin-top:12px;display:flex;gap:10px">
+            <button class="btn-primary" id="enable-2fa">Get Started</button>
+            <button class="btn-secondary btn-ghost" id="learn-2fa">Learn</button>
+          </div>
         </div>
-
-        <p class="security-note">
-          <strong>Security</strong> — CITI uses bank‑grade TLS 1.3 and industry‑standard safeguards; two‑factor authentication is supported.
-        </p>
-      </form>
+      </aside>
     </div>
+  </main>
 
-    <!-- Side column: Cards / Quick actions / 2FA -->
-    <aside class="side-panel" role="complementary" aria-labelledby="side-title">
-      <h3 id="side-title" class="visually-hidden">Account utilities</h3>
+  <!-- Drawer (All Transactions) -->
+  <aside class="transactions-drawer" id="tx-drawer" aria-hidden="true">
+    <div class="drawer-backdrop" id="tx-backdrop" tabindex="-1"></div>
+    <div class="drawer-shell" role="document" aria-modal="true">
+      <header class="drawer-head">
+        <div><h3 class="drawer-title">All Transactions</h3><div class="drawer-sub muted">Search, filter, and export your full history</div></div>
 
-      <!-- Quick actions -->
-      <div class="mini-card">
-        <div class="mini-head">
-          <div class="mini-title">Quick actions</div>
-          <div class="mini-sub muted">Shortcuts for common tasks</div>
-        </div>
+        <div class="drawer-actions" style="display:flex;gap:8px;align-items:center">
+          <div style="position:relative">
+            <input id="tx-search" class="tx-search" type="search" placeholder="Search description, amount or date" aria-label="Search transactions" />
+            <button id="tx-clear-search" class="btn-icon" title="Clear search" aria-label="Clear search">✕</button>
+          </div>
 
-        <div class="quick-actions">
-          <a href="#security" class="quick-link">🔒 Security & Privacy</a>
-          <a href="#limits" class="quick-link">📊 Transaction limits</a>
-          <a href="#banking" class="quick-link">🏦 Bank details</a>
-        </div>
-      </div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <select id="tx-filter-type" aria-label="Filter by type"><option value="all">All</option><option value="credit">Credit</option><option value="debit">Debit</option><option value="pending">Pending</option></select>
+            <input id="tx-date-from" type="date" class="date-input" aria-label="Date from" />
+            <input id="tx-date-to" type="date" class="date-input" aria-label="Date to" />
+          </div>
 
-      <!-- Two Factor Authentication -->
-      <div class="mini-card">
-        <div class="mini-head">
-          <div>
-            <div class="mini-title">Two-Factor Authentication</div>
-            <div class="mini-sub muted">Protect your account with an extra verification step</div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <button id="tx-export" class="btn-ghost" aria-label="Export transactions">Export</button>
+            <button id="drawer-close" class="btn-close" aria-label="Close transactions">&times;</button>
           </div>
         </div>
+      </header>
 
-        <div class="twofa-body">
-          <p class="muted small">We recommend authenticator apps for highest security or SMS as a fallback.</p>
-          <div class="twofa-ctas">
-            <button id="enable-2fa-adv" class="btn-primary-compact">Get Started</button>
-            <button id="learn-2fa-adv" class="btn-ghost-compact">Learn</button>
+      <div class="drawer-body" id="tx-drawer-body">
+        <div class="drawer-table-wrap">
+          <table class="drawer-table" id="drawer-table" role="table" aria-label="Transaction history">
+            <thead><tr><th>Date</th><th>Description</th><th class="text-right">Amount</th><th class="text-right">Balance</th></tr></thead>
+            <tbody id="drawer-tbody"><!-- injected --></tbody>
+          </table>
+        </div>
+
+        <div class="drawer-footer">
+          <div class="pager">
+            <button id="tx-prev" class="pager-btn" aria-label="Previous page">‹</button>
+            <div class="pager-info"><span id="tx-page">1</span> / <span id="tx-pages">1</span></div>
+            <button id="tx-next" class="pager-btn" aria-label="Next page">›</button>
           </div>
+          <div class="drawer-note muted">Showing <span id="tx-count">0</span> transactions</div>
         </div>
       </div>
-    </aside>
-  </div>
-</section>
+    </div>
+  </aside>
 
-<!-- Luxury footer -->
-<footer class="site-footer-adv" role="contentinfo">
-  <div class="footer-inner container">
-    <div class="footer-left">
+  <!-- Footer -->
+  <footer class="site-footer-adv" role="contentinfo">
+    <div class="footer-inner">
       <div class="trust-row">
         <div class="trust-badge" aria-hidden="true">🔷</div>
-        <div>
+        <div class="footer-meta">
           <div class="footer-brand">© <span id="footer-year-adv"></span> CITI - 2025</div>
         </div>
       </div>
-    </div>
-
-    <div class="footer-right">
       <nav class="footer-links" aria-label="Footer">
-        <a href="/privacy.html">Privacy Terms Support</a>
+        <a href="/privacy.html">Privacy</a>
+        <a href="/terms.html" style="margin-left:16px">Terms</a>
+        <a href="/support.html" style="margin-left:16px">Support</a>
       </nav>
     </div>
-  </div>
-</footer>
-<!-- END: Advanced drop-in -->
-
-  <!-- Scripts: all logic kept, organized and grouped -->
-  <script>
-    /* Helpers */
-    function fmtAmount(val){
-      if (val === 0) return '—';
-      const abs = Math.abs(val).toLocaleString(undefined,{minimumFractionDigits:2});
-      return (val < 0 ? '−' : '+') + abs;
-    }
-
-    function formatLoginTime(date){
-      const opts = { month:'short', day:'numeric', year:'numeric', hour:'numeric', minute:'2-digit', hour12:true };
-      return new Intl.DateTimeFormat('en-US', opts).format(date).replace(',', '').replace(' ', ' @ ');
-    }
-
-    // Source transactions: prefer global transactions array if provided, else extract table rows
-    function sourceTransactions(){
-      if (window.transactions && Array.isArray(window.transactions)) return window.transactions.slice();
-      const rows = Array.from(document.querySelectorAll('table.transactions tbody tr'));
-      if (!rows.length) return [];
-      return rows.map(r => {
-        const td = r.querySelectorAll('td');
-        const amountRaw = (td[2]?.textContent || '').trim();
-        const amount = parseFloat(amountRaw.replace(/[^0-9\.\-]/g,'')) || 0;
-        return {
-          date: (td[0]?.textContent || '').trim(),
-          desc: (td[1]?.textContent || '').trim(),
-          amountRaw,
-          amount,
-          balance: (td[3]?.textContent || '').trim(),
-          time: ''
-        };
-      });
-    }
-  </script>
-
-  <script>
-    // App initialization and wiring
-    document.addEventListener('DOMContentLoaded', () => {
-      // Footer year
-      document.getElementById('year').textContent = new Date().getFullYear();
-
-      // Last login: read and update
-      (function(){
-        const stored = localStorage.getItem('lastLogin');
-        const lastLoginDate = stored ? new Date(stored) : new Date();
-        const loginEl = document.getElementById('last-login');
-        if (loginEl) loginEl.textContent = 'Last login: ' + formatLoginTime(lastLoginDate);
-        try { localStorage.setItem('lastLogin', new Date().toISOString()); } catch(e){}
-      })();
-
-      // Transactions rendering functions
-      function renderTxTableRows(txs){
-        const tbody = document.getElementById('tx-tbody');
-        if (!tbody) return;
-        tbody.innerHTML = txs.slice(0,3).map(tx => `
-          <tr>
-            <td>${tx.date}${tx.time ? ' • ' + tx.time : ''}</td>
-            <td>${tx.desc}</td>
-            <td class="amount ${tx.amount < 0 ? 'negative' : (tx.amount > 0 ? 'positive' : '')} text-right">${tx.amountRaw ?? fmtAmount(tx.amount)}</td>
-            <td class="text-right">${tx.balance || ''}</td>
-          </tr>
-        `).join('');
-      }
-
-      function renderTxCards(txs){
-        const cards = document.getElementById('tx-cards');
-        if (!cards) return;
-        cards.innerHTML = (txs.slice(0,6).map(tx => `
-          <div class="tx-card" role="article">
-            <div>
-              <div class="tx-date">${tx.date}${tx.time ? ' • ' + tx.time : ''}</div>
-              <div class="tx-desc">${tx.desc}</div>
-            </div>
-            <div style="text-align:right">
-              <div class="tx-amount ${tx.amount < 0 ? 'negative' : 'positive'}">${tx.amountRaw ?? fmtAmount(tx.amount)}</div>
-              <div class="tx-balance" style="font-size:.8rem;color:var(--muted)">${tx.balance||''}</div>
-            </div>
-          </div>
-        `).join('')) || '<div class="muted">No recent transactions</div>';
-      }
-
-      // Drawer advanced controls: filters, pagination, export
-      (function drawerModule(){
-        const btnViewAll = document.getElementById('tx-toggle');
-        const drawer = document.getElementById('tx-drawer');
-        const drawerBackdrop = document.getElementById('tx-backdrop');
-        const drawerClose = document.getElementById('drawer-close');
-        const drawerTbody = document.getElementById('drawer-tbody');
-
-        const txSearch = document.getElementById('tx-search');
-        const txClear = document.getElementById('tx-clear-search');
-        const filterType = document.getElementById('tx-filter-type');
-        const dateFrom = document.getElementById('tx-date-from');
-        const dateTo = document.getElementById('tx-date-to');
-        const exportBtn = document.getElementById('tx-export');
-
-        let page = 1;
-        const pageSize = 10;
-        let filtered = [];
-
-        function applyFilters(list){
-          const q = (txSearch?.value || '').trim().toLowerCase();
-          const type = filterType?.value || 'all';
-          const from = dateFrom?.value ? new Date(dateFrom.value) : null;
-          const to = dateTo?.value ? new Date(dateTo.value) : null;
-
-          return list.filter(item => {
-            if (type !== 'all') {
-              if (type === 'credit' && item.amount < 0) return false;
-              if (type === 'debit' && item.amount > 0) return false;
-              if (type === 'pending' && !(item.status && item.status.toLowerCase().includes('pending'))) return false;
-            }
-            if (from || to) {
-              const parsed = new Date(item.date);
-              if (from && parsed < from) return false;
-              if (to && parsed > new Date(to.getTime() + 86400000)) return false;
-            }
-            if (!q) return true;
-            return [item.date, item.desc, String(item.amount), item.balance, item.status].join(' ').toLowerCase().includes(q);
-          });
-        }
-
-        function renderDrawerPage(){
-          const list = filtered;
-          const pages = Math.max(1, Math.ceil(list.length / pageSize));
-          if (page > pages) page = pages;
-          const start = (page -1) * pageSize;
-          const slice = list.slice(start, start + pageSize);
-
-          document.getElementById('tx-page').textContent = page;
-          document.getElementById('tx-pages').textContent = pages;
-          document.getElementById('tx-count').textContent = list.length;
-
-          if (!drawerTbody) return;
-          drawerTbody.innerHTML = slice.map(tx => `
-            <tr>
-              <td>${tx.date}${tx.time ? ' • ' + tx.time : ''}</td>
-              <td>${tx.desc}</td>
-              <td class="text-right ${tx.amount < 0 ? 'amount negative' : 'amount positive'}">${tx.amountRaw ?? (tx.amount < 0 ? '−' : '+') + Math.abs(tx.amount).toLocaleString(undefined,{minimumFractionDigits:2})}</td>
-              <td class="text-right">${tx.balance || ''}</td>
-            </tr>
-          `).join('') || '<tr><td colspan="4" style="padding:18px;color:var(--muted)">No transactions found</td></tr>';
-        }
-
-        function refreshFiltered(){
-          const src = sourceTransactions();
-          filtered = applyFilters(src);
-          page = 1;
-          renderDrawerPage();
-        }
-
-        function openDrawer(){
-          refreshFiltered();
-          drawer.classList.add('open');
-          drawer.setAttribute('aria-hidden','false');
-          document.body.style.overflow = 'hidden';
-          setTimeout(()=> txSearch?.focus(), 120);
-          btnViewAll?.setAttribute('aria-expanded','true');
-        }
-        function closeDrawer(){
-          drawer.classList.remove('open');
-          drawer.setAttribute('aria-hidden','true');
-          document.body.style.overflow = '';
-          btnViewAll?.setAttribute('aria-expanded','false');
-          btnViewAll?.focus();
-        }
-
-        // Events
-        btnViewAll?.addEventListener('click', () => {
-          if (drawer.classList.contains('open')) closeDrawer(); else openDrawer();
-        });
-        drawerClose?.addEventListener('click', closeDrawer);
-        drawerBackdrop?.addEventListener('click', closeDrawer);
-
-        // Mini search (filter table rows)
-        const txMiniSearch = document.getElementById('tx-mini-search');
-        txMiniSearch?.addEventListener('input', (e) => {
-          const q = e.target.value.trim().toLowerCase();
-          const rows = Array.from(document.querySelectorAll('table.transactions tbody tr'));
-          rows.forEach(tr => {
-            const txt = tr.textContent.toLowerCase();
-            tr.style.display = (!q || txt.includes(q)) ? '' : 'none';
-          });
-        });
-
-        // Debounced filter input
-        let tid;
-        function debounce(fn, ms=200){ return (...a)=>{ clearTimeout(tid); tid = setTimeout(()=>fn(...a), ms); }; }
-        const onFilterChange = debounce(() => { refreshFiltered(); }, 220);
-
-        txSearch?.addEventListener('input', onFilterChange);
-        txClear?.addEventListener('click', ()=> { if (txSearch){ txSearch.value=''; refreshFiltered(); txSearch.focus(); }});
-        filterType?.addEventListener('change', onFilterChange);
-        dateFrom?.addEventListener('change', onFilterChange);
-        dateTo?.addEventListener('change', onFilterChange);
-
-        // Pager
-        document.getElementById('tx-prev')?.addEventListener('click', ()=> { if (page>1){ page--; renderDrawerPage(); }});
-        document.getElementById('tx-next')?.addEventListener('click', ()=> { const pages = Math.max(1, Math.ceil(filtered.length / pageSize)); if (page<pages){ page++; renderDrawerPage(); }});
-
-        // Export CSV
-        exportBtn?.addEventListener('click', ()=>{
-          const rows = filtered.map(tx => [tx.date, tx.time||'', tx.desc, tx.amountRaw ?? tx.amount, tx.balance || '']);
-          const csv = [['Date','Time','Description','Amount','Balance'], ...rows].map(r => r.map(c => `"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
-          const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement('a'); a.href = url; a.download = `transactions_${new Date().toISOString().slice(0,10)}.csv`; document.body.appendChild(a); a.click();
-          setTimeout(()=>{ URL.revokeObjectURL(url); a.remove(); }, 400);
-        });
-
-        // Close on Escape
-        document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && drawer?.classList.contains('open')) closeDrawer(); });
-
-        // Expose refreshFiltered for external updates (safe)
-        window.refreshTransactionDrawer = refreshFiltered;
-      })();
-
-      // Initial render for main table and cards
-      const initialTx = sourceTransactions();
-      renderTxTableRows(initialTx);
-      renderTxCards(initialTx);
-
-      // Drawer list initial render kept to open-time refresh only (not automatic)
-      // Settings form submit (basic placeholder)
-      const settingsForm = document.getElementById('settings-form');
-      if (settingsForm){
-        settingsForm.addEventListener('submit', (e) => {
-          e.preventDefault();
-          const email = settingsForm.querySelector('#email').value;
-          alert('Settings saved for ' + (email || 'your account'));
-        });
-      }
-
-      // Action wiring
-      const map = { 'act-deposit':'/deposit.html', 'act-withdraw':'/withdraw.html', 'act-transfer':'/transfer.html', 'act-trade':'/trade.html' };
-      Object.keys(map).forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.addEventListener('click', () => { window.location.href = map[id]; });
-      });
-
-      // 2FA helper
-      const enable2fa = document.getElementById('enable-2fa');
-      if (enable2fa) enable2fa.addEventListener('click', () => { alert('Begin 2FA setup flow'); });
-
-      // Overlay menu toggle
-      const navBtn = document.getElementById('nav-toggle');
-      const menuOverlay = document.getElementById('menu-overlay');
-      const overlayClose = document.getElementById('overlay-close');
-      const overlayBackdrop = document.getElementById('overlay-backdrop');
-      if (navBtn && menuOverlay) {
-        navBtn.addEventListener('click', () => { menuOverlay.style.display = 'block'; menuOverlay.setAttribute('aria-hidden','false'); });
-      }
-      if (overlayClose) overlayClose.addEventListener('click', () => { menuOverlay.style.display = 'none'; menuOverlay.setAttribute('aria-hidden','true'); });
-      if (overlayBackdrop) overlayBackdrop.addEventListener('click', () => { menuOverlay.style.display = 'none'; menuOverlay.setAttribute('aria-hidden','true'); });
-
-      // Responsive tx presentation
-      function syncTxPresentation(){
-        const small = window.matchMedia('(max-width:1100px)').matches;
-        document.getElementById('tx-table-wrapper').style.display = small ? 'none' : 'block';
-        document.getElementById('tx-cards').style.display = small ? 'block' : 'none';
-      }
-      window.addEventListener('resize', syncTxPresentation);
-      syncTxPresentation();
-    });
-
-  </script>
+  </footer>
 
 <script>
-/*
-  Card generator script
-  - preserves logic: uses only last-4 and name, does not accept full PAN
-  - renders preview, updates dates display
-  - exports PNG by drawing the card node to a canvas (SVG + computed styles)
-*/
+/* ----------------------
+   Helpers (single copy)
+   ---------------------- */
+function fmtAmount(val){
+  if (val === 0) return '—';
+  const abs = Math.abs(val).toLocaleString(undefined,{minimumFractionDigits:2});
+  return (val < 0 ? '−' : '+') + abs;
+}
+function formatLoginTimeISO(date){
+  const opts = { month:'short', day:'numeric', year:'numeric', hour:'numeric', minute:'2-digit', hour12:true };
+  return new Intl.DateTimeFormat('en-US', opts).format(date).replace(',', '').replace(' ', ' @ ');
+}
 
-(function(){
-  const nameInput = document.getElementById('cg-name');
-  const last4Input = document.getElementById('cg-last4');
-  const fromInput = document.getElementById('cg-from');
-  const toInput = document.getElementById('cg-to');
-  const btnRender = document.getElementById('cg-render');
-  const btnExport = document.getElementById('cg-export');
-
-  const displayName = document.getElementById('cg-name-display');
-  const displayLast = document.getElementById('cg-last');
-  const displayDates = document.getElementById('cg-dates');
-  const cardNode = document.getElementById('cg-card');
-
-  // sanitize last4: digits only, pad with • if empty
-  function sanitizeLast4(s){
-    const digits = (s||'').replace(/\D/g,'').slice(-4);
-    return digits.padStart(4, '•');
-  }
-
-  function formatMonthYear(val){
-    if(!val) return '';
-    try{
-      const d = new Date(val + '-01T00:00:00');
-      const mm = String(d.getMonth()+1).padStart(2,'0');
-      const yy = String(d.getFullYear()).slice(-2);
-      return `${mm}/${yy}`;
-    }catch(e){ return ''; }
-  }
-
-  function updatePreview(){
-    displayName.textContent = (nameInput.value || '—').toUpperCase();
-    displayLast.textContent = sanitizeLast4(last4Input.value);
-    const from = formatMonthYear(fromInput.value);
-    const to = formatMonthYear(toInput.value);
-    displayDates.textContent = (from && to) ? `${from} • ${to}` : (from || to || '');
-  }
-
-  // Export PNG: render node to raster image using SVG foreignObject -> canvas
-  async function exportPNG(){
-    updatePreview();
-
-    const width = Math.min(cardNode.offsetWidth, 1400);
-    const height = Math.round(cardNode.offsetHeight * (width / cardNode.offsetWidth));
-
-    // Serialize node into SVG with foreignObject to preserve CSS
-    const serialized = new XMLSerializer().serializeToString(cardNode);
-    const xmlns = "http://www.w3.org/2000/svg";
-    const svg = document.createElementNS(xmlns, "svg");
-    svg.setAttribute('xmlns', xmlns);
-    svg.setAttribute('width', width);
-    svg.setAttribute('height', height);
-
-    const fo = document.createElementNS(xmlns, "foreignObject");
-    fo.setAttribute('width', '100%');
-    fo.setAttribute('height', '100%');
-
-    // Clone node and inline computed styles for reliable rendering
-    function cloneWithInlineStyles(node){
-      const clone = node.cloneNode(true);
-      const all = clone.querySelectorAll('*');
-      const srcAll = node.querySelectorAll('*');
-      // inline for root
-      inlineStyle(node, clone);
-      for(let i=0;i<all.length;i++){
-        inlineStyle(srcAll[i], all[i]);
-      }
-      return clone;
-    }
-
-    function inlineStyle(src, dest){
-      const cs = window.getComputedStyle(src);
-      let cssText = "";
-      for (let i = 0; i < cs.length; i++){
-        try { cssText += `${cs[i]}: ${cs.getPropertyValue(cs[i])}; `; } catch(e){}
-      }
-      dest.setAttribute('style', cssText);
-    }
-
-    const cloned = cloneWithInlineStyles(cardNode);
-    fo.appendChild(cloned);
-    svg.appendChild(fo);
-    const svgStr = new XMLSerializer().serializeToString(svg);
-    const svgBlob = new Blob([svgStr], { type: 'image/svg+xml;charset=utf-8' });
-    const url = URL.createObjectURL(svgBlob);
-
-    // create image and draw to canvas
-    const img = new Image();
-    img.onload = () => {
-      const canvas = document.createElement('canvas');
-      canvas.width = width;
-      canvas.height = height;
-      const ctx = canvas.getContext('2d');
-      ctx.fillStyle = window.getComputedStyle(document.body).backgroundColor || '#071833';
-      ctx.fillRect(0,0,canvas.width, canvas.height);
-      ctx.drawImage(img, 0, 0, width, height);
-      URL.revokeObjectURL(url);
-
-      canvas.toBlob((blob) => {
-        const a = document.createElement('a');
-        const fileName = `card_preview_${new Date().toISOString().slice(0,10)}.png`;
-        a.href = URL.createObjectURL(blob);
-        a.download = fileName;
-        document.body.appendChild(a);
-        a.click();
-        setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); }, 500);
-      }, 'image/png', 0.95);
+/* Read transactions from global array or table rows */
+function sourceTransactions(){
+  if (window.transactions && Array.isArray(window.transactions)) return window.transactions.slice();
+  const rows = Array.from(document.querySelectorAll('table.transactions tbody tr'));
+  if (!rows.length) return [];
+  return rows.map(r => {
+    const td = r.querySelectorAll('td');
+    const amountRaw = (td[2]?.textContent || '').trim();
+    const amount = parseFloat(amountRaw.replace(/[^0-9\.\-]/g,'')) || 0;
+    return {
+      date: (td[0]?.textContent || '').trim(),
+      desc: (td[1]?.textContent || '').trim(),
+      amountRaw,
+      amount,
+      balance: (td[3]?.textContent || '').trim(),
+      time: ''
     };
-    img.onerror = (e)=>{ alert('Export failed: unable to render preview for download.'); URL.revokeObjectURL(url); };
-    img.src = url;
+  });
+}
+
+/* ----------------------
+   App initialization
+   ---------------------- */
+document.addEventListener('DOMContentLoaded', () => {
+  // Footer year (preserve element id usage)
+  const fy = document.getElementById('footer-year-adv');
+  if (fy) fy.textContent = new Date().getFullYear();
+
+  // Last login: read / display / persist
+  (function(){
+    const key = 'lastLogin';
+    const stored = localStorage.getItem(key);
+    const lastLoginEl = document.getElementById('last-login');
+    const now = new Date();
+    let dateObj = stored ? new Date(stored) : now;
+    if (isNaN(dateObj.getTime())) dateObj = now;
+    if (lastLoginEl) lastLoginEl.textContent = 'Last login: ' + formatLoginTimeISO(dateObj);
+    try { localStorage.setItem(key, new Date().toISOString()); } catch(e){}
+  })();
+
+  // Render recent transactions into table and cards
+  function renderTxTableRows(txs){
+    const tbody = document.getElementById('tx-tbody');
+    if (!tbody) return;
+    tbody.innerHTML = txs.slice(0,3).map(tx => `
+      <tr>
+        <td>${tx.date}${tx.time ? ' • ' + tx.time : ''}</td>
+        <td>${tx.desc}</td>
+        <td class="amount ${tx.amount < 0 ? 'negative' : (tx.amount > 0 ? 'positive' : '')} text-right">${tx.amountRaw ?? fmtAmount(tx.amount)}</td>
+        <td class="text-right">${tx.balance || ''}</td>
+      </tr>
+    `).join('');
   }
 
-  // initial preview
-  updatePreview();
+  function renderTxCards(txs){
+    const cards = document.getElementById('tx-cards');
+    if (!cards) return;
+    cards.innerHTML = txs.slice(0,6).map(tx => `
+      <div class="tx-card" role="article">
+        <div>
+          <div class="tx-date">${tx.date}${tx.time ? ' • ' + tx.time : ''}</div>
+          <div class="tx-desc">${tx.desc}</div>
+        </div>
+        <div style="text-align:right">
+          <div class="tx-amount ${tx.amount < 0 ? 'negative' : 'positive'}">${tx.amountRaw ?? fmtAmount(tx.amount)}</div>
+          <div class="tx-balance" style="font-size:.8rem;color:var(--muted)">${tx.balance||''}</div>
+        </div>
+      </div>
+    `).join('');
+  }
 
-  btnRender.addEventListener('click', (e)=>{
-    e.preventDefault();
-    updatePreview();
-  });
+  // Drawer module (filters, pagination, export) — single consolidated instance
+  (function drawerModule(){
+    const btnViewAll = document.getElementById('tx-toggle');
+    const drawer = document.getElementById('tx-drawer');
+    const drawerBackdrop = document.getElementById('tx-backdrop');
+    const drawerClose = document.getElementById('drawer-close');
+    const drawerTbody = document.getElementById('drawer-tbody');
 
-  btnExport.addEventListener('click', (e)=>{
-    e.preventDefault();
-    exportPNG();
-  });
+    const txSearch = document.getElementById('tx-search');
+    const txClear = document.getElementById('tx-clear-search');
+    const filterType = document.getElementById('tx-filter-type');
+    const dateFrom = document.getElementById('tx-date-from');
+    const dateTo = document.getElementById('tx-date-to');
+    const exportBtn = document.getElementById('tx-export');
 
-  // keyboard-friendly: Enter on last4 triggers update
-  last4Input.addEventListener('keydown', (e)=>{ if(e.key === 'Enter') updatePreview(); });
-})();
-</script>
+    let page = 1, pageSize = 10, filtered = [];
 
+    function applyFilters(list){
+      const q = (txSearch?.value || '').trim().toLowerCase();
+      const type = filterType?.value || 'all';
+      const from = dateFrom?.value ? new Date(dateFrom.value) : null;
+      const to = dateTo?.value ? new Date(dateTo.value) : null;
 
-  <script>
-    // ---- Data (sample or your real data) ----
-    // Preserve your transactions array if present; else fall back to this sample
-    window.transactions = window.transactions && Array.isArray(window.transactions) ? window.transactions : [
-      { date:'Oct 4, 2025', time:'11:44 PM', desc:'Debit', amount:-500.00, balance:64345.67, status:'Successful' },
-      { date:'Sep 30, 2025', time:'09:12 AM', desc:'Credit', amount:2000.00, balance:62345.67, status:'Successful' },
-      { date:'Oct 2, 2025', time:'10:12 AM', desc:'Transfer to ACME Inc.', amount:-500.00, balance:61845.67, status:'Successful' },
-      { date:'Sep 29, 2025', time:'08:16 PM', desc:'Withdrawal', amount:-2900.00, balance:62345.67, status:'Successful' },
-    ];
-
-    // ---- Helpers ----
-    function fmtAmount(v){
-      if (v === 0) return '—';
-      const abs = Math.abs(v).toLocaleString(undefined,{minimumFractionDigits:2});
-      return (v < 0 ? '−' : '+') + abs;
+      return list.filter(item => {
+        if (type !== 'all') {
+          if (type === 'credit' && item.amount < 0) return false;
+          if (type === 'debit' && item.amount > 0) return false;
+          if (type === 'pending' && !(item.status && item.status.toLowerCase().includes('pending'))) return false;
+        }
+        if (from || to) {
+          const parsed = new Date(item.date);
+          if (from && parsed < from) return false;
+          if (to && parsed > new Date(to.getTime() + 86400000)) return false;
+        }
+        if (!q) return true;
+        return [item.date, item.desc, String(item.amount), item.balance, item.status].join(' ').toLowerCase().includes(q);
+      });
     }
 
-    function formatLoginTimeISO(date){
-      const opts = { month:'short', day:'numeric', year:'numeric', hour:'numeric', minute:'2-digit', hour12:true };
-      return new Intl.DateTimeFormat('en-US', opts).format(date).replace(',', '').replace(' ', ' @ ');
-    }
+    function renderDrawerPage(){
+      const list = filtered;
+      const pages = Math.max(1, Math.ceil(list.length / pageSize));
+      if (page > pages) page = pages;
+      const start = (page -1) * pageSize;
+      const slice = list.slice(start, start + pageSize);
 
-    // ---- Render transactions (table, cards, drawer) ----
-    function renderRecentTransactions(){
-      const list = Array.isArray(window.transactions) ? window.transactions : [];
-      const tbody = document.getElementById('tx-tbody');
-      if(!tbody) return;
-      tbody.innerHTML = list.slice(0,3).map(tx => `
+      document.getElementById('tx-page').textContent = page;
+      document.getElementById('tx-pages').textContent = pages;
+      document.getElementById('tx-count').textContent = list.length;
+
+      if (!drawerTbody) return;
+      drawerTbody.innerHTML = slice.map(tx => `
         <tr>
           <td>${tx.date}${tx.time ? ' • ' + tx.time : ''}</td>
           <td>${tx.desc}</td>
-          <td class="amount ${tx.amount < 0 ? 'negative' : 'positive'} text-right">${fmtAmount(tx.amount)}</td>
-          <td class="text-right">$${(tx.balance || 0).toLocaleString(undefined,{minimumFractionDigits:2})}</td>
+          <td class="text-right ${tx.amount < 0 ? 'amount negative' : 'amount positive'}">${tx.amountRaw ?? fmtAmount(tx.amount)}</td>
+          <td class="text-right">${tx.balance || ''}</td>
         </tr>
-      `).join('');
-      // mobile cards
-      const cards = document.getElementById('tx-cards');
-      if(cards){
-        cards.innerHTML = list.slice(0,6).map(tx => `
-          <div class="tx-card" role="article">
-            <div>
-              <div class="tx-date">${tx.date}${tx.time ? ' • ' + tx.time : ''}</div>
-              <div class="tx-desc">${tx.desc}</div>
-            </div>
-            <div style="text-align:right">
-              <div class="tx-amount ${tx.amount<0?'negative':'positive'}">${fmtAmount(tx.amount)}</div>
-              <div class="tx-balance" style="font-size:.8rem;color:var(--muted)">${tx.balance ? '$' + tx.balance.toLocaleString(undefined,{minimumFractionDigits:2}) : ''}</div>
-            </div>
-          </div>
-        `).join('');
-      }
+      `).join('') || '<tr><td colspan="4" style="padding:18px;color:var(--muted)">No transactions found</td></tr>';
     }
 
-    // ---- Drawer: filtering, pagination, export ----
-    (function(){
-      let page = 1, pageSize = 8, filtered = [];
-      const btnViewAll = document.getElementById('tx-toggle');
-      const drawer = document.getElementById('tx-drawer');
-      const drawerBackdrop = document.getElementById('tx-backdrop');
-      const drawerClose = document.getElementById('drawer-close');
-      const drawerTbody = document.getElementById('drawer-tbody');
-      const txSearch = document.getElementById('tx-search');
-      const txClear = document.getElementById('tx-clear-search');
-      const filterType = document.getElementById('tx-filter-type');
-      const dateFrom = document.getElementById('tx-date-from');
-      const dateTo = document.getElementById('tx-date-to');
-      const exportBtn = document.getElementById('tx-export');
+    function refreshFiltered(){
+      filtered = applyFilters(sourceTransactions());
+      page = 1;
+      renderDrawerPage();
+    }
 
-      function src(){
-        return Array.isArray(window.transactions) ? window.transactions.slice() : [];
-      }
+    function openDrawer(){
+      refreshFiltered();
+      drawer.classList.add('open');
+      drawer.setAttribute('aria-hidden','false');
+      document.body.style.overflow = 'hidden';
+      setTimeout(()=> txSearch?.focus(), 120);
+      btnViewAll?.setAttribute('aria-expanded','true');
+    }
+    function closeDrawer(){
+      drawer.classList.remove('open');
+      drawer.setAttribute('aria-hidden','true');
+      document.body.style.overflow = '';
+      btnViewAll?.setAttribute('aria-expanded','false');
+      btnViewAll?.focus();
+    }
 
-      function applyFilters(list){
-        const q = (txSearch?.value || '').trim().toLowerCase();
-        const type = filterType?.value || 'all';
-        const from = dateFrom?.value ? new Date(dateFrom.value) : null;
-        const to = dateTo?.value ? new Date(dateTo.value) : null;
+    btnViewAll?.addEventListener('click', ()=> drawer.classList.contains('open') ? closeDrawer() : openDrawer());
+    drawerClose?.addEventListener('click', closeDrawer);
+    drawerBackdrop?.addEventListener('click', closeDrawer);
 
-        return list.filter(item => {
-          if (type !== 'all') {
-            if (type === 'credit' && item.amount < 0) return false;
-            if (type === 'debit' && item.amount > 0) return false;
-            if (type === 'pending' && !(item.status && item.status.toLowerCase().includes('pending'))) return false;
-          }
-          if (from || to) {
-            const parsed = new Date(item.date);
-            if (from && parsed < from) return false;
-            if (to && parsed > new Date(to.getTime() + 86400000)) return false;
-          }
-          if (!q) return true;
-          return [item.date, item.desc, String(item.amount), item.balance, item.status].join(' ').toLowerCase().includes(q);
-        });
-      }
-
-      function renderDrawerPage(){
-        const list = filtered;
-        const pages = Math.max(1, Math.ceil(list.length/pageSize));
-        if (page > pages) page = pages;
-        const start = (page-1)*pageSize;
-        const slice = list.slice(start, start+pageSize);
-        document.getElementById('tx-page').textContent = page;
-        document.getElementById('tx-pages').textContent = pages;
-        document.getElementById('tx-count').textContent = list.length;
-        if(!drawerTbody) return;
-        drawerTbody.innerHTML = slice.map(tx => `
-          <tr>
-            <td>${tx.date}${tx.time ? ' • ' + tx.time : ''}</td>
-            <td>${tx.desc}</td>
-            <td class="text-right ${tx.amount < 0 ? 'amount negative' : 'amount positive'}">${fmtAmount(tx.amount)}</td>
-            <td class="text-right">${tx.balance ? '$' + tx.balance.toLocaleString(undefined,{minimumFractionDigits:2}) : ''}</td>
-          </tr>
-        `).join('') || '<tr><td colspan="4" style="padding:18px;color:var(--muted)">No transactions found</td></tr>';
-      }
-
-      function refreshFiltered(){
-        filtered = applyFilters(src());
-        page = 1;
-        renderDrawerPage();
-      }
-
-      function openDrawer(){
-        refreshFiltered();
-        drawer.classList.add('open');
-        drawer.setAttribute('aria-hidden','false');
-        document.body.style.overflow = 'hidden';
-        setTimeout(()=> txSearch?.focus(), 120);
-        btnViewAll?.setAttribute('aria-expanded','true');
-      }
-      function closeDrawer(){
-        drawer.classList.remove('open');
-        drawer.setAttribute('aria-hidden','true');
-        document.body.style.overflow = '';
-        btnViewAll?.setAttribute('aria-expanded','false');
-        btnViewAll?.focus();
-      }
-
-      btnViewAll?.addEventListener('click', ()=> drawer.classList.contains('open') ? closeDrawer() : openDrawer());
-      drawerClose?.addEventListener('click', closeDrawer);
-      drawerBackdrop?.addEventListener('click', closeDrawer);
-      document.addEventListener('keydown', e => { if (e.key === 'Escape' && drawer?.classList.contains('open')) closeDrawer(); });
-
-      // debounce helper
-      let tId;
-      function debounce(fn,ms=220){ return (...a)=>{ clearTimeout(tId); tId = setTimeout(()=>fn(...a), ms); }; }
-
-      txSearch?.addEventListener('input', debounce(()=> refreshFiltered()));
-      txClear?.addEventListener('click', ()=>{ if(txSearch){ txSearch.value=''; refreshFiltered(); txSearch.focus(); }});
-      filterType?.addEventListener('change', debounce(()=> refreshFiltered()));
-      dateFrom?.addEventListener('change', debounce(()=> refreshFiltered()));
-      dateTo?.addEventListener('change', debounce(()=> refreshFiltered()));
-
-      document.getElementById('tx-prev')?.addEventListener('click', ()=>{ if(page>1){ page--; renderDrawerPage(); }});
-      document.getElementById('tx-next')?.addEventListener('click', ()=>{ const pages = Math.max(1, Math.ceil(filtered.length/pageSize)); if(page<pages){ page++; renderDrawerPage(); }});
-
-      exportBtn?.addEventListener('click', ()=>{
-        const rows = filtered.map(tx => [tx.date, tx.time||'', tx.desc, tx.amount, tx.balance||'']);
-        const csv = [['Date','Time','Description','Amount','Balance'], ...rows].map(r => r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
-        const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a'); a.href = url; a.download = `transactions_${new Date().toISOString().slice(0,10)}.csv`; document.body.appendChild(a); a.click();
-        setTimeout(()=>{ URL.revokeObjectURL(url); a.remove(); }, 400);
-      });
-
-      // export refreshFiltered function if needed externally:
-      window.refreshTxDrawer = refreshFiltered;
-    })();
-
-    // ---- Last login: read/write + format (fixes real-time display) ----
-    (function(){
-      const key = 'lastLogin';
-      const stored = localStorage.getItem(key);
-      const lastLoginEl = document.getElementById('last-login');
-      const now = new Date();
-      let dateObj;
-      if (stored) {
-        const parsed = new Date(stored);
-        dateObj = isNaN(parsed.getTime()) ? now : parsed;
-      } else {
-        dateObj = now;
-      }
-      if (lastLoginEl) lastLoginEl.textContent = 'Last login: ' + formatLoginTimeISO(dateObj);
-      try { localStorage.setItem(key, new Date().toISOString()); } catch(e){}
-    })();
-
-    // ---- Utilities toggle for mobile (keeps all content but collapses visually) ----
-    (function(){
-      const toggle = document.getElementById('utilities-toggle');
-      const inner = document.getElementById('utilities-inner');
-      if (!toggle || !inner) return;
-      toggle.addEventListener('click', ()=> {
-        const collapsed = inner.classList.toggle('collapsed');
-        toggle.setAttribute('aria-expanded', String(!collapsed));
-      });
-    })();
-
-    // ---- Wire primary actions and settings form (preserve existing logic) ----
-    document.addEventListener('DOMContentLoaded', () => {
-      // initial render
-      renderRecentTransactions();
-
-      // actions
-      document.getElementById('act-deposit')?.addEventListener('click', ()=> location.href='/deposit.html');
-      document.getElementById('act-withdraw')?.addEventListener('click', ()=> location.href='/withdraw.html');
-      document.getElementById('act-transfer')?.addEventListener('click', ()=> location.href='/transfer.html');
-      document.getElementById('act-trade')?.addEventListener('click', ()=> location.href='/trade.html');
-
-      // settings save (non-destructive placeholder)
-      const settingsForm = document.getElementById('settings-form');
-      if (settingsForm) {
-        settingsForm.addEventListener('submit', (e)=> {
-          e.preventDefault();
-          const btn = settingsForm.querySelector('button[type="submit"]');
-          const prev = btn.textContent;
-          btn.disabled = true; btn.textContent = 'Saving…';
-          setTimeout(()=> { btn.disabled=false; btn.textContent=prev; alert('Settings saved'); }, 700);
-        });
-      }
-
-      // 2FA CTAs
-      document.getElementById('enable-2fa')?.addEventListener('click', ()=> { location.href='/2fa-setup.html'; });
-      document.getElementById('learn-2fa')?.addEventListener('click', ()=> { location.href='/2fa-info.html'; });
-
-      // overlay menu wiring (preserve)
-      document.getElementById('nav-toggle')?.addEventListener('click', ()=> {
-        const el = document.getElementById('menu-overlay');
-        if(el) { el.style.display = 'block'; el.setAttribute('aria-hidden','false'); }
-      });
-      document.getElementById('overlay-close')?.addEventListener('click', ()=> {
-        const el = document.getElementById('menu-overlay'); if(el){ el.style.display='none'; el.setAttribute('aria-hidden','true'); }
-      });
-
-      // mini search for recent transactions (filters rows)
-      document.getElementById('tx-mini-search')?.addEventListener('input', function(e){
-        const q = (e.target.value || '').toLowerCase().trim();
-        document.querySelectorAll('table.transactions tbody tr').forEach(tr => {
-          const txt = tr.textContent.toLowerCase();
-          tr.style.display = (!q || txt.includes(q)) ? '' : 'none';
-        });
+    // mini-search filters table rows
+    document.getElementById('tx-mini-search')?.addEventListener('input', (e) => {
+      const q = e.target.value.trim().toLowerCase();
+      const rows = Array.from(document.querySelectorAll('table.transactions tbody tr'));
+      rows.forEach(tr => {
+        const txt = tr.textContent.toLowerCase();
+        tr.style.display = (!q || txt.includes(q)) ? '' : 'none';
       });
     });
-  </script>
+
+    // Debounce helper
+    let tid;
+    function debounce(fn,ms=220){ return (...a)=>{ clearTimeout(tid); tid = setTimeout(()=>fn(...a), ms); }; }
+    const onFilterChange = debounce(()=> refreshFiltered(), 220);
+
+    txSearch?.addEventListener('input', onFilterChange);
+    txClear?.addEventListener('click', ()=> { if (txSearch){ txSearch.value=''; refreshFiltered(); txSearch.focus(); }});
+    filterType?.addEventListener('change', onFilterChange);
+    dateFrom?.addEventListener('change', onFilterChange);
+    dateTo?.addEventListener('change', onFilterChange);
+
+    document.getElementById('tx-prev')?.addEventListener('click', ()=> { if (page>1){ page--; renderDrawerPage(); }});
+    document.getElementById('tx-next')?.addEventListener('click', ()=> { const pages = Math.max(1, Math.ceil(filtered.length/pageSize)); if (page<pages){ page++; renderDrawerPage(); }});
+
+    exportBtn?.addEventListener('click', ()=> {
+      const rows = filtered.map(tx => [tx.date, tx.time||'', tx.desc, tx.amountRaw ?? tx.amount, tx.balance || '']);
+      const csv = [['Date','Time','Description','Amount','Balance'], ...rows].map(r => r.map(c => `"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+      const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = `transactions_${new Date().toISOString().slice(0,10)}.csv`; document.body.appendChild(a); a.click();
+      setTimeout(()=>{ URL.revokeObjectURL(url); a.remove(); }, 400);
+    });
+
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && drawer?.classList.contains('open')) closeDrawer(); });
+
+    window.refreshTransactionDrawer = refreshFiltered;
+  })();
+
+  // Initial render of transactions in table/cards
+  const initialTx = sourceTransactions();
+  renderTxTableRows(initialTx);
+  renderTxCards(initialTx);
+
+  // Settings form (placeholder preserve)
+  const settingsForm = document.getElementById('settings-form');
+  if (settingsForm){
+    settingsForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const btn = settingsForm.querySelector('button[type="submit"]');
+      const prev = btn.textContent;
+      btn.disabled = true; btn.textContent = 'Saving…';
+      setTimeout(()=> { btn.disabled=false; btn.textContent=prev; alert('Settings saved'); }, 700);
+    });
+  }
+
+  // Action wiring (preserve mapping)
+  const map = { 'act-deposit':'/deposit.html', 'act-withdraw':'/withdraw.html', 'act-transfer':'/transfer.html', 'act-trade':'/trade.html' };
+  Object.keys(map).forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('click', () => { window.location.href = map[id]; });
+  });
+
+  // 2FA CTAs
+  document.getElementById('enable-2fa')?.addEventListener('click', ()=> { alert('Begin 2FA setup flow'); });
+  document.getElementById('learn-2fa')?.addEventListener('click', ()=> { location.href='/2fa-info.html'; });
+
+  // Overlay menu wiring
+  const navBtn = document.getElementById('nav-toggle');
+  const menuOverlay = document.getElementById('menu-overlay');
+  const overlayClose = document.getElementById('overlay-close');
+  const overlayBackdrop = document.getElementById('overlay-backdrop');
+  if (navBtn && menuOverlay) {
+    navBtn.addEventListener('click', () => { menuOverlay.style.display = 'block'; menuOverlay.setAttribute('aria-hidden','false'); });
+  }
+  if (overlayClose) overlayClose.addEventListener('click', () => { menuOverlay.style.display = 'none'; menuOverlay.setAttribute('aria-hidden','true'); });
+  if (overlayBackdrop) overlayBackdrop.addEventListener('click', () => { menuOverlay.style.display = 'none'; menuOverlay.setAttribute('aria-hidden','true'); });
+
+  // Utilities toggle for mobile
+  (function(){
+    const toggle = document.getElementById('utilities-toggle');
+    const inner = document.getElementById('utilities-inner');
+    if (!toggle || !inner) return;
+    // show toggle only on small screens (CSS hides by default)
+    toggle.style.display = window.matchMedia('(max-width:1100px)').matches ? 'block' : 'none';
+    toggle.addEventListener('click', ()=> {
+      const collapsed = inner.classList.toggle('collapsed');
+      toggle.setAttribute('aria-expanded', String(!collapsed));
+    });
+    // update on resize
+    window.addEventListener('resize', ()=> toggle.style.display = window.matchMedia('(max-width:1100px)').matches ? 'block' : 'none');
+  })();
+
+  // Responsive tx presentation
+  function syncTxPresentation(){
+    const small = window.matchMedia('(max-width:1100px)').matches;
+    const tableWrap = document.getElementById('tx-table-wrapper');
+    const cards = document.getElementById('tx-cards');
+    if (tableWrap) tableWrap.style.display = small ? 'none' : 'block';
+    if (cards) cards.style.display = small ? 'block' : 'none';
+  }
+  window.addEventListener('resize', syncTxPresentation);
+  syncTxPresentation();
+
+}); // DOMContentLoaded end
+</script>
 </body>
 </html>
