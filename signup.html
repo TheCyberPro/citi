@@ -18,15 +18,7 @@
      <a href="/" class="nav__logo" aria-label="CITI Home">
         <img src="assets/citi_logo.png" alt="CITI Logo" />
       </a>
-      </div>
     </nav>
-    <div class="menu-overlay" aria-hidden="true">
-      <div class="overlay-header">
-        <a href="index.html" class="overlay-logo">
-          <img src="assets/citibank-logo.svg" alt="Citibank Logo" />
-        </a>
-        <button class="overlay-close" aria-label="Close menu">&times;</button>
-      </div>
       <ul class="overlay-menu">
         <li><a href="index.html#products">Products</a></li>
         <li><a href="index.html#solutions">Solutions</a></li>
@@ -40,7 +32,13 @@
       </div>
     </div>
   </header>
-
+  <!-- SECURE SESSION BANNER -->
+  <div class="secure-banner container" role="status" aria-live="polite">
+    <svg class="lock-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none">
+      <path d="M12 1a5 5 0 0 0-5 5v4H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-1V6a5 5 0 0 0-5-5z" fill="currentColor"/>
+    </svg>
+    <span>You’re in a secure session — data is encrypted end-to-end.</span>
+  </div>
   <!-- SIGNUP FORM -->
   <main>
     <section class="signup-section">
