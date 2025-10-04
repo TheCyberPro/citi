@@ -69,7 +69,7 @@
       <div class="user-profile">
         <img src="assets/user-avatar.jpg" alt="User Avatar" class="avatar" />
         <div>
-          <p class="greeting">Hello, <strong>Alex</strong></p>
+          <p class="greeting">Hello, <strong>Hart Z. Gijs</strong></p>
           <p class="last-login">Last login: Oct 4, 2025 @ 09:17 AM</p>
         </div>
       </div>
@@ -90,71 +90,72 @@
       </div>
     </section>
 
-    <!-- TRANSACTIONS -->
-    <section class="transactions-section">
-      <div class="section-header">
-        <h2>Recent Transactions</h2>
-        <button id="tx-toggle" class="btn-secondary">View All</button>
-      </div>
+<!-- TRANSACTIONS -->
+<section class="transactions-section container">
+  <!-- Header with title + View All -->
+  <div class="section-header">
+    <h2>Recent Transactions</h2>
+    <button id="tx-toggle" class="btn-secondary">View All</button>
+  </div>
 
-      <!-- Table for desktop / large screens -->
-      <div class="transactions-table-wrapper">
-        <table class="transactions">
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Description</th>
-              <th>Amount</th>
-              <th>Balance</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Oct 4, 2025</td>
-              <td>Debit</td>
-              <td class="amount negative">−$500.00</td>
-              <td>$64,345.67</td>
-            </tr>
-            <tr>
-              <td>Sep 30, 2025</td>
-              <td>Credit</td>
-              <td class="amount positive">+$2,000.00</td>
-              <td>$62,345.67</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+  <!-- Desktop / Large Screens: Table -->
+  <div class="transactions-table-wrapper">
+    <table class="transactions">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Description</th>
+          <th>Amount</th>
+          <th>Balance</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Oct 4, 2025</td>
+          <td>Debit</td>
+          <td class="amount negative">−$500.00</td>
+          <td>$64,345.67</td>
+        </tr>
+        <tr>
+          <td>Sep 30, 2025</td>
+          <td>Credit</td>
+          <td class="amount positive">+$2,000.00</td>
+          <td>$62,345.67</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
-      <!-- Side‐drawer for mobile / all devices -->
-      <aside class="transactions-drawer" aria-hidden="true">
-          <div class="drawer-container container">
-	<button class="drawer-close" aria-label="Close">&times;</button>
-        <h3 class="drawer-title">All Transactions</h3>
-        <ul class="transactions-list">
-          <li>
-            <span class="date">Sep 29, 2025</span>
-            <span class="desc">Credit</span>
-            <span class="amount negative">−$6500.00</span>
-          </li>
-          <li>
-            <span class="date">Sep 30, 2025</span>
-            <span class="desc">Received from Stripe</span>
-            <span class="amount positive">+$2,000.00</span>
-          </li>
-          <li>
-            <span class="date">Oct 2, 2025</span>
-            <span class="desc">Transfer to ACME Inc.</span>
-            <span class="amount negative">−$500.00</span>
-          </li>
-          <li>
-            <span class="date">Oct 4, 2025</span>
-            <span class="desc">Cargo vessel Repairs and Miscellenous</span>
-            <span class="amount positive">+$52,000.00</span>
-          </li>
-
-        </ul>
-      </aside>
-    </section>
+  <!-- Mobile / All Devices: Slide-Out Drawer -->
+  <aside class="transactions-drawer" aria-hidden="true">
+    <div class="drawer-container container">
+      <button class="drawer-close" aria-label="Close">&times;</button>
+      <h3 class="drawer-title">All Transactions</h3>
+      <ul class="transactions-list">
+        <li>
+          <span class="date">Sep 29, 2025</span>
+          <span class="desc">Credit</span>
+          <span class="amount negative">−$6,500.00</span>
+        </li>
+        <li>
+          <span class="date">Sep 30, 2025</span>
+          <span class="desc">Received from Stripe</span>
+          <span class="amount positive">+$2,000.00</span>
+        </li>
+        <li>
+          <span class="date">Oct 2, 2025</span>
+          <span class="desc">Transfer to ACME Inc.</span>
+          <span class="amount negative">−$500.00</span>
+        </li>
+        <li>
+          <span class="date">Oct 4, 2025</span>
+          <span class="desc">Cargo Vessel Repairs and Miscellaneous</span>
+          <span class="amount positive">+$52,000.00</span>
+        </li>
+      </ul>
+    </div>
+  </aside>
+</section>
 
     <!-- CARDS -->
     <section class="cards-section">
@@ -182,6 +183,7 @@
 
     <!-- Account Settings -->
     <section id="settings" class="settings-section">
+
       <!-- … -->
 
     <!-- SETTINGS -->
