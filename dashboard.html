@@ -1,374 +1,420 @@
-<!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8" /> 
-  <meta name="viewport" content="width=device-width, 
-  initial-scale=1" /> <title>CITI — Dashboard</title>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title>CITI — Dashboard</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
 
-  <!-- Inter font for a refined, modern look -->
-  <link rel="preconnect" href="https://fonts.gstatic.com" />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
-    rel="stylesheet"
-  />
+  <!-- Inter -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* -----------------------
+       Design tokens
+       ----------------------- */
+    :root{
+      --bg:#0b1220; --panel:#07101a; --card:#0f1724;
+      --muted:#98A0AD; --text:#E9F2FF; --accent:#9C7CFF; --accent-2:#00D4FF;
+      --success:#7CFFCC; --danger:#FF7A7A;
+      --radius:12px; --container:1180px; --gap:16px;
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; min-height:100vh;
+      background:
+        radial-gradient(600px 380px at 10% 10%, rgba(156,124,255,0.06), transparent 6%),
+        radial-gradient(500px 300px at 90% 85%, rgba(0,212,255,0.03), transparent 8%),
+        var(--bg);
+      color:var(--text); -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+      line-height:1.45; padding-bottom:92px;
+    }
+    .container{max-width:var(--container);margin:0 auto;padding:0 20px}
+
+    /* Header */
+    header.site-header{
+      position:sticky;top:0;z-index:1200;padding:16px 0;
+      background:linear-gradient(180deg, rgba(6,10,18,0.6), rgba(6,10,18,0.45));
+      border-bottom:1px solid rgba(255,255,255,0.02);
+      backdrop-filter:blur(6px);
+    }
+    .nav-wrapper{display:flex;align-items:center;justify-content:space-between}
+    .nav-left{display:flex;align-items:center;gap:12px}
+    .nav-toggle{width:44px;height:44px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);display:grid;place-items:center;background:transparent;cursor:pointer}
+    .nav-toggle span{display:block;width:18px;height:2px;background:var(--muted);border-radius:2px}
+    .logo img{height:34px}
+    .nav-actions{display:flex;align-items:center;gap:12px}
+    .profile-compact{display:flex;align-items:center;gap:10px;padding:6px 10px;border-radius:10px;border:1px solid rgba(255,255,255,0.03)}
+    .avatar{width:40px;height:40px;border-radius:50%;object-fit:cover}
+
+    /* Secure banner */
+    .secure-banner{margin:16px auto;display:flex;align-items:center;gap:12px;padding:10px 20px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);border:1px solid rgba(255,255,255,0.02);color:var(--muted);font-size:0.95rem}
+    .lock-icon{width:18px;height:18px;color:var(--accent)}
+
+    /* Main grid */
+    main.dashboard{padding:20px 0}
+    .grid{display:grid;grid-template-columns:1fr 380px;gap:20px;align-items:start}
+
+    /* Panels */
+    .panel{padding:18px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);border:1px solid rgba(255,255,255,0.03)}
+    .dashboard__title{font-size:1.5rem;margin:12px 0 18px;font-weight:600}
+
+    /* User */
+    .user-profile{display:flex;gap:12px;align-items:center}
+    .greeting{font-size:1rem;color:var(--muted)}
+    .last-login{font-size:0.9rem;color:var(--muted)}
+
+    /* Balances */
+    .balances{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin:14px 0}
+    .balance-card{padding:16px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);border:1px solid rgba(255,255,255,0.02)}
+    .balance-card h3{font-size:0.95rem;color:var(--muted);margin-bottom:8px}
+    .balance-amount{font-size:1.45rem;font-weight:700}
+
+    /* Actions */
+    .actions-row{display:flex;gap:12px;margin-top:12px}
+    .action-item{text-align:center}
+    .action-btn{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;border:1px solid rgba(255,255,255,0.03);background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);cursor:pointer;transition:transform .12s}
+    .action-btn:hover{transform:translateY(-6px)}
+    .action-icon{width:20px;height:20px}
+    .action-label{font-size:0.78rem;color:var(--muted);margin-top:8px}
+
+    /* Transactions */
+    .transactions-section{margin-top:18px}
+    .section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+    .btn-secondary{background:none;border:1px solid rgba(255,255,255,0.04);padding:8px 12px;border-radius:10px;color:var(--text);cursor:pointer}
+    .transactions-table-wrapper{overflow:auto;border-radius:10px}
+    table.transactions{width:100%;border-collapse:collapse;background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);border:1px solid rgba(255,255,255,0.02)}
+    table.transactions thead th{padding:12px 16px;text-align:left;color:var(--muted);font-size:0.85rem;border-bottom:1px solid rgba(255,255,255,0.02)}
+    table.transactions tbody td{padding:12px 16px;border-top:1px solid rgba(255,255,255,0.02)}
+    .amount.negative{color:var(--danger);font-weight:700}
+    .amount.positive{color:var(--success);font-weight:700}
+
+    .tx-cards{display:none;gap:10px;margin-top:8px}
+    .tx-card{display:flex;justify-content:space-between;align-items:center;padding:12px;border-radius:10px;background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);border:1px solid rgba(255,255,255,0.02)}
+    .tx-date{font-size:0.9rem;color:var(--muted)}
+    .tx-desc{font-weight:600}
+
+    /* Drawer */
+    .transactions-drawer{position:fixed;top:0;right:-520px;height:100%;width:520px;background:linear-gradient(180deg, rgba(2,6,23,0.9), rgba(2,6,23,0.96));box-shadow:-28px 0 80px rgba(0,0,0,0.7);transition:right .28s;z-index:1400;padding:20px;border-left:1px solid rgba(255,255,255,0.03)}
+    .transactions-drawer.open{right:0}
+    .drawer-close{position:absolute;top:18px;right:18px;background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer}
+
+    /* Side */
+    .side-column{display:flex;flex-direction:column;gap:14px}
+    .mini-panel{padding:14px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);border:1px solid rgba(255,255,255,0.02)}
+    .card-preview{height:120px;border-radius:12px;padding:14px;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#07101a;display:flex;flex-direction:column;justify-content:space-between}
+
+    /* Settings */
+    .settings-section{margin-top:20px}
+    .settings-form{display:grid;gap:10px;max-width:520px}
+    .settings-form input{padding:10px;border:1px solid rgba(255,255,255,0.04);border-radius:8px;background:transparent;color:var(--text)}
+    .btn-primary{background:linear-gradient(90deg,var(--accent),var(--accent-2));border:none;color:#07101a;padding:10px 14px;border-radius:8px;cursor:pointer;font-weight:700}
+    .security-note{font-size:0.9rem;color:var(--muted);margin-top:8px}
+
+    /* Footer */
+    footer.site-footer{position:fixed;left:0;right:0;bottom:0;background:linear-gradient(180deg, rgba(2,6,23,0.95), rgba(2,6,23,0.98));border-top:1px solid rgba(255,255,255,0.02);padding:12px 20px;display:flex;justify-content:center}
+    .footer-inner{max-width:var(--container);width:100%;display:flex;align-items:center;justify-content:space-between;color:var(--muted);font-size:0.9rem}
+
+    /* Responsive */
+    @media (max-width:1100px){
+      .grid{grid-template-columns:1fr}
+      .tx-cards{display:block}
+      .transactions-table-wrapper{display:none}
+      .transactions-drawer{width:100%}
+    }
+    @media (max-width:640px){
+      .action-btn{width:48px;height:48px}
+      .avatar{width:36px;height:36px}
+      .container{padding:0 14px}
+    }
+  </style>
 </head>
-<body class="dashboard-page">
-
-  <!-- HEADER: Hamburger on left, Logo on right -->
+<body>
+  <!-- Header -->
   <header class="site-header">
-    <nav class="nav-wrapper">
-      <div class="nav-inner">
-        <!-- 1) Hamburger -->
-        <button class="nav-toggle" aria-label="Open menu">
-          <span></span><span></span><span></span>
-        </button>
-
-        <!-- 2) Logo -->
-        <a href="index.html" class="logo">
-          <img src="assets/citi_logo.png" alt="CITI Logo" />
-        </a>
+    <div class="container nav-wrapper" role="navigation" aria-label="Main">
+      <div class="nav-left">
+        <button class="nav-toggle" id="nav-toggle" aria-label="Open menu"><span aria-hidden="true"></span></button>
+        <a class="logo" href="index.html" aria-label="CITI Home"><img src="assets/citi_logo.png" alt="CITI Logo" /></a>
       </div>
-    </nav>
 
-    <!-- Overlay menu (unchanged) -->
-    <div class="menu-overlay" aria-hidden="true">
-      <div class="overlay-header">
-        <a href="index.html" class="overlay-logo">
-          <img src="assets/citi_logo.png" alt="CITI Logo" />
-        </a>
-        <button class="overlay-close" aria-label="Close menu">&times;</button>
+      <div class="nav-actions">
+        <div class="secure-inline" style="display:flex;align-items:center;gap:8px;color:var(--muted)"><svg class="lock-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1a5 5 0 0 0-5 5v4H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-1V6a5 5 0 0 0-5-5z" fill="currentColor"/></svg><div style="font-size:0.92rem">Secure session</div></div>
+        <div class="profile-compact" title="Account"><img src="assets/passport1.png" alt="User" class="avatar"/><div style="text-align:right"><div style="font-weight:600">Hart Gijs</div><div style="font-size:0.78rem;color:var(--muted)">Member since 2024</div></div></div>
       </div>
-      <ul class="overlay-menu">
-        <li><a href="index.html#products">Products</a></li>
-        <li><a href="index.html#solutions">Solutions</a></li>
-        <li><a href="index.html#resources">Resources</a></li>
-        <li><a href="index.html#about">About</a></li>
-        <li><a href="index.html#pricing">Pricing</a></li>
-      </ul>
-      <div class="overlay-cta">
-        <a href="login.html" class="login-link">Log Out</a>
-        <a href="signup.html" class="btn-primary">Open Account</a>
+    </div>
+
+    <!-- Overlay -->
+    <div class="menu-overlay" id="menu-overlay" aria-hidden="true" style="display:none;position:fixed;inset:0;z-index:1500;">
+      <div id="overlay-backdrop" style="position:absolute;inset:0;background:rgba(2,6,23,0.6)"></div>
+      <div style="position:relative;max-width:340px;background:var(--card);height:100%;right:0;padding:18px;border-left:1px solid rgba(255,255,255,0.02)">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+          <a href="index.html"><img src="assets/citi_logo.png" alt="CITI Logo" style="height:28px"/></a>
+          <button class="overlay-close" id="overlay-close" aria-label="Close" style="background:none;border:none;color:var(--muted);font-size:22px">&times;</button>
+        </div>
+        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:12px">
+          <li><a href="index.html#products" style="color:var(--text);text-decoration:none">Products</a></li>
+          <li><a href="index.html#solutions" style="color:var(--text);text-decoration:none">Solutions</a></li>
+          <li><a href="index.html#resources" style="color:var(--text);text-decoration:none">Resources</a></li>
+          <li><a href="index.html#about" style="color:var(--text);text-decoration:none">About</a></li>
+          <li><a href="index.html#pricing" style="color:var(--text);text-decoration:none">Pricing</a></li>
+        </ul>
+        <div style="margin-top:24px;display:flex;flex-direction:column;gap:10px">
+          <a href="login.html" style="padding:10px;border-radius:8px;text-align:center;border:1px solid rgba(255,255,255,0.03);color:var(--text);text-decoration:none">Log out</a>
+          <a href="signup.html" style="padding:10px;border-radius:8px;text-align:center;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#07101a;text-decoration:none;font-weight:700">Open Account</a>
+        </div>
       </div>
     </div>
   </header>
-  </header>
 
-  <!-- ▼ Secure Session Banner ▼ -->
-  <div class="secure-banner">
-    <svg class="lock-icon" aria-hidden="true" viewBox="0 0 24 24">
-      <path d="M12 1a5 5 0 0 0-5 5v4H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-1V6a5 5 0 0 0-5-5z"/>
-    </svg>
+  <!-- Secure banner -->
+  <div class="secure-banner container" role="status" aria-live="polite">
+    <svg class="lock-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1a5 5 0 0 0-5 5v4H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-1V6a5 5 0 0 0-5-5z" fill="currentColor"/></svg>
     <span>You’re in a secure session — data is encrypted end-to-end.</span>
   </div>
 
-  <!-- MAIN DASHBOARD -->
-  <main class="dashboard container">
+  <!-- MAIN -->
+  <main class="dashboard container" role="main">
+    <div class="grid">
+      <!-- LEFT -->
+      <section class="panel" aria-labelledby="account-overview">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap">
+          <div>
+            <div class="user-profile">
+              <img src="assets/passport1.png" alt="User Avatar" class="avatar" style="width:56px;height:56px"/>
+              <div style="margin-left:12px">
+                <p class="greeting">Hello, <strong>Hart Gijs</strong></p>
+                <p class="last-login" id="last-login">Last login: —</p>
+              </div>
+            </div>
 
-    <!-- ▼ User Info (avatar + last login) ▼ -->
-    <section class="user-info container">
-      <div class="user-profile">
-        <img src="assets/passport1.png" alt="User Avatar" class="avatar" />
-        <div>
-          <p class="greeting">Hello, <strong>Hart Gijs</strong></p>
-	<p class="last-login" id="last-login">Last login: —</p>
+            <h1 id="account-overview" class="dashboard__title">Account Overview</h1>
+
+            <div class="balances" role="list">
+              <div class="balance-card" role="listitem"><h3>Checking</h3><p class="balance-amount" id="checking-balance">$62,345.67</p></div>
+              <div class="balance-card" role="listitem"><h3>Savings</h3><p class="balance-amount" id="savings-balance">$758,910.11</p></div>
+            </div>
+
+            <div class="actions-row" role="toolbar" aria-label="Account actions">
+              <div class="action-item"><button class="action-btn" id="act-deposit" aria-label="Deposit"><img src="assets/icons/deposit.svg" class="action-icon" alt="" /></button><div class="action-label">Deposit</div></div>
+              <div class="action-item"><button class="action-btn" id="act-withdraw" aria-label="Withdraw"><img src="assets/withdraw.svg" class="action-icon" alt="Withdraw" /></button><div class="action-label">Withdraw</div></div>
+              <div class="action-item"><button class="action-btn" id="act-transfer" aria-label="Transfer"><img src="assets/transfer.png" class="action-icon" alt="Transfer" /></button><div class="action-label">Transfer</div></div>
+              <div class="action-item"><button class="action-btn" id="act-trade" aria-label="Trade"><img src="assets/icons/trade.svg" class="action-icon" alt="Trade" /></button><div class="action-label">Trade</div></div>
+            </div>
+          </div>
         </div>
-      </div>
-    </section>
 
+        <!-- Transactions -->
+        <section class="transactions-section" aria-labelledby="recent-tx">
+          <div class="section-header">
+            <h2 id="recent-tx">Recent Transactions</h2>
+            <button id="tx-toggle" class="btn-secondary" aria-expanded="false">View All</button>
+          </div>
 
-    <h1 class="dashboard__title">Account Overview</h1>
+          <div class="transactions-table-wrapper" id="tx-table-wrapper" aria-hidden="false">
+            <table class="transactions" role="table" aria-label="Recent transactions">
+              <thead><tr><th>Date</th><th>Description</th><th>Amount</th><th>Balance</th></tr></thead>
+              <tbody id="tx-tbody"><!-- injected --></tbody>
+            </table>
+          </div>
 
-    <!-- BALANCES -->
-    <section class="balances grid grid--2cols">
-      <div class="balance-card">
-        <h3>Checking</h3>
-        <p class="balance-amount">$62,345.67</p>
-      </div>
-      <div class="balance-card">
-        <h3>Savings</h3>
-        <p class="balance-amount">$758,910.11</p>
-      </div>
-    </section>
-<button class="action-btn" aria-label="Withdraw">
-  <img src="assets/withdraw.svg" alt="Withdraw" class="action-icon" />
-  <svg
-    class="action-icon"
-    viewBox="0 0 1024 1024"
-    preserveAspectRatio="xMidYMid meet"
-    fill="currentColor"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <!-- your paths… -->
-    <path d="M617.1 671.2H148.2c-46.3…"/>
-    <!-- etc -->
-  </svg>
-  <span>Withdraw</span>
-</button>
-<button class="action-btn" aria-label="Transfer">
-  <img src="assets/transfer.png" alt="Transfer" class="action-icon" />
-  <svg
-    class="action-icon"
-    viewBox="0 0 1024 1024"
-    preserveAspectRatio="xMidYMid meet"
-    fill="currentColor"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <!-- your paths… -->
-    <path d="M617.1 671.2H148.2c-46.3…"/>
-    <!-- etc -->
-  </svg>
-  <span>Transfer</span>
-</button>
+          <div class="tx-cards" id="tx-cards" aria-hidden="true"><!-- injected --></div>
+        </section>
 
-<!-- TRANSACTIONS -->
-<section class="transactions-section container">
-  <!-- Header with title + View All -->
-  <div class="section-header">
-    <h2>Recent Transactions</h2>
-    <button id="tx-toggle" class="btn-secondary">View All</button>
-  </div>
+        <!-- Settings -->
+        <section id="settings" class="settings-section">
+          <h2>Account Settings</h2>
+          <form class="settings-form" id="settings-form" novalidate>
+            <label for="email">Email</label>
+            <input id="email" type="email" placeholder="you@example.com" />
 
-  <!-- Desktop / Large Screens: Table -->
-  <div class="transactions-table-wrapper">
-    <table class="transactions">
-      <thead>
-        <tr>
-          <th>Date</th>
-          <th>Description</th>
-          <th>Amount</th>
-          <th>Balance</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Oct 4, 2025</td>
-          <td>Debit</td>
-          <td class="amount negative">−$500.00</td>
-          <td>$64,345.67</td>
-        </tr>
-        <tr>
-          <td>Sep 30, 2025</td>
-          <td>Credit</td>
-          <td class="amount positive">+$2,000.00</td>
-          <td>$62,345.67</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+            <label for="password">New Password</label>
+            <input id="password" type="password" placeholder="••••••••" />
 
-  <!-- Mobile / All Devices: Slide-Out Drawer -->
-  <aside class="transactions-drawer" aria-hidden="true">
-    <div class="drawer-container container">
-      <button class="drawer-close" aria-label="Close">&times;</button>
-      <h3 class="drawer-title">All Transactions</h3>
-      <ul class="transactions-list">
-        <li>
-          <span class="date">Sep 29, 2025</span>
-          <span class="desc">Credit</span>
-          <span class="amount negative">−$6,500.00</span>
-        </li>
-        <li>
-          <span class="date">Sep 30, 2025</span>
-          <span class="desc">Received from Stripe</span>
-          <span class="amount positive">+$2,000.00</span>
-        </li>
-        <li>
-          <span class="date">Oct 2, 2025</span>
-          <span class="desc">Transfer to ACME Inc.</span>
-          <span class="amount negative">−$500.00</span>
-        </li>
-        <li>
-          <span class="date">Oct 4, 2025</span>
-          <span class="desc">Cargo Vessel Repairs and Miscellaneous</span>
-          <span class="amount positive">+$52,000.00</span>
-        </li>
-      </ul>
+            <button type="submit" class="btn-primary">Save Changes</button>
+
+            <p class="security-note">CITI uses bank-level TLS 1.3 encryption and supports two-factor authentication.</p>
+          </form>
+        </section>
+      </section>
+
+      <!-- RIGHT -->
+      <aside class="side-column">
+        <div class="mini-panel">
+          <h4>Cards</h4>
+          <div class="card-preview" role="group" aria-label="Primary card"><div style="display:flex;justify-content:space-between"><div style="opacity:0.9">Primary</div><div style="font-weight:700">•••• 3364</div></div><div style="font-weight:700">$12,345.67</div></div>
+        </div>
+
+        <div class="mini-panel">
+          <h4>Quick actions</h4>
+          <div style="display:flex;flex-direction:column;gap:8px"><a href="#security" style="text-decoration:none;color:var(--text)">Security & Privacy</a><a href="#limits" style="text-decoration:none;color:var(--text)">Transaction limits</a><a href="#banking" style="text-decoration:none;color:var(--text)">Bank details</a></div>
+        </div>
+
+        <div class="mini-panel">
+          <h4>Two Factor Authentication</h4>
+          <div style="color:var(--muted);margin-top:8px">Protect your account with 2FA. Recommended.</div>
+          <div style="margin-top:12px;display:flex;gap:10px"><button class="btn-secondary" id="enable-2fa">Get Started</button><button class="btn-secondary" id="learn-2fa">Learn</button></div>
+        </div>
+      </aside>
     </div>
-  </aside>
-</section>
-
-    <!-- CARDS -->
-    <section class="cards-section">
-      <h2>Cards</h2>
-      <ul class="cards-list">
-        <li>
-          <div class="card-item">
-            <span class="card-name">Primary •••• 3364</span>
-            <a href="#" class="link">Manage</a>
-          </div>
-        </li>
-        <li>
-          <div class="card-item">
-            <span class="card-name">Savings •••• 5678</span>
-            <a href="#" class="link">Manage</a>
-          </div>
-        </li>
-      </ul>
-    </section>
-    <!-- ▼ Security & Support Quick-Links ▼ -->
-    <nav class="quick-links container">
-      <a href="#security" class="link">🔒 Security & Privacy</a>
-      <a href="#support"  class="link">💬 Help & Support</a>
-    </nav>
-
-    <!-- Account Settings -->
-    <section id="settings" class="settings-section">
-
-      <!-- … -->
-
-    <!-- SETTINGS -->
-    <section id="settings" class="settings-section">
-      <h2>Account Settings</h2>
-      <form class="settings-form">
-        <label for="email">Email</label>
-        <input id="email" type="email" placeholder="you@example.com" />
-
-        <label for="password">New Password</label>
-        <input id="password" type="password" placeholder="••••••••" />
-
-        <button type="submit" class="btn-primary">Save Changes</button>
-
-        <!-- ▼ Encryption & 2FA Note ▼ -->
-        <p class="security-note">
-          CITI uses bank-level TLS 1.3 encryption and supports two-factor authentication.
-        </p>
-
-      </form>
-    </section>
   </main>
 
-  <!-- NAV & DRAWER TOGGLE SCRIPT -->
-  <script>
-    // Header overlay toggle
-    const navBtn     = document.querySelector('.nav-toggle');
-    const navOverlay = document.querySelector('.menu-overlay');
-    const navClose   = document.querySelector('.overlay-close');
-    navBtn.addEventListener('click', () => {
-      navOverlay.classList.add('open');
-      navOverlay.setAttribute('aria-hidden','false');
-    });
-    navClose.addEventListener('click', () => {
-      navOverlay.classList.remove('open');
-      navOverlay.setAttribute('aria-hidden','true');
-    });
+  <!-- Drawer -->
+  <aside class="transactions-drawer" id="tx-drawer" aria-hidden="true">
+    <button class="drawer-close" id="drawer-close" aria-label="Close transactions">&times;</button>
+    <h3>All Transactions</h3>
+    <div id="drawer-list" style="margin-top:14px;display:grid;gap:10px;max-height:72vh;overflow:auto"></div>
+  </aside>
 
-    // Transactions drawer toggle
-    const txBtn    = document.getElementById('tx-toggle');
-    const drawer   = document.querySelector('.transactions-drawer');
-    const drawerX  = document.querySelector('.drawer-close');
-    txBtn.addEventListener('click', () => {
-      drawer.classList.add('open');
-      drawer.setAttribute('aria-hidden','false');
-    });
-    drawerX.addEventListener('click', () => {
-      drawer.classList.remove('open');
-      drawer.setAttribute('aria-hidden','true');
+  <!-- Footer -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="footer-inner container"><div>© <span id="year">2025</span> CITI. All rights reserved.</div><div class="footer-links"><a href="/privacy.html">Privacy</a><a href="/terms.html" style="margin-left:12px">Terms</a><a href="/support.html" style="margin-left:12px">Support</a></div></div>
+  </footer>
+
+  <!-- Scripts: preserve and merge your logic -->
+  <script>
+    // Format login time
+    function formatLoginTime(date) {
+      const opts = { month:'short', day:'numeric', year:'numeric', hour:'numeric', minute:'2-digit', hour12:true };
+      return new Intl.DateTimeFormat('en-US', opts).format(date).replace(',', '').replace(' ', ' @ ');
+    }
+
+    // Last login read/write
+    (function() {
+      const stored = localStorage.getItem('lastLogin');
+      const lastLoginDate = stored ? new Date(stored) : new Date();
+      const loginEl = document.getElementById('last-login');
+      if (loginEl) loginEl.textContent = 'Last login: ' + formatLoginTime(lastLoginDate);
+      // update stored on page load (represents "after successful login")
+      try { localStorage.setItem('lastLogin', new Date().toISOString()); } catch(e){}
+    })();
+
+    // Transactions sample (merge)
+    const transactions = [
+      { date:'Sep 28, 2025', time:'8:16 PM', desc:'Withdrawal', amount:-2900.00, currency:'USD', status:'Successful', balance:62000.00 },
+      { date:'Sep 27, 2025', time:'', desc:'—', amount:0, currency:'', status:'Pending', balance:64900.00 },
+      { date:'Oct 02, 2025', time:'10:12 AM', desc:'Transfer to ACME Inc.', amount:-500.00, currency:'USD', status:'Successful', balance:64400.00 },
+      { date:'Oct 04, 2025', time:'2:04 PM', desc:'Cargo Vessel Repairs', amount:52000.00, currency:'USD', status:'Successful', balance:116400.00 }
+    ];
+
+    function formatAmount(val){
+      if (val === 0) return '—';
+      const abs = Math.abs(val).toLocaleString(undefined, { minimumFractionDigits:2 });
+      return (val < 0 ? '−' : '+') + abs;
+    }
+
+    function renderTxTable() {
+      const tbody = document.getElementById('tx-tbody');
+      if (!tbody) return;
+      tbody.innerHTML = transactions.slice(0,3).map(tx => `
+        <tr>
+          <td>${tx.date}${tx.time ? ' • ' + tx.time : ''}</td>
+          <td>${tx.desc}</td>
+          <td class="amount ${tx.amount < 0 ? 'negative' : (tx.amount > 0 ? 'positive' : '')}">${formatAmount(tx.amount)}</td>
+          <td>$${tx.balance.toLocaleString(undefined, { minimumFractionDigits:2 })}</td>
+        </tr>
+      `).join('');
+    }
+
+    function renderTxCards() {
+      const cards = document.getElementById('tx-cards');
+      if (!cards) return;
+      cards.innerHTML = transactions.slice(0,3).map(tx => `
+        <div class="tx-card">
+          <div>
+            <div class="tx-date">${tx.date}${tx.time ? ' • ' + tx.time : ''}</div>
+            <div class="tx-desc">${tx.desc}</div>
+          </div>
+          <div style="text-align:right">
+            <div class="tx-amount ${tx.amount<0?'negative':'positive'}">${formatAmount(tx.amount)}</div>
+            <div class="tx-status" style="font-size:0.78rem;color:var(--muted)">${tx.status}</div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderDrawerList() {
+      const container = document.getElementById('drawer-list');
+      if (!container) return;
+      container.innerHTML = transactions.map(tx => `
+        <div class="tx-card" style="display:flex;justify-content:space-between;align-items:center;padding:12px;border-radius:10px;background:rgba(255,255,255,0.01);border:1px solid rgba(255,255,255,0.02)">
+          <div>
+            <div style="font-size:0.94rem;color:var(--muted)">${tx.date}${tx.time ? ' • ' + tx.time : ''}</div>
+            <div style="font-weight:600">${tx.desc}</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-weight:700" class="${tx.amount<0? 'negative':'positive'}">${formatAmount(tx.amount)}</div>
+            <div style="font-size:0.78rem;color:var(--muted)">${tx.status}</div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // year in footer
+      document.getElementById('year').textContent = new Date().getFullYear();
+
+      // render txs
+      renderTxTable();
+      renderTxCards();
+      renderDrawerList();
+
+      // Drawer toggle
+      const txBtn = document.getElementById('tx-toggle');
+      const drawer = document.getElementById('tx-drawer');
+      const drawerX = document.getElementById('drawer-close');
+      if (txBtn && drawer) {
+        txBtn.addEventListener('click', () => {
+          const open = drawer.classList.toggle('open');
+          txBtn.setAttribute('aria-expanded', String(open));
+          drawer.setAttribute('aria-hidden', String(!open));
+        });
+      }
+      if (drawerX) drawerX.addEventListener('click', () => { drawer.classList.remove('open'); drawer.setAttribute('aria-hidden','true'); document.getElementById('tx-toggle').setAttribute('aria-expanded','false'); });
+
+      // Header overlay
+      const navBtn = document.getElementById('nav-toggle');
+      const menuOverlay = document.getElementById('menu-overlay');
+      const overlayClose = document.getElementById('overlay-close');
+      const overlayBackdrop = document.getElementById('overlay-backdrop');
+      if (navBtn && menuOverlay) {
+        navBtn.addEventListener('click', () => { menuOverlay.style.display = 'block'; menuOverlay.setAttribute('aria-hidden','false'); });
+      }
+      if (overlayClose) overlayClose.addEventListener('click', () => { menuOverlay.style.display = 'none'; menuOverlay.setAttribute('aria-hidden','true'); });
+      if (overlayBackdrop) overlayBackdrop.addEventListener('click', () => { menuOverlay.style.display = 'none'; menuOverlay.setAttribute('aria-hidden','true'); });
+
+      // Settings form submit (basic)
+      const settingsForm = document.getElementById('settings-form');
+      if (settingsForm) {
+        settingsForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const email = settingsForm.querySelector('#email').value;
+          // perform validation / API call here
+          alert('Settings saved for ' + (email || 'your account'));
+        });
+      }
+
+      // Action buttons (wire to flows)
+      const map = { 'act-deposit':'/deposit.html', 'act-withdraw':'/withdraw.html', 'act-transfer':'/transfer.html', 'act-trade':'/trade.html' };
+      Object.keys(map).forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('click', () => { window.location.href = map[id]; });
+      });
+
+      // 2FA enable
+      const enable2fa = document.getElementById('enable-2fa');
+      if (enable2fa) enable2fa.addEventListener('click', () => { alert('Begin 2FA setup flow'); });
+
+      // Responsive tx presentation
+      function syncTxPresentation(){
+        const small = window.matchMedia('(max-width:1100px)').matches;
+        document.getElementById('tx-table-wrapper').style.display = small ? 'none' : 'block';
+        document.getElementById('tx-cards').style.display = small ? 'block' : 'none';
+      }
+      window.addEventListener('resize', syncTxPresentation);
+      syncTxPresentation();
     });
   </script>
-<script>
-  // Format a Date object as "Mon D, YYYY @ hh:mm AM/PM"
-  function formatLoginTime(date) {
-    const opts = {
-      month:  'short',
-      day:    'numeric',
-      year:   'numeric',
-      hour:   'numeric',
-      minute: '2-digit',
-      hour12: true
-    };
-    return new Intl.DateTimeFormat('en-US', opts).format(date)
-               .replace(',', '')   // remove extra comma
-               .replace(' ', ' @ ');
-  }
-
-  // Example: retrieve last-login timestamp from wherever you store it
-  // In a real app, this could come from your backend or localStorage
-  const stored = localStorage.getItem('lastLogin'); 
-  const lastLoginDate = stored 
-    ? new Date(stored) 
-    : new Date();  // fallback to now
-
-  // Inject into the DOM
-  const loginEl = document.getElementById('last-login');
-  loginEl.textContent = `Last login: ${formatLoginTime(lastLoginDate)}`;
-// After successful login:
-const now = new Date().toISOString();
-localStorage.setItem('lastLogin', now);
-
-</script>
-<script>
-  // Sample data; replace with real API or storage after login
-  const transactions = [
-    {
-      date: 'Sep 28, 2025',
-      time: '8:16 PM',
-      desc: 'Withdrawal',
-      amount: -2900.00,
-      currency: 'USD',
-      status: 'Successful'
-    },
-    {
-      date: 'Sep 27, 2025',
-      time: '',
-      desc: '—',
-      amount: 0,
-      currency: '',
-      status: 'Pending'
-    }
-    // …add more items here…
-  ];
-
-  // Format amount with two decimals + sign
-  function formatAmount(val) {
-    const abs = Math.abs(val).toLocaleString(undefined, { minimumFractionDigits: 2 });
-    return (val < 0 ? '−' : '+') + abs;
-  }
-
-  // Render list into any .tx-list container
-  function renderTxList(container) {
-    container.innerHTML = transactions.map(tx => `
-      <li class="tx-card">
-        <div class="tx-info">
-          <span class="tx-date">${tx.date}</span>
-          ${tx.time ? `<span class="tx-time">${tx.time}</span>` : ''}
-          <span class="tx-desc">${tx.desc}</span>
-        </div>
-        <div class="tx-details">
-          <span class="tx-amount ${tx.amount < 0 ? 'negative' : 'positive'}">
-            ${formatAmount(tx.amount)}
-          </span>
-          <span class="tx-currency">${tx.currency}</span>
-          <span class="tx-status">${tx.status}</span>
-        </div>
-      </li>
-    `).join('');
-  }
-
-  document.addEventListener('DOMContentLoaded', () => {
-    // Populate both the inline list and drawer list
-    document.querySelectorAll('.tx-list').forEach(renderTxList);
-
-    // Drawer toggle logic
-    const btn    = document.getElementById('tx-toggle');
-    const drawer = document.querySelector('.transactions-drawer');
-    const close  = document.querySelector('.drawer-close');
-
-    btn.addEventListener('click', () => {
-      drawer.classList.add('open');
-      drawer.setAttribute('aria-hidden','false');
-    });
-    close.addEventListener('click', () => {
-      drawer.classList.remove('open');
-      drawer.setAttribute('aria-hidden','true');
-    });
-    drawer.addEventListener('click', e => {
-      if (e.target === drawer) {
-        drawer.classList.remove('open');
-        drawer.setAttribute('aria-hidden','true');
-      }
-    });
-  });
-</script>
-
 </body>
 </html>
-
