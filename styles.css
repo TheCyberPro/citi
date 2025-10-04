@@ -1205,3 +1205,41 @@ body {
   height: 20px;
 }
 
+.dashboard-actions .actions-grid {
+  display: flex;
+  justify-content: space-around;
+  margin: 2rem 0;
+}
+
+.action-btn {
+  background: var(--primary);
+  border: none;
+  border-radius: 50%;
+  width: 56px;
+  height: 56px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.action-btn:hover {
+  opacity: 0.85;
+}
+
+.action-icon {
+  width: 24px;
+  height: 24px;
+  fill: var(--on-primary);
+}
+
+.action-btn + span {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text);
+  text-align: center;
+}
