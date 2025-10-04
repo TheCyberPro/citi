@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>CITI — Withdraw</title>
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+<style>
+:root{
+  --bg:#0b1220; --panel:#07101a; --card:#0f1724;
+  --muted:#98A0AD; --text:#E9F2FF; --accent:#9C7CFF; --accent-2:#00D4FF;
+  --success:#7CFFCC; --danger:#FF7A7A;
+  --radius:12px; --container:1180px; --gap:16px;
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  background:
+    radial-gradient(600px 380px at 10% 10%, rgba(156,124,255,0.06), transparent 6%),
+    radial-gradient(500px 300px at 90% 85%, rgba(0,212,255,0.03), transparent 8%),
+    var(--bg);
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  line-height:1.45;
+  letter-spacing:-0.01em;
+  padding-bottom:100px;
+}
+.container{max-width:var(--container);margin:0 auto;padding:0 20px}
+
+/* Header */
+header.site-header{position:sticky;top:0;z-index:1200;padding-top:8px}
+.header-top{display:flex;align-items:center;justify-content:space-between;padding:10px 0;background:linear-gradient(180deg, rgba(6,10,18,0.6), rgba(6,10,18,0.45));border-bottom:1px solid rgba(255,255,255,0.02);backdrop-filter:blur(6px)}
+.nav-toggle{width:44px;height:44px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);display:grid;place-items:center;background:transparent;cursor:pointer}
+.nav-toggle span{display:block;width:18px;height:2px;background:var(--muted);border-radius:2px}
+.header-right .logo img{height:36px}
+.header-sub{display:flex;align-items:center;padding:10px 0}
+.secure-line{font-size:0.95rem;color:var(--muted)}
+.member-line{font-size:0.88rem;color:var(--muted)}
+
+/* Overlay */
+.menu-overlay{display:none;position:fixed;inset:0;z-index:1500}
+.overlay-panel{position:relative;max-width:360px;height:100%;right:0;background:var(--card);padding:18px;border-left:1px solid rgba(255,255,255,0.02)}
+
+/* Secure banner */
+.secure-banner{margin:16px auto;display:flex;align-items:center;gap:12px;padding:10px 20px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);border:1px solid rgba(255,255,255,0.02);color:var(--muted);font-size:0.95rem}
+
+/* Layout */
+main{padding:26px 0}
+.grid{display:grid;grid-template-columns:1fr 360px;gap:20px;align-items:start}
+.panel{padding:20px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);border:1px solid rgba(255,255,255,0.03);box-shadow:0 18px 50px rgba(2,6,23,0.6)}
+h1{margin:0 0 12px 0;font-size:1.35rem}
+.muted{color:var(--muted)}
+
+/* Form */
+.form-group{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
+label{font-weight:600}
+input[type="text"], input[type="number"], select, textarea { padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--text); }
+.inline-row{display:flex;gap:12px}
+.btn-primary{background:linear-gradient(90deg,var(--accent),var(--accent-2));border:none;color:#07101a;padding:12px 16px;border-radius:10px;cursor:pointer;font-weight:700}
+.btn-ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);padding:10px 12px;border-radius:10px;color:var(--text);cursor:pointer}
+.preview{margin-top:12px;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.02);background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent)}
+.preview-row{display:flex;justify-content:space-between;gap:8px;padding:6px 0}
+
+/* Right column */
+.side-card{padding:14px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);border:1px solid rgba(255,255,255,0.03)}
+.quick-list{display:flex;flex-direction:column;gap:8px}
+
+/* Modal */
+.modal-backdrop{position:fixed;inset:0;background:rgba(2,6,23,0.6);display:none;align-items:center;justify-content:center;z-index:2200}
+.modal{background:var(--card);padding:18px;border-radius:12px;width:520px;max-width:94%;border:1px solid rgba(255,255,255,0.03)}
+.modal.open{display:block}
+
+/* Responsive */
+@media (max-width:1000px){ .grid{grid-template-columns:1fr} }
+@media (max-width:720px){ .inline-row{flex-direction:column} .btn-primary{width:100%} }
+button:focus, a:focus{outline:2px solid rgba(156,124,255,0.14);outline-offset:2px}
+</style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="site-header" role="banner">
+    <div class="container header-top">
+      <button id="nav-toggle" class="nav-toggle" aria-label="Open menu"><span aria-hidden="true"></span></button>
+      <div class="header-right"><a class="logo" href="dashboard.html" aria-label="CITI Home"><img src="assets/citi_logo.png" alt="CITI Logo" /></a></div>
+    </div>
+
+    <div class="container header-sub">
+      <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1a5 5 0 0 0-5 5v4H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-1V6a5 5 0 0 0-5-5z" fill="currentColor"/></svg>
+      <div style="margin-left:10px"><div class="secure-line">Secure session — data encrypted end-to-end</div><div class="member-line"><strong id="member-name-top">Hart Gijs</strong> · Member since 2024</div></div>
+    </div>
+
+    <!-- overlay -->
+    <div class="menu-overlay" id="menu-overlay" aria-hidden="true">
+      <div id="overlay-backdrop" style="position:absolute;inset:0;background:rgba(2,6,23,0.6)"></div>
+      <div class="overlay-panel" role="dialog" aria-modal="true">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+          <a href="dashboard.html"><img src="assets/citi_logo.png" alt="CITI Logo" style="height:28px"/></a>
+          <button id="overlay-close" class="overlay-close" aria-label="Close" style="background:none;border:none;color:var(--muted);font-size:22px">&times;</button>
+        </div>
+        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:12px">
+          <li><a href="dashboard.html#products" style="color:var(--text);text-decoration:none">Products</a></li>
+          <li><a href="dashboard.html#solutions" style="color:var(--text);text-decoration:none">Solutions</a></li>
+          <li><a href="dashboard.html#resources" style="color:var(--text);text-decoration:none">Resources</a></li>
+          <li><a href="dashboard.html#about" style="color:var(--text);text-decoration:none">About</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+  <!-- secure banner -->
+  <div class="secure-banner container" role="status" aria-live="polite">
+    <svg class="lock-icon" viewBox="0 0 24 24" aria-hidden="true" width="18" height="18"><path d="M12 1a5 5 0 0 0-5 5v4H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-1V6a5 5 0 0 0-5-5z" fill="currentColor"/></svg>
+    <span>You’re in a secure session — data is encrypted end-to-end.</span>
+  </div>
+
+  <main class="container">
+    <div class="grid">
+      <section class="panel" aria-labelledby="withdraw-title">
+        <h1 id="withdraw-title">Withdraw funds</h1>
+
+        <form id="withdraw-form" class="withdraw-form" novalidate>
+          <div class="form-group">
+            <label for="from-account">From</label>
+            <select id="from-account" required>
+              <option value="checking">Checking •••• 3364 — $62,345.67</option>
+              <option value="savings">Savings •••• 5678 — $758,910.11</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="to-method">Method</label>
+            <select id="to-method" required>
+              <option value="atm">ATM cash withdrawal</option>
+              <option value="external">External bank transfer</option>
+              <option value="cashier">Cashier's check</option>
+            </select>
+            <div class="muted" style="font-size:0.9rem;margin-top:6px">Choose withdrawal method. External transfers may take 1–3 business days.</div>
+          </div>
+
+          <div class="inline-row">
+            <div style="flex:1" class="form-group">
+              <label for="amount">Amount</label>
+              <input id="amount" name="amount" type="number" step="0.01" min="0.01" placeholder="0.00" required />
+            </div>
+            <div style="width:220px" class="form-group">
+              <label for="currency">Currency</label>
+              <select id="currency"><option value="USD">USD</option><option value="EUR">EUR</option></select>
+            </div>
+          </div>
+
+          <div class="form-group" id="external-acc-group" style="display:none">
+            <label for="external-account">External account (for bank transfer)</label>
+            <input id="external-account" type="text" placeholder="Account number or IBAN" />
+          </div>
+
+          <div class="preview" aria-live="polite">
+            <div class="preview-row"><div class="muted">From</div><div id="preview-from">Checking •••• 3364</div></div>
+            <div class="preview-row"><div class="muted">Method</div><div id="preview-method">ATM cash withdrawal</div></div>
+            <div class="preview-row"><div class="muted">Amount</div><div id="preview-amount">—</div></div>
+            <div class="preview-row"><div class="muted">Currency</div><div id="preview-currency">USD</div></div>
+          </div>
+
+          <div style="margin-top:14px;display:flex;gap:10px;align-items:center">
+            <button class="btn-primary" id="withdraw-submit" type="submit">Continue</button>
+            <button class="btn-ghost" id="withdraw-cancel" type="button">Cancel</button>
+          </div>
+        </form>
+      </section>
+
+      <aside>
+        <div class="side-card panel">
+          <h4>Quick withdraw</h4>
+          <div class="quick-list">
+            <button class="btn-ghost" data-method="atm">ATM cash — $200</button>
+            <button class="btn-ghost" data-method="external">Transfer to external account</button>
+          </div>
+        </div>
+
+        <div class="side-card panel" style="margin-top:12px">
+          <h4>Safety tips</h4>
+          <ul style="margin:8px 0 0 16px">
+            <li class="muted">Confirm withdrawal limits and fees before proceeding</li>
+            <li class="muted">For external transfers, verify account details carefully</li>
+            <li class="muted">Never share your password or OTPs</li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <!-- Confirmation modal -->
+  <div class="modal-backdrop" id="confirm-backdrop" role="dialog" aria-hidden="true">
+    <div class="modal" role="document" aria-labelledby="confirm-title">
+      <h3 id="confirm-title">Confirm withdrawal</h3>
+      <div style="margin-top:10px">
+        <div class="preview-row"><div class="muted">From</div><div id="confirm-from">—</div></div>
+        <div class="preview-row"><div class="muted">Method</div><div id="confirm-method">—</div></div>
+        <div class="preview-row"><div class="muted">Amount</div><div id="confirm-amount">—</div></div>
+        <div class="preview-row" id="confirm-external-row" style="display:none"><div class="muted">External account</div><div id="confirm-external">—</div></div>
+      </div>
+
+      <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:14px">
+        <button class="btn-ghost" id="confirm-cancel" type="button">Cancel</button>
+        <button class="btn-primary" id="confirm-send" type="button">Confirm withdrawal</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer-adv" role="contentinfo" style="margin-top:32px">
+    <div class="footer-inner">
+      <div class="trust-row">
+        <div class="trust-badge" aria-hidden="true">🔷</div>
+        <div class="footer-meta">
+          <div class="footer-brand">© <span id="footer-year">2025</span> CITI</div>
+          <div class="footer-sub muted">Bank‑grade TLS 1.3 · Two‑Factor Authentication available</div>
+        </div>
+      </div>
+      <nav class="footer-links" aria-label="Footer">
+        <a href="/privacy.html">Privacy</a>
+        <a href="/terms.html" style="margin-left:16px">Terms</a>
+        <a href="/support.html" style="margin-left:16px">Support</a>
+      </nav>
+    </div>
+  </footer>
+
+<script>
+/* Withdraw page script — consistent with dashboard/transfer helpers */
+
+/* Format helpers */
+function fmtAmount(val){
+  if (val === 0) return '—';
+  const abs = Math.abs(val).toLocaleString(undefined,{minimumFractionDigits:2});
+  return (val < 0 ? '−' : '+') + abs;
+}
+function formatLoginTimeISO(date){
+  const opts = { month:'short', day:'numeric', year:'numeric', hour:'numeric', minute:'2-digit', hour12:true };
+  return new Intl.DateTimeFormat('en-US', opts).format(date).replace(',', '').replace(' ', ' @ ');
+}
+
+/* Init */
+document.addEventListener('DOMContentLoaded', () => {
+  // footer year
+  const fy = document.getElementById('footer-year');
+  if (fy) fy.textContent = new Date().getFullYear();
+
+  // last-login persist (same key used elsewhere)
+  (function(){
+    const key = 'lastLogin';
+    const stored = localStorage.getItem(key);
+    const now = new Date();
+    let dateObj = stored ? new Date(stored) : now;
+    if (isNaN(dateObj.getTime())) dateObj = now;
+    try { localStorage.setItem(key, new Date().toISOString()); } catch(e){}
+  })();
+
+  // overlay wiring (shared)
+  const navBtn = document.getElementById('nav-toggle');
+  const menuOverlay = document.getElementById('menu-overlay');
+  const overlayClose = document.getElementById('overlay-close');
+  const overlayBackdrop = document.getElementById('overlay-backdrop');
+  if (navBtn && menuOverlay) {
+    navBtn.addEventListener('click', () => { menuOverlay.style.display = 'block'; menuOverlay.setAttribute('aria-hidden','false'); });
+  }
+  if (overlayClose) overlayClose.addEventListener('click', () => { menuOverlay.style.display = 'none'; menuOverlay.setAttribute('aria-hidden','true'); });
+  if (overlayBackdrop) overlayBackdrop.addEventListener('click', () => { menuOverlay.style.display = 'none'; menuOverlay.setAttribute('aria-hidden','true'); });
+
+  // Elements
+  const form = document.getElementById('withdraw-form');
+  const fromEl = document.getElementById('from-account');
+  const methodEl = document.getElementById('to-method');
+  const amountEl = document.getElementById('amount');
+  const currencyEl = document.getElementById('currency');
+  const externalAcc = document.getElementById('external-account');
+
+  const pFrom = document.getElementById('preview-from');
+  const pMethod = document.getElementById('preview-method');
+  const pAmount = document.getElementById('preview-amount');
+  const pCurrency = document.getElementById('preview-currency');
+
+  // Confirm modal
+  const confirmBackdrop = document.getElementById('confirm-backdrop');
+  const confirmFrom = document.getElementById('confirm-from');
+  const confirmMethod = document.getElementById('confirm-method');
+  const confirmAmount = document.getElementById('confirm-amount');
+  const confirmExternalRow = document.getElementById('confirm-external-row');
+  const confirmExternal = document.getElementById('confirm-external');
+  const confirmCancel = document.getElementById('confirm-cancel');
+  const confirmSend = document.getElementById('confirm-send');
+
+  // Quick list actions for method shortcuts
+  document.querySelectorAll('.quick-list button[data-method]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const m = btn.getAttribute('data-method');
+      if (m && methodEl) {
+        methodEl.value = m === 'atm' ? 'atm' : (m === 'external' ? 'external' : 'cashier');
+        updatePreview();
+        if (m === 'atm') amountEl.value = '200';
+      }
+    });
+  });
+
+  // Show/hide external account input based on method
+  function updateExternalField(){
+    const extGroup = document.getElementById('external-acc-group');
+    if (!extGroup) return;
+    if (methodEl.value === 'external') extGroup.style.display = 'block';
+    else extGroup.style.display = 'none';
+  }
+
+  // preview updater
+  function updatePreview(){
+    pFrom.textContent = fromEl.options[fromEl.selectedIndex]?.text || '—';
+    pMethod.textContent = methodEl.options[methodEl.selectedIndex]?.text || '—';
+    const amt = parseFloat(amountEl.value || '0');
+    pAmount.textContent = amt ? ('$' + amt.toLocaleString(undefined,{minimumFractionDigits:2})) : '—';
+    pCurrency.textContent = currencyEl.value || 'USD';
+    updateExternalField();
+  }
+
+  // validation
+  function validate(){
+    const recipientMethod = methodEl.value;
+    const amt = parseFloat(amountEl.value || '0');
+    if (!amt || amt <= 0) return { ok:false, msg:'Enter a valid amount' };
+    if (recipientMethod === 'external' && (!externalAcc.value || !externalAcc.value.trim())) return { ok:false, msg:'Enter external account details' };
+    return { ok:true };
+  }
+
+  // modal open/close
+  function openConfirm(){
+    confirmFrom.textContent = pFrom.textContent;
+    confirmMethod.textContent = pMethod.textContent;
+    confirmAmount.textContent = pAmount.textContent + ' ' + pCurrency.textContent;
+    if (methodEl.value === 'external') {
+      confirmExternalRow.style.display = 'flex';
+      confirmExternal.textContent = externalAcc.value.trim() || '—';
+    } else {
+      confirmExternalRow.style.display = 'none';
+    }
+    confirmBackdrop.style.display = 'flex';
+    confirmBackdrop.setAttribute('aria-hidden','false');
+    confirmSend.focus();
+  }
+  function closeConfirm(){
+    confirmBackdrop.style.display = 'none';
+    confirmBackdrop.setAttribute('aria-hidden','true');
+  }
+
+  // event wiring
+  [fromEl, methodEl, amountEl, currencyEl, externalAcc].forEach(el => el?.addEventListener && el.addEventListener('input', updatePreview));
+  updatePreview();
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const ok = validate();
+    if (!ok.ok) { alert(ok.msg); return; }
+    openConfirm();
+  });
+
+  document.getElementById('withdraw-cancel')?.addEventListener('click', () => { window.location.href = 'dashboard.html'; });
+
+  confirmCancel?.addEventListener('click', () => { closeConfirm(); });
+  confirmBackdrop?.addEventListener('click', (ev) => { if (ev.target === confirmBackdrop) closeConfirm(); });
+
+  confirmSend?.addEventListener('click', () => {
+    confirmSend.disabled = true;
+    confirmSend.textContent = 'Processing…';
+    setTimeout(() => {
+      confirmSend.disabled = false;
+      confirmSend.textContent = 'Confirm withdrawal';
+      closeConfirm();
+      alert('Withdrawal submitted');
+      window.location.href = 'dashboard.html';
+    }, 900);
+  });
+
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeConfirm(); });
+
+});
+</script>
+</body>
+</html>
+
