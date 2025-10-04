@@ -295,53 +295,7 @@
   margin: 0 auto;
 }
 
-/* artwork fills the card */
-.cg-art {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  -webkit-user-drag: none;
-  user-select: none;
-}
 
-/* overlay for dynamic text (last4 + name) */
-.cg-overlay {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  padding: clamp(10px, 2.2vw, 22px);
-  gap: clamp(6px, 1.2vw, 10px);
-}
-
-/* last 4 digits (top-right feel) */
-.cg-last {
-  align-self: flex-end;
-  background: rgba(255,255,255,0.06);
-  padding: .25em .5em;
-  border-radius: 6px;
-  font-weight:700;
-  color: #fff;
-  font-size: clamp(11px, 1.8vw, 14px);
-  letter-spacing: 1.2px;
-  backdrop-filter: blur(4px);
-}
-
-/* cardholder name (bottom-left) */
-.cg-name {
-  font-weight:700;
-  color:#fff;
-  font-size: clamp(12px, 2.0vw, 16px);
-  letter-spacing: 0.8px;
-  text-transform: uppercase;
-  mix-blend-mode: screen;
-}
-
-/* ensure good hit area elsewhere and maintain layout */
-.cg-card img[alt="Card artwork"] { display:block; }
 
   </style>
 </head>
@@ -660,6 +614,58 @@
       });
     }
   </script>
+<script>
+/* Robust action wiring for act-withdraw and act-transfer */
+(function(){
+  function safeNavigate(url){
+    try { location.assign(url); }
+    catch(e){ location.href = url; }
+  }
+
+  function attachAction(id, url){
+    const el = document.getElementById(id);
+    if (!el) {
+      console.warn('[Action Wiring] Element not found:', id);
+      return;
+    }
+
+    // Replace element with a clean clone to remove any stale inline listeners without changing attributes
+    const clone = el.cloneNode(true);
+    el.parentNode.replaceChild(clone, el);
+
+    // Add a single, reliable click listener
+    clone.addEventListener('click', function(evt){
+      try {
+        // prevent accidental form submit or other default behavior
+        if (evt && typeof evt.preventDefault === 'function') evt.preventDefault();
+        // small visual feedback
+        clone.disabled = true;
+        setTimeout(()=> clone.disabled = false, 600);
+        console.info(`[Action Wiring] ${id} clicked — navigating to ${url}`);
+        safeNavigate(url);
+      } catch(err){
+        console.error('[Action Wiring] Error on click for', id, err);
+      }
+    }, {passive:false});
+  }
+
+  function ensureAttached(){
+    attachAction('act-withdraw', '/withdraw.html');
+    attachAction('act-transfer', '/transfer.html');
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', ensureAttached);
+  } else {
+    ensureAttached();
+  }
+
+  // If your app replaces DOM later (client router), keep a fallback: retry attach once after a short delay
+  setTimeout(ensureAttached, 1200);
+
+  console.log('Action wiring helper loaded; withdraw/transfer listeners attached or scheduled.');
+})();
+</script>
 
   <script>
     // App initialization and wiring
