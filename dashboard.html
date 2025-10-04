@@ -999,5 +999,247 @@
 })();
 </script>
 
+
+  <script>
+    // ---- Data (sample or your real data) ----
+    // Preserve your transactions array if present; else fall back to this sample
+    window.transactions = window.transactions && Array.isArray(window.transactions) ? window.transactions : [
+      { date:'Oct 4, 2025', time:'11:44 PM', desc:'Debit', amount:-500.00, balance:64345.67, status:'Successful' },
+      { date:'Sep 30, 2025', time:'09:12 AM', desc:'Credit', amount:2000.00, balance:62345.67, status:'Successful' },
+      { date:'Oct 2, 2025', time:'10:12 AM', desc:'Transfer to ACME Inc.', amount:-500.00, balance:61845.67, status:'Successful' },
+      { date:'Sep 29, 2025', time:'08:16 PM', desc:'Withdrawal', amount:-2900.00, balance:62345.67, status:'Successful' },
+    ];
+
+    // ---- Helpers ----
+    function fmtAmount(v){
+      if (v === 0) return '—';
+      const abs = Math.abs(v).toLocaleString(undefined,{minimumFractionDigits:2});
+      return (v < 0 ? '−' : '+') + abs;
+    }
+
+    function formatLoginTimeISO(date){
+      const opts = { month:'short', day:'numeric', year:'numeric', hour:'numeric', minute:'2-digit', hour12:true };
+      return new Intl.DateTimeFormat('en-US', opts).format(date).replace(',', '').replace(' ', ' @ ');
+    }
+
+    // ---- Render transactions (table, cards, drawer) ----
+    function renderRecentTransactions(){
+      const list = Array.isArray(window.transactions) ? window.transactions : [];
+      const tbody = document.getElementById('tx-tbody');
+      if(!tbody) return;
+      tbody.innerHTML = list.slice(0,3).map(tx => `
+        <tr>
+          <td>${tx.date}${tx.time ? ' • ' + tx.time : ''}</td>
+          <td>${tx.desc}</td>
+          <td class="amount ${tx.amount < 0 ? 'negative' : 'positive'} text-right">${fmtAmount(tx.amount)}</td>
+          <td class="text-right">$${(tx.balance || 0).toLocaleString(undefined,{minimumFractionDigits:2})}</td>
+        </tr>
+      `).join('');
+      // mobile cards
+      const cards = document.getElementById('tx-cards');
+      if(cards){
+        cards.innerHTML = list.slice(0,6).map(tx => `
+          <div class="tx-card" role="article">
+            <div>
+              <div class="tx-date">${tx.date}${tx.time ? ' • ' + tx.time : ''}</div>
+              <div class="tx-desc">${tx.desc}</div>
+            </div>
+            <div style="text-align:right">
+              <div class="tx-amount ${tx.amount<0?'negative':'positive'}">${fmtAmount(tx.amount)}</div>
+              <div class="tx-balance" style="font-size:.8rem;color:var(--muted)">${tx.balance ? '$' + tx.balance.toLocaleString(undefined,{minimumFractionDigits:2}) : ''}</div>
+            </div>
+          </div>
+        `).join('');
+      }
+    }
+
+    // ---- Drawer: filtering, pagination, export ----
+    (function(){
+      let page = 1, pageSize = 8, filtered = [];
+      const btnViewAll = document.getElementById('tx-toggle');
+      const drawer = document.getElementById('tx-drawer');
+      const drawerBackdrop = document.getElementById('tx-backdrop');
+      const drawerClose = document.getElementById('drawer-close');
+      const drawerTbody = document.getElementById('drawer-tbody');
+      const txSearch = document.getElementById('tx-search');
+      const txClear = document.getElementById('tx-clear-search');
+      const filterType = document.getElementById('tx-filter-type');
+      const dateFrom = document.getElementById('tx-date-from');
+      const dateTo = document.getElementById('tx-date-to');
+      const exportBtn = document.getElementById('tx-export');
+
+      function src(){
+        return Array.isArray(window.transactions) ? window.transactions.slice() : [];
+      }
+
+      function applyFilters(list){
+        const q = (txSearch?.value || '').trim().toLowerCase();
+        const type = filterType?.value || 'all';
+        const from = dateFrom?.value ? new Date(dateFrom.value) : null;
+        const to = dateTo?.value ? new Date(dateTo.value) : null;
+
+        return list.filter(item => {
+          if (type !== 'all') {
+            if (type === 'credit' && item.amount < 0) return false;
+            if (type === 'debit' && item.amount > 0) return false;
+            if (type === 'pending' && !(item.status && item.status.toLowerCase().includes('pending'))) return false;
+          }
+          if (from || to) {
+            const parsed = new Date(item.date);
+            if (from && parsed < from) return false;
+            if (to && parsed > new Date(to.getTime() + 86400000)) return false;
+          }
+          if (!q) return true;
+          return [item.date, item.desc, String(item.amount), item.balance, item.status].join(' ').toLowerCase().includes(q);
+        });
+      }
+
+      function renderDrawerPage(){
+        const list = filtered;
+        const pages = Math.max(1, Math.ceil(list.length/pageSize));
+        if (page > pages) page = pages;
+        const start = (page-1)*pageSize;
+        const slice = list.slice(start, start+pageSize);
+        document.getElementById('tx-page').textContent = page;
+        document.getElementById('tx-pages').textContent = pages;
+        document.getElementById('tx-count').textContent = list.length;
+        if(!drawerTbody) return;
+        drawerTbody.innerHTML = slice.map(tx => `
+          <tr>
+            <td>${tx.date}${tx.time ? ' • ' + tx.time : ''}</td>
+            <td>${tx.desc}</td>
+            <td class="text-right ${tx.amount < 0 ? 'amount negative' : 'amount positive'}">${fmtAmount(tx.amount)}</td>
+            <td class="text-right">${tx.balance ? '$' + tx.balance.toLocaleString(undefined,{minimumFractionDigits:2}) : ''}</td>
+          </tr>
+        `).join('') || '<tr><td colspan="4" style="padding:18px;color:var(--muted)">No transactions found</td></tr>';
+      }
+
+      function refreshFiltered(){
+        filtered = applyFilters(src());
+        page = 1;
+        renderDrawerPage();
+      }
+
+      function openDrawer(){
+        refreshFiltered();
+        drawer.classList.add('open');
+        drawer.setAttribute('aria-hidden','false');
+        document.body.style.overflow = 'hidden';
+        setTimeout(()=> txSearch?.focus(), 120);
+        btnViewAll?.setAttribute('aria-expanded','true');
+      }
+      function closeDrawer(){
+        drawer.classList.remove('open');
+        drawer.setAttribute('aria-hidden','true');
+        document.body.style.overflow = '';
+        btnViewAll?.setAttribute('aria-expanded','false');
+        btnViewAll?.focus();
+      }
+
+      btnViewAll?.addEventListener('click', ()=> drawer.classList.contains('open') ? closeDrawer() : openDrawer());
+      drawerClose?.addEventListener('click', closeDrawer);
+      drawerBackdrop?.addEventListener('click', closeDrawer);
+      document.addEventListener('keydown', e => { if (e.key === 'Escape' && drawer?.classList.contains('open')) closeDrawer(); });
+
+      // debounce helper
+      let tId;
+      function debounce(fn,ms=220){ return (...a)=>{ clearTimeout(tId); tId = setTimeout(()=>fn(...a), ms); }; }
+
+      txSearch?.addEventListener('input', debounce(()=> refreshFiltered()));
+      txClear?.addEventListener('click', ()=>{ if(txSearch){ txSearch.value=''; refreshFiltered(); txSearch.focus(); }});
+      filterType?.addEventListener('change', debounce(()=> refreshFiltered()));
+      dateFrom?.addEventListener('change', debounce(()=> refreshFiltered()));
+      dateTo?.addEventListener('change', debounce(()=> refreshFiltered()));
+
+      document.getElementById('tx-prev')?.addEventListener('click', ()=>{ if(page>1){ page--; renderDrawerPage(); }});
+      document.getElementById('tx-next')?.addEventListener('click', ()=>{ const pages = Math.max(1, Math.ceil(filtered.length/pageSize)); if(page<pages){ page++; renderDrawerPage(); }});
+
+      exportBtn?.addEventListener('click', ()=>{
+        const rows = filtered.map(tx => [tx.date, tx.time||'', tx.desc, tx.amount, tx.balance||'']);
+        const csv = [['Date','Time','Description','Amount','Balance'], ...rows].map(r => r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+        const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a'); a.href = url; a.download = `transactions_${new Date().toISOString().slice(0,10)}.csv`; document.body.appendChild(a); a.click();
+        setTimeout(()=>{ URL.revokeObjectURL(url); a.remove(); }, 400);
+      });
+
+      // export refreshFiltered function if needed externally:
+      window.refreshTxDrawer = refreshFiltered;
+    })();
+
+    // ---- Last login: read/write + format (fixes real-time display) ----
+    (function(){
+      const key = 'lastLogin';
+      const stored = localStorage.getItem(key);
+      const lastLoginEl = document.getElementById('last-login');
+      const now = new Date();
+      let dateObj;
+      if (stored) {
+        const parsed = new Date(stored);
+        dateObj = isNaN(parsed.getTime()) ? now : parsed;
+      } else {
+        dateObj = now;
+      }
+      if (lastLoginEl) lastLoginEl.textContent = 'Last login: ' + formatLoginTimeISO(dateObj);
+      try { localStorage.setItem(key, new Date().toISOString()); } catch(e){}
+    })();
+
+    // ---- Utilities toggle for mobile (keeps all content but collapses visually) ----
+    (function(){
+      const toggle = document.getElementById('utilities-toggle');
+      const inner = document.getElementById('utilities-inner');
+      if (!toggle || !inner) return;
+      toggle.addEventListener('click', ()=> {
+        const collapsed = inner.classList.toggle('collapsed');
+        toggle.setAttribute('aria-expanded', String(!collapsed));
+      });
+    })();
+
+    // ---- Wire primary actions and settings form (preserve existing logic) ----
+    document.addEventListener('DOMContentLoaded', () => {
+      // initial render
+      renderRecentTransactions();
+
+      // actions
+      document.getElementById('act-deposit')?.addEventListener('click', ()=> location.href='/deposit.html');
+      document.getElementById('act-withdraw')?.addEventListener('click', ()=> location.href='/withdraw.html');
+      document.getElementById('act-transfer')?.addEventListener('click', ()=> location.href='/transfer.html');
+      document.getElementById('act-trade')?.addEventListener('click', ()=> location.href='/trade.html');
+
+      // settings save (non-destructive placeholder)
+      const settingsForm = document.getElementById('settings-form');
+      if (settingsForm) {
+        settingsForm.addEventListener('submit', (e)=> {
+          e.preventDefault();
+          const btn = settingsForm.querySelector('button[type="submit"]');
+          const prev = btn.textContent;
+          btn.disabled = true; btn.textContent = 'Saving…';
+          setTimeout(()=> { btn.disabled=false; btn.textContent=prev; alert('Settings saved'); }, 700);
+        });
+      }
+
+      // 2FA CTAs
+      document.getElementById('enable-2fa')?.addEventListener('click', ()=> { location.href='/2fa-setup.html'; });
+      document.getElementById('learn-2fa')?.addEventListener('click', ()=> { location.href='/2fa-info.html'; });
+
+      // overlay menu wiring (preserve)
+      document.getElementById('nav-toggle')?.addEventListener('click', ()=> {
+        const el = document.getElementById('menu-overlay');
+        if(el) { el.style.display = 'block'; el.setAttribute('aria-hidden','false'); }
+      });
+      document.getElementById('overlay-close')?.addEventListener('click', ()=> {
+        const el = document.getElementById('menu-overlay'); if(el){ el.style.display='none'; el.setAttribute('aria-hidden','true'); }
+      });
+
+      // mini search for recent transactions (filters rows)
+      document.getElementById('tx-mini-search')?.addEventListener('input', function(e){
+        const q = (e.target.value || '').toLowerCase().trim();
+        document.querySelectorAll('table.transactions tbody tr').forEach(tr => {
+          const txt = tr.textContent.toLowerCase();
+          tr.style.display = (!q || txt.includes(q)) ? '' : 'none';
+        });
+      });
+    });
+  </script>
 </body>
 </html>
