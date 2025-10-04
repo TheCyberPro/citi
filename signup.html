@@ -59,14 +59,46 @@
   </style>
 </head>
 <body>
-  <header class="site-header container" role="banner">
-    <div style="display:flex;align-items:center;justify-content:space-between">
-      <div class="brand">CITI</div>
-      <nav aria-label="top">
-        <a href="/login.html" style="color:var(--muted);text-decoration:none;font-size:0.95rem">Log in</a>
-      </nav>
+  <!-- HEADER -->
+  <header class="site-header container">
+    <div class="nav-inner">
+      <button class="nav-toggle" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+
+      <a href="/" class="nav__logo" aria-label="CITI Home">
+        <img src="assets/citi_logo.png" alt="CITI Logo" />
+      </a>
+        <button class="overlay-close" aria-label="Close menu">&times;</button>
+      <nav class="nav-actions" aria-hidden="false">
+        <a href="login.html" class="link">Log in</a>
+  
+
+
+<!-- OVERLAY MENU (hidden by default) -->
+  <div class="menu-overlay" aria-hidden="true">
+    <div class="overlay-panel" role="dialog" aria-modal="true">
+      <div class="overlay-header">
+        <a href="/" class="overlay-logo"><img src="assets/citi_logo.png" alt="CITI Logo" /></a>
+        <button class="overlay-close" aria-label="Close menu">&times;</button>
+      </div>
+
+      <ul class="overlay-menu">
+        <li><a href="index.html#products">Products</a></li>
+        <li><a href="index.html#solutions">Solutions</a></li>
+        <li><a href="index.html#resources">Resources</a></li>
+        <li><a href="index.html#about">About</a></li>
+        <li><a href="index.html#pricing">Pricing</a></li>
+      </ul>
+
+      <div class="overlay-cta">
+      </div>
     </div>
-  </header>
+
+    <!-- clicking the backdrop closes the overlay -->
+    <button class="overlay-backdrop" aria-hidden="true"></button>
+  </div>
+
 
   <div class="container">
     <div class="secure-banner" role="status" aria-live="polite">
