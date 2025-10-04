@@ -5,7 +5,7 @@
   <title>CITI — Dashboard</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
 
-  <!-- Inter font -->
+  <!-- Inter -->
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 
@@ -52,7 +52,6 @@
 
     /* Secure banner */
     .secure-banner{margin:16px auto;display:flex;align-items:center;gap:12px;padding:10px 20px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);border:1px solid rgba(255,255,255,0.02);color:var(--muted);font-size:0.95rem}
-    .lock-icon{width:18px;height:18px;color:var(--accent)}
 
     /* Layout */
     main.dashboard{padding:18px 0}
@@ -77,12 +76,10 @@
     /* Primary actions (centered) */
     .primary-actions{margin:20px 0}
     .actions-wrap{display:flex;flex-direction:column;align-items:center;gap:14px}
-
     .secondary-actions{display:flex;gap:12px}
     .btn-ghost.action-small{display:flex;flex-direction:column;align-items:center;padding:8px 12px;border-radius:12px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--text);cursor:pointer}
     .icon-sm{width:18px;height:18px;margin-bottom:6px}
     .label-sm{font-size:0.82rem;color:var(--muted)}
-
     .primary-pair{display:flex;align-items:center;gap:18px;justify-content:center;flex-wrap:wrap}
     .btn-primary-large{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:160px;padding:18px;border-radius:14px;border:none;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#07101a;font-weight:700;font-size:1rem;cursor:pointer;box-shadow:0 18px 40px rgba(12,12,40,0.45);transition:transform .12s}
     .btn-primary-large.alt{background:linear-gradient(90deg,var(--accent-2),var(--accent))}
@@ -91,21 +88,47 @@
     .label-large{font-size:1rem}
     .primary-spacer{width:18px}
 
-    /* Transactions (kept exactly as requested in structure and content) */
-    .transactions-section{margin-top:12px}
-    .section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-    .btn-secondary{background:none;border:1px solid rgba(255,255,255,0.04);padding:8px 12px;border-radius:10px;color:var(--text);cursor:pointer}
-    .transactions-table-wrapper{overflow:auto;border-radius:10px}
-    table.transactions{width:100%;border-collapse:collapse;background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);border:1px solid rgba(255,255,255,0.02)}
-    table.transactions thead th{padding:12px 16px;text-align:left;color:var(--muted);font-size:0.85rem;border-bottom:1px solid rgba(255,255,255,0.02)}
-    table.transactions tbody td{padding:12px 16px;border-top:1px solid rgba(255,255,255,0.02)}
-    .amount.negative{color:var(--danger);font-weight:700}
-    .amount.positive{color:var(--success);font-weight:700}
+    /* Transactions: table and cards */
+    .transactions-section { margin-top:18px; }
+    .section-header { display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px; }
+    .section-controls { display:flex;align-items:center;gap:10px; }
+    .tx-mini-search { padding:8px 10px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--text);min-width:160px }
+    .transactions-table-wrapper { border-radius:12px; overflow:auto; border:1px solid rgba(255,255,255,0.02); background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent); }
+    table.transactions { width:100%; border-collapse:collapse; min-width:680px; }
+    table.transactions thead th { padding:14px 16px; text-align:left; color:var(--muted); font-size:0.9rem; border-bottom:1px solid rgba(255,255,255,0.02); }
+    table.transactions tbody td { padding:12px 16px; font-size:0.95rem; border-top:1px solid rgba(255,255,255,0.02); }
+    .text-right { text-align:right; }
 
-    .tx-cards{display:none;gap:10px;margin-top:8px}
-    .tx-card{display:flex;justify-content:space-between;align-items:center;padding:12px;border-radius:10px;background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);border:1px solid rgba(255,255,255,0.02)}
-    .tx-date{font-size:0.9rem;color:var(--muted)}
-    .tx-desc{font-weight:600}
+    .tx-cards { display:none; gap:10px; margin-top:8px; }
+    .tx-card { display:flex; justify-content:space-between; align-items:center; padding:12px; border-radius:10px; background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent); border:1px solid rgba(255,255,255,0.02) }
+    .tx-date { font-size:0.9rem; color:var(--muted) }
+    .tx-desc { font-weight:600 }
+
+    .amount.negative, .tx-amount.negative { color:var(--danger); font-weight:700 }
+    .amount.positive, .tx-amount.positive { color:var(--success); font-weight:700 }
+
+    /* Drawer: luxury shell */
+    .transactions-drawer { position:fixed; inset:0; z-index:1800; display:none; }
+    .transactions-drawer.open { display:block; }
+    .drawer-backdrop { position:absolute; inset:0; background:rgba(2,6,23,0.6); backdrop-filter: blur(6px); }
+    .drawer-shell { position:absolute; right:0; top:6vh; bottom:6vh; width:560px; max-width:96%; background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border-left:1px solid rgba(255,255,255,0.03); border-radius:12px 0 0 12px; box-shadow:-30px 40px 120px rgba(2,6,23,0.7); display:flex; flex-direction:column; overflow:hidden; }
+    .drawer-head { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; padding:18px; border-bottom:1px solid rgba(255,255,255,0.02) }
+    .drawer-title { margin:0; font-size:1.15rem }
+    .drawer-sub { color:var(--muted); font-size:0.85rem; margin-top:4px }
+    .search-wrap { position:relative; }
+    .tx-search { padding:10px 36px 10px 12px; border-radius:10px; border:1px solid rgba(255,255,255,0.04); background:transparent; color:var(--text); min-width:220px; }
+    .btn-icon { position:absolute; right:6px; top:50%; transform:translateY(-50%); background:none; border:none; color:var(--muted); cursor:pointer; padding:6px; }
+    .filters { display:flex; gap:8px; align-items:center; margin-left:8px }
+    .date-input { padding:8px 10px; border-radius:8px; border:1px solid rgba(255,255,255,0.04); background:transparent; color:var(--text) }
+    .drawer-body { padding:12px 16px 18px; display:flex; flex-direction:column; gap:12px; flex:1; overflow:hidden }
+    .drawer-table-wrap { overflow:auto; border-radius:8px; border:1px solid rgba(255,255,255,0.02); }
+    .drawer-table { width:100%; border-collapse:collapse; min-width:480px; }
+    .drawer-table thead th { padding:12px 14px; text-align:left; color:var(--muted); font-size:0.9rem; border-bottom:1px solid rgba(255,255,255,0.02) }
+    .drawer-table tbody td { padding:12px 14px; border-top:1px solid rgba(255,255,255,0.02); font-size:0.95rem }
+    .drawer-footer { display:flex; align-items:center; justify-content:space-between; gap:12px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.02) }
+    .pager { display:flex; align-items:center; gap:8px }
+    .pager-btn { padding:8px 10px; border-radius:8px; background:transparent; border:1px solid rgba(255,255,255,0.03); color:var(--text); cursor:pointer }
+    .pager-info { font-size:0.95rem; color:var(--muted) }
 
     /* Settings */
     .settings-section{margin-top:18px}
@@ -113,16 +136,6 @@
     .settings-form input{padding:10px;border:1px solid rgba(255,255,255,0.04);border-radius:8px;background:transparent;color:var(--text)}
     .btn-primary{background:linear-gradient(90deg,var(--accent),var(--accent-2));border:none;color:#07101a;padding:10px 14px;border-radius:8px;cursor:pointer;font-weight:700}
     .security-note{font-size:0.9rem;color:var(--muted);margin-top:8px}
-
-    /* Drawer */
-    .transactions-drawer{position:fixed;top:0;right:-520px;height:100%;width:520px;background:linear-gradient(180deg, rgba(2,6,23,0.92), rgba(2,6,23,0.98));box-shadow:-28px 0 80px rgba(0,0,0,0.7);transition:right .28s;z-index:1400;padding:20px;border-left:1px solid rgba(255,255,255,0.03)}
-    .transactions-drawer.open{right:0}
-    .drawer-close{position:absolute;top:18px;right:18px;background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer}
-
-    /* Side panels */
-    .side-column{display:flex;flex-direction:column;gap:14px}
-    .mini-panel{padding:14px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);border:1px solid rgba(255,255,255,0.02)}
-    .card-preview{height:120px;border-radius:12px;padding:14px;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#07101a;display:flex;flex-direction:column;justify-content:space-between}
 
     /* Footer */
     footer.site-footer{position:fixed;left:0;right:0;bottom:0;background:linear-gradient(180deg, rgba(2,6,23,0.95), rgba(2,6,23,0.98));border-top:1px solid rgba(255,255,255,0.02);padding:14px 20px;display:flex;justify-content:center}
@@ -138,7 +151,6 @@
       .tx-cards{display:block}
       .transactions-table-wrapper{display:none}
       .transactions-drawer{width:100%}
-      .overlay-panel{max-width:100%}
     }
     @media (max-width:720px){
       .primary-pair{flex-direction:column}
@@ -149,161 +161,6 @@
     }
 
     button:focus, a:focus{outline:2px solid rgba(156,124,255,0.14);outline-offset:2px}
-/* Transactions: responsive table, stacked cards, and polished drawer */
-
-/* Table wrapper: allow horizontal scroll but keep padding and rounded corners */
-.transactions-table-wrapper {
-  border-radius: 12px;
-  overflow: auto;
-  background: linear-gradient(180deg, rgba(255,255,255,0.01), transparent);
-  border: 1px solid rgba(255,255,255,0.02);
-}
-
-/* Table spacing and readable type scale */
-table.transactions {
-  width: 100%;
-  border-collapse: collapse;
-  min-width: 680px; /* ensures columns stay readable on narrow desktops */
-}
-table.transactions thead th {
-  padding: 14px 16px;
-  text-align: left;
-  color: var(--muted);
-  font-size: 0.9rem;
-  border-bottom: 1px solid rgba(255,255,255,0.02);
-}
-table.transactions tbody td {
-  padding: 12px 16px;
-  border-top: 1px solid rgba(255,255,255,0.02);
-  font-size: 0.95rem;
-}
-
-/* Amount styling */
-.amount.negative { color: var(--danger); font-weight: 700; }
-.amount.positive { color: var(--success); font-weight: 700; }
-
-/* Mobile-friendly stacked list (hidden on wide screens) */
-.transactions-list, .tx-cards {
-  display: none;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  gap: 10px;
-}
-.transactions-list li {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 12px;
-  border-radius: 10px;
-  background: linear-gradient(180deg, rgba(255,255,255,0.01), transparent);
-  border: 1px solid rgba(255,255,255,0.02);
-}
-
-/* Drawer container styles (keeps your markup) */
-.transactions-drawer {
-  position: fixed;
-  top: 0;
-  right: -100%;
-  width: 420px;
-  max-width: 95%;
-  height: 100%;
-  background: linear-gradient(180deg, rgba(2,6,23,0.96), rgba(2,6,23,0.99));
-  box-shadow: -28px 0 80px rgba(0,0,0,0.7);
-  transition: right .28s ease;
-  z-index: 1400;
-  padding: 20px;
-  border-left: 1px solid rgba(255,255,255,0.03);
-}
-.transactions-drawer.open { right: 0; }
-
-/* Drawer header close button */
-.drawer-close {
-  position: absolute;
-  top: 14px;
-  right: 14px;
-  background: none;
-  border: none;
-  color: var(--muted);
-  font-size: 24px;
-  cursor: pointer;
-}
-
-/* Make table hidden and stacked list visible on small viewports */
-@media (max-width: 900px) {
-  table.transactions { display: none; }
-  .transactions-list { display: block; }
-  .transactions-table-wrapper { display: none; }
-}
-
-/* Accessibility: focus ring for interactive elements inside transactions */
-button:focus, .transactions-list a:focus {
-  outline: 2px solid rgba(156,124,255,0.14);
-  outline-offset: 2px;
-}
-/* Transactions: polished table, cards and luxury drawer */
-.transactions-section { margin-top:18px; }
-.section-header { display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px; }
-.section-controls { display:flex;align-items:center;gap:10px; }
-.tx-mini-search { padding:8px 10px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--text);min-width:160px }
-
-/* Table wrapper */
-.transactions-table-wrapper { border-radius:12px; overflow:auto; border:1px solid rgba(255,255,255,0.02); background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent); }
-table.transactions { width:100%; border-collapse:collapse; min-width:680px; }
-table.transactions thead th { padding:14px 16px; text-align:left; color:var(--muted); font-size:0.9rem; border-bottom:1px solid rgba(255,255,255,0.02); }
-table.transactions tbody td { padding:12px 16px; font-size:0.95rem; border-top:1px solid rgba(255,255,255,0.02); }
-.text-right { text-align:right; }
-
-/* Small stacked cards */
-.tx-cards { display:none; gap:10px; margin-top:8px; }
-.tx-card { display:flex; justify-content:space-between; align-items:center; padding:12px; border-radius:10px; background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent); border:1px solid rgba(255,255,255,0.02) }
-.tx-date { font-size:0.9rem; color:var(--muted) }
-.tx-desc { font-weight:600 }
-
-/* Amount styles */
-.amount.negative, .tx-amount.negative { color:var(--danger); font-weight:700 }
-.amount.positive, .tx-amount.positive { color:var(--success); font-weight:700 }
-
-/* Luxury drawer shell + backdrop */
-.transactions-drawer { position:fixed; inset:0; z-index:1800; display:none; }
-.transactions-drawer.open { display:block; }
-.drawer-backdrop { position:absolute; inset:0; background:rgba(2,6,23,0.6); backdrop-filter: blur(6px); }
-.drawer-shell { position:absolute; right:0; top:6vh; bottom:6vh; width:560px; max-width:96%; background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border-left:1px solid rgba(255,255,255,0.03); border-radius:12px 0 0 12px; box-shadow:-30px 40px 120px rgba(2,6,23,0.7); display:flex; flex-direction:column; overflow:hidden; }
-
-/* Drawer header */
-.drawer-head { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; padding:18px; border-bottom:1px solid rgba(255,255,255,0.02) }
-.drawer-title { margin:0; font-size:1.15rem }
-.drawer-sub { color:var(--muted); font-size:0.85rem; margin-top:4px }
-
-/* Search and filters */
-.search-wrap { position:relative; }
-.tx-search { padding:10px 36px 10px 12px; border-radius:10px; border:1px solid rgba(255,255,255,0.04); background:transparent; color:var(--text); min-width:220px; }
-.btn-icon { position:absolute; right:6px; top:50%; transform:translateY(-50%); background:none; border:none; color:var(--muted); cursor:pointer; padding:6px; }
-.filters { display:flex; gap:8px; align-items:center; margin-left:8px }
-.date-input { padding:8px 10px; border-radius:8px; border:1px solid rgba(255,255,255,0.04); background:transparent; color:var(--text) }
-
-/* Drawer table */
-.drawer-body { padding:12px 16px 18px; display:flex; flex-direction:column; gap:12px; flex:1; overflow:hidden }
-.drawer-table-wrap { overflow:auto; border-radius:8px; border:1px solid rgba(255,255,255,0.02); }
-.drawer-table { width:100%; border-collapse:collapse; min-width:480px; }
-.drawer-table thead th { padding:12px 14px; text-align:left; color:var(--muted); font-size:0.9rem; border-bottom:1px solid rgba(255,255,255,0.02) }
-.drawer-table tbody td { padding:12px 14px; border-top:1px solid rgba(255,255,255,0.02); font-size:0.95rem }
-
-/* Drawer footer */
-.drawer-footer { display:flex; align-items:center; justify-content:space-between; gap:12px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.02) }
-.pager { display:flex; align-items:center; gap:8px }
-.pager-btn { padding:8px 10px; border-radius:8px; background:transparent; border:1px solid rgba(255,255,255,0.03); color:var(--text); cursor:pointer }
-.pager-info { font-size:0.95rem; color:var(--muted) }
-
-/* Responsive breakpoints */
-@media (max-width: 900px) {
-  table.transactions { display:none }
-  .transactions-table-wrapper { display:none }
-  .tx-cards { display:block }
-  .drawer-shell { width: calc(100% - 32px); left:16px; right:16px; top:6vh; bottom:6vh; border-radius:12px }
-  .tx-mini-search { display:none }
-}
-
   </style>
 </head>
 <body>
@@ -316,6 +173,15 @@ table.transactions tbody td { padding:12px 16px; font-size:0.95rem; border-top:1
       </div>
     </div>
 
+    <div class="container header-sub">
+      <div class="secure-inline">
+        <svg class="lock-icon" viewBox="0 0 24 24" aria-hidden="true" width="18" height="18"><path d="M12 1a5 5 0 0 0-5 5v4H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-1V6a5 5 0 0 0-5-5z" fill="currentColor"/></svg>
+        <div>
+          <div class="secure-line">Secure session — data encrypted end-to-end</div>
+          <div class="member-line"><strong>Hart Gijs</strong> · Member since 2024</div>
+        </div>
+      </div>
+    </div>
 
     <!-- overlay panel -->
     <div class="menu-overlay" id="menu-overlay" aria-hidden="true">
@@ -342,10 +208,15 @@ table.transactions tbody td { padding:12px 16px; font-size:0.95rem; border-top:1
     </div>
   </header>
 
+  <!-- optional secure banner -->
+  <div class="secure-banner container" role="status" aria-live="polite">
+    <svg class="lock-icon" viewBox="0 0 24 24" aria-hidden="true" width="18" height="18"><path d="M12 1a5 5 0 0 0-5 5v4H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-1V6a5 5 0 0 0-5-5z" fill="currentColor"/></svg>
+    <span>You’re in a secure session — data is encrypted end-to-end.</span>
+  </div>
 
   <main class="dashboard container" role="main">
     <div class="grid">
-      <!-- LEFT / MAIN -->
+      <!-- LEFT -->
       <section class="panel" aria-labelledby="account-overview">
         <div style="display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap">
           <div style="flex:1">
@@ -353,11 +224,6 @@ table.transactions tbody td { padding:12px 16px; font-size:0.95rem; border-top:1
               <img src="assets/passport1.png" alt="User Avatar" class="avatar" />
               <div style="margin-left:12px">
                 <p class="greeting">Hello, <strong>Hart Gijs</strong></p>
-      <div class="secure-inline">
-        <svg class="lock-icon" viewBox="0 0 24 24" aria-hidden="true" width="18" height="18"><p>
-        <div>
-          <div class="secure-line">Secure session — data encrypted end-to-end</div>
-  
                 <p class="last-login" id="last-login">Last login: —</p>
               </div>
             </div>
@@ -369,13 +235,19 @@ table.transactions tbody td { padding:12px 16px; font-size:0.95rem; border-top:1
               <div class="balance-card" role="listitem"><h3>Savings</h3><p class="balance-amount" id="savings-balance">$758,910.11</p></div>
             </div>
 
-            <!-- Primary actions (centered) -->
+            <!-- Primary actions -->
             <section class="primary-actions" aria-label="Primary account actions">
               <div class="actions-wrap">
-
-
                 <div class="secondary-actions" role="toolbar" aria-label="Secondary actions">
-
+                  <button class="btn-ghost action-small" id="act-deposit" aria-label="Deposit">
+                    <img src="assets/icons/deposit.svg" alt="" class="icon-sm" />
+                    <span class="label-sm">Deposit</span>
+                  </button>
+                  <button class="btn-ghost action-small" id="act-trade" aria-label="Trade">
+                    <img src="assets/icons/trade.svg" alt="" class="icon-sm" />
+                    <span class="label-sm">Trade</span>
+                  </button>
+                </div>
 
                 <div class="primary-pair" role="group" aria-label="Primary transfers">
                   <button class="btn-primary-large" id="act-withdraw" aria-label="Withdraw">
@@ -388,138 +260,108 @@ table.transactions tbody td { padding:12px 16px; font-size:0.95rem; border-top:1
                   <button class="btn-primary-large alt" id="act-transfer" aria-label="Transfer">
                     <img src="assets/transfer.png" alt="" class="icon-large" />
                     <span class="label-large">Transfer</span>
-
                   </button>
                 </div>
               </div>
             </section>
 
-
-
             <!-- TRANSACTIONS -->
-<section class="transactions-section container" aria-labelledby="recent-tx">
-  <div class="section-header">
-    <h2 id="recent-tx">Recent Transactions</h2>
-    <div class="section-controls">
-      <input id="tx-mini-search" class="tx-mini-search" type="search" placeholder="Search recent" aria-label="Search recent transactions" />
-      <button id="tx-toggle" class="btn-secondary" aria-expanded="false">View All</button>
-    </div>
-  </div>
+            <section class="transactions-section container" aria-labelledby="recent-tx">
+              <div class="section-header">
+                <h2 id="recent-tx">Recent Transactions</h2>
+                <div class="section-controls">
+                  <input id="tx-mini-search" class="tx-mini-search" type="search" placeholder="Search recent" aria-label="Search recent transactions" />
+                  <button id="tx-toggle" class="btn-secondary" aria-expanded="false">View All</button>
+                </div>
+              </div>
 
-  <!-- Desktop / Large Screens: Table -->
-  <div class="transactions-table-wrapper" aria-hidden="false">
-    <table class="transactions" role="table" aria-label="Recent transactions">
-      <thead>
-        <tr>
-          <th scope="col">Date</th>
-          <th scope="col">Description</th>
-          <th scope="col" class="text-right">Amount</th>
-          <th scope="col" class="text-right">Balance</th>
-        </tr>
-      </thead>
-      <tbody id="tx-tbody">
-        <tr>
-          <td>Oct 4, 2025 • 11:44 PM</td>
-          <td>Debit</td>
-          <td class="amount negative text-right">−$500.00</td>
-          <td class="text-right">$64,345.67</td>
-       </tr>
-        <tr>
-          <td>Sep 30, 2025 • 09:12 AM</td>
-          <td>Credit</td>
-          <td class="amount positive text-right">+$2,000.00</td>
-          <td class="text-right">$62,345.67</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+              <div class="transactions-table-wrapper" aria-hidden="false">
+                <table class="transactions" role="table" aria-label="Recent transactions">
+                  <thead>
+                    <tr>
+                      <th scope="col">Date</th>
+                      <th scope="col">Description</th>
+                      <th scope="col" class="text-right">Amount</th>
+                      <th scope="col" class="text-right">Balance</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tx-tbody">
+                    <tr>
+                      <td>Oct 4, 2025 • 11:44 PM</td>
+                      <td>Debit</td>
+                      <td class="amount negative text-right">−$500.00</td>
+                      <td class="text-right">$64,345.67</td>
+                   </tr>
+                    <tr>
+                      <td>Sep 30, 2025 • 09:12 AM</td>
+                      <td>Credit</td>
+                      <td class="amount positive text-right">+$2,000.00</td>
+                      <td class="text-right">$62,345.67</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
 
-  <!-- Mobile: stacked cards (visible on small viewports) -->
-  <div class="tx-cards" id="tx-cards" aria-hidden="true"></div>
+              <div class="tx-cards" id="tx-cards" aria-hidden="true"></div>
 
-  <!-- All Transactions Drawer (luxury contained) -->
-  <aside class="transactions-drawer" id="tx-drawer" aria-hidden="true" role="dialog" aria-label="All transactions">
-    <div class="drawer-backdrop" id="tx-backdrop" tabindex="-1"></div>
+              <!-- All Transactions Drawer (luxury) -->
+              <aside class="transactions-drawer" id="tx-drawer" aria-hidden="true" role="dialog" aria-label="All transactions">
+                <div class="drawer-backdrop" id="tx-backdrop" tabindex="-1"></div>
 
-    <div class="drawer-shell" role="document" aria-modal="true">
-      <header class="drawer-head">
-        <div>
-          <h3 class="drawer-title">All Transactions</h3>
-          <div class="drawer-sub muted">Search, filter, and export your full history</div>
-        </div>
+                <div class="drawer-shell" role="document" aria-modal="true">
+                  <header class="drawer-head">
+                    <div>
+                      <h3 class="drawer-title">All Transactions</h3>
+                      <div class="drawer-sub muted">Search, filter, and export your full history</div>
+                    </div>
 
-        <div class="drawer-actions">
-          <div class="search-wrap">
-            <input id="tx-search" class="tx-search" type="search" placeholder="Search description, amount or date" aria-label="Search transactions" />
-            <button id="tx-clear-search" class="btn-icon" title="Clear search" aria-label="Clear search">✕</button>
-          </div>
+                    <div class="drawer-actions">
+                      <div class="search-wrap">
+                        <input id="tx-search" class="tx-search" type="search" placeholder="Search description, amount or date" aria-label="Search transactions" />
+                        <button id="tx-clear-search" class="btn-icon" title="Clear search" aria-label="Clear search">✕</button>
+                      </div>
 
-          <div class="filters">
-            <select id="tx-filter-type" aria-label="Filter by type">
-              <option value="all">All</option>
-              <option value="credit">Credit</option>
-              <option value="debit">Debit</option>
-              <option value="pending">Pending</option>
-            </select>
+                      <div class="filters">
+                        <select id="tx-filter-type" aria-label="Filter by type">
+                          <option value="all">All</option>
+                          <option value="credit">Credit</option>
+                          <option value="debit">Debit</option>
+                          <option value="pending">Pending</option>
+                        </select>
 
-            <input id="tx-date-from" type="date" class="date-input" aria-label="Date from" />
-            <input id="tx-date-to" type="date" class="date-input" aria-label="Date to" />
-          </div>
+                        <input id="tx-date-from" type="date" class="date-input" aria-label="Date from" />
+                        <input id="tx-date-to" type="date" class="date-input" aria-label="Date to" />
+                      </div>
 
-          <div class="drawer-ctas">
-            <button id="tx-export" class="btn-ghost" aria-label="Export transactions">Export</button>
-            <button id="drawer-close" class="btn-close" aria-label="Close transactions">&times;</button>
-          </div>
-        </div>
-      </header>
+                      <div class="drawer-ctas">
+                        <button id="tx-export" class="btn-ghost" aria-label="Export transactions">Export</button>
+                        <button id="drawer-close" class="btn-close" aria-label="Close transactions">&times;</button>
+                      </div>
+                    </div>
+                  </header>
 
-      <div class="drawer-body" id="tx-drawer-body">
-        <div class="drawer-table-wrap">
-          <table class="drawer-table" id="drawer-table" role="table" aria-label="Transaction history">
-            <thead>
-              <tr><th>Date</th><th>Description</th><th class="text-right">Amount</th><th class="text-right">Balance</th></tr>
-            </thead>
-            <tbody id="drawer-tbody">
-        <tr>
-          <td>Oct 4, 2025</td>
-          <td>Debit</td>
-          <td class="amount negative">−$500.00</td>
-          <td>$64,345.67</td>
-        </tr>
-        <tr>
-          <td>Sep 30, 2025</td>
-          <td>Credit</td>
-          <td class="amount positive">+$2,000.00</td>
-          <td>$62,345.67</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+                  <div class="drawer-body" id="tx-drawer-body">
+                    <div class="drawer-table-wrap">
+                      <table class="drawer-table" id="drawer-table" role="table" aria-label="Transaction history">
+                        <thead>
+                          <tr><th>Date</th><th>Description</th><th class="text-right">Amount</th><th class="text-right">Balance</th></tr>
+                        </thead>
+                        <tbody id="drawer-tbody"><!-- injected --></tbody>
+                      </table>
+                    </div>
 
-  <!-- Mobile / All Devices: Slide-Out Drawer -->
-  <aside class="transactions-drawer" aria-hidden="true">
-    <div class="drawer-container container">
-      <button class="drawer-close" aria-label="Close">&times;</button>
-      <h3 class="drawer-title">All Transactions</h3>
-      <ul class="transactions-list">
-        <li>
-
-          </table>
-        </div>
-
-        <div class="drawer-footer">
-          <div class="pager">
-            <button id="tx-prev" class="pager-btn" aria-label="Previous page">‹</button>
-            <div class="pager-info"><span id="tx-page">1</span> / <span id="tx-pages">1</span></div>
-            <button id="tx-next" class="pager-btn" aria-label="Next page">›</button>
-          </div>
-          <div class="drawer-note muted">Showing <span id="tx-count">0</span> transactions</div>
-        </div>
-      </div>
-    </div>
-  </aside>
-</section>
-
+                    <div class="drawer-footer">
+                      <div class="pager">
+                        <button id="tx-prev" class="pager-btn" aria-label="Previous page">‹</button>
+                        <div class="pager-info"><span id="tx-page">1</span> / <span id="tx-pages">1</span></div>
+                        <button id="tx-next" class="pager-btn" aria-label="Next page">›</button>
+                      </div>
+                      <div class="drawer-note muted">Showing <span id="tx-count">0</span> transactions</div>
+                    </div>
+                  </div>
+                </div>
+              </aside>
+            </section>
 
             <!-- Settings -->
             <section id="settings" class="settings-section">
@@ -540,15 +382,12 @@ table.transactions tbody td { padding:12px 16px; font-size:0.95rem; border-top:1
         </div>
       </section>
 
-      <!-- RIGHT / SIDE -->
+      <!-- RIGHT -->
       <aside class="side-column">
         <div class="mini-panel">
           <h4>Cards</h4>
           <div class="card-preview" role="group" aria-label="Primary card">
-            <div style="display:flex;justify-content:space-between">
-              <div style="opacity:0.9">Primary</div>
-              <div style="font-weight:700">•••• 3364</div>
-            </div>
+            <div style="display:flex;justify-content:space-between"><div style="opacity:0.9">Primary</div><div style="font-weight:700">•••• 3364</div></div>
             <div style="font-weight:700">$12,345.67</div>
           </div>
         </div>
@@ -565,142 +404,266 @@ table.transactions tbody td { padding:12px 16px; font-size:0.95rem; border-top:1
         <div class="mini-panel">
           <h4>Two Factor Authentication</h4>
           <div style="color:var(--muted);margin-top:8px">Protect your account with 2FA. Recommended.</div>
-          <div style="margin-top:12px;display:flex;gap:10px">
-            <button class="btn-secondary" id="enable-2fa">Get Started</button>
-            <button class="btn-secondary" id="learn-2fa">Learn</button>
-          </div>
+          <div style="margin-top:12px;display:flex;gap:10px"><button class="btn-secondary" id="enable-2fa">Get Started</button><button class="btn-secondary" id="learn-2fa">Learn</button></div>
         </div>
       </aside>
     </div>
   </main>
 
-  <!-- Drawer for All Transactions -->
-  <aside class="transactions-drawer" id="tx-drawer" aria-hidden="true">
-    <button class="drawer-close" id="drawer-close" aria-label="Close transactions">&times;</button>
-    <h3>All Transactions</h3>
-    <div id="drawer-list" style="margin-top:14px;display:grid;gap:10px;max-height:72vh;overflow:auto"></div>
-  </aside>
-
-  <!-- Footer (luxury) -->
+  <!-- Footer -->
   <footer class="site-footer" role="contentinfo">
     <div class="footer-inner container">
       <div style="display:flex;align-items:center;gap:12px">
-        <div class="trust-badge" aria-hidden="true">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 1.5l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.77 5.82 22 7 14.14 2 9.27l6.91-1.51L12 1.5z" fill="currentColor"/></svg>
-        </div>
-        <div class="footer-meta">
-          <div>© <span id="year">2025</span> CITI</div>
-          <div class="footer-sub">Bank-grade TLS 1.3 · Two-Factor Authentication available</div>
-        </div>
+        <div class="trust-badge" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 1.5l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.77 5.82 22 7 14.14 2 9.27l6.91-1.51L12 1.5z" fill="currentColor"/></svg></div>
+        <div class="footer-meta"><div>© <span id="year">2025</span> CITI</div><div class="footer-sub">Bank-grade TLS 1.3 · Two-Factor Authentication available</div></div>
       </div>
-
-      <div class="footer-links">
-        <a href="/privacy.html">Privacy</a>
-        <a href="/terms.html">Terms</a>
-        <a href="/support.html">Support</a>
-      </div>
+      <div class="footer-links"><a href="/privacy.html">Privacy</a><a href="/terms.html" style="margin-left:12px">Terms</a><a href="/support.html" style="margin-left:12px">Support</a></div>
     </div>
   </footer>
 
+  <!-- Scripts: all logic kept, organized and grouped -->
   <script>
-    /* -----------------------
-       Data + helpers
-       ----------------------- */
-    const transactions = [
-      { date:'Sep 28, 2025', time:'8:16 PM', desc:'Withdrawal', amount:-2900.00, currency:'USD', status:'Successful', balance:62000.00 },
-      { date:'Sep 27, 2025', time:'', desc:'—', amount:0, currency:'', status:'Pending', balance:64900.00 },
-      { date:'Oct 02, 2025', time:'10:12 AM', desc:'Transfer to ACME Inc.', amount:-500.00, currency:'USD', status:'Successful', balance:64400.00 },
-      { date:'Oct 04, 2025', time:'2:04 PM', desc:'Cargo Vessel Repairs', amount:52000.00, currency:'USD', status:'Successful', balance:116400.00 }
-    ];
-
-    function formatAmount(val){
+    /* Helpers */
+    function fmtAmount(val){
       if (val === 0) return '—';
-      const abs = Math.abs(val).toLocaleString(undefined, { minimumFractionDigits:2 });
+      const abs = Math.abs(val).toLocaleString(undefined,{minimumFractionDigits:2});
       return (val < 0 ? '−' : '+') + abs;
     }
 
-    function renderTxTable() {
-      const tbody = document.getElementById('tx-tbody');
-      if (!tbody) return;
-      tbody.innerHTML = transactions.slice(0,3).map(tx => `
-        <tr>
-          <td>${tx.date}${tx.time ? ' • ' + tx.time : ''}</td>
-          <td>${tx.desc}</td>
-          <td class="amount ${tx.amount < 0 ? 'negative' : (tx.amount > 0 ? 'positive' : '')}">${formatAmount(tx.amount)}</td>
-          <td>$${tx.balance.toLocaleString(undefined, { minimumFractionDigits:2 })}</td>
-        </tr>
-      `).join('');
+    function formatLoginTime(date){
+      const opts = { month:'short', day:'numeric', year:'numeric', hour:'numeric', minute:'2-digit', hour12:true };
+      return new Intl.DateTimeFormat('en-US', opts).format(date).replace(',', '').replace(' ', ' @ ');
     }
 
-    function renderTxCards() {
-      const cards = document.getElementById('tx-cards');
-      if (!cards) return;
-      cards.innerHTML = transactions.slice(0,3).map(tx => `
-        <div class="tx-card">
-          <div>
-            <div class="tx-date">${tx.date}${tx.time ? ' • ' + tx.time : ''}</div>
-            <div class="tx-desc">${tx.desc}</div>
-          </div>
-          <div style="text-align:right">
-            <div class="tx-amount ${tx.amount<0?'negative':'positive'}">${formatAmount(tx.amount)}</div>
-            <div class="tx-status" style="font-size:0.78rem;color:var(--muted)">${tx.status}</div>
-          </div>
-        </div>
-      `).join('');
+    // Source transactions: prefer global transactions array if provided, else extract table rows
+    function sourceTransactions(){
+      if (window.transactions && Array.isArray(window.transactions)) return window.transactions.slice();
+      const rows = Array.from(document.querySelectorAll('table.transactions tbody tr'));
+      if (!rows.length) return [];
+      return rows.map(r => {
+        const td = r.querySelectorAll('td');
+        const amountRaw = (td[2]?.textContent || '').trim();
+        const amount = parseFloat(amountRaw.replace(/[^0-9\.\-]/g,'')) || 0;
+        return {
+          date: (td[0]?.textContent || '').trim(),
+          desc: (td[1]?.textContent || '').trim(),
+          amountRaw,
+          amount,
+          balance: (td[3]?.textContent || '').trim(),
+          time: ''
+        };
+      });
     }
+  </script>
 
-    function renderDrawerList() {
-      const container = document.getElementById('drawer-list');
-      if (!container) return;
-      container.innerHTML = transactions.map(tx => `
-        <div class="tx-card" style="display:flex;justify-content:space-between;align-items:center;padding:12px;border-radius:10px;background:rgba(255,255,255,0.01);border:1px solid rgba(255,255,255,0.02)">
-          <div>
-            <div style="font-size:0.94rem;color:var(--muted)">${tx.date}${tx.time ? ' • ' + tx.time : ''}</div>
-            <div style="font-weight:600">${tx.desc}</div>
-          </div>
-          <div style="text-align:right">
-            <div style="font-weight:700" class="${tx.amount<0? 'negative':'positive'}">${formatAmount(tx.amount)}</div>
-            <div style="font-size:0.78rem;color:var(--muted)">${tx.status}</div>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    /* -----------------------
-       DOM interactions
-       ----------------------- */
+  <script>
+    // App initialization and wiring
     document.addEventListener('DOMContentLoaded', () => {
       // Footer year
       document.getElementById('year').textContent = new Date().getFullYear();
 
-      // Last login (read/write)
-      const stored = localStorage.getItem('lastLogin');
-      const lastLoginDate = stored ? new Date(stored) : new Date();
-      const opts = { month:'short', day:'numeric', year:'numeric', hour:'numeric', minute:'2-digit', hour12:true };
-      const formatted = new Intl.DateTimeFormat('en-US', opts).format(lastLoginDate).replace(',', '').replace(' ', ' @ ');
-      const loginEl = document.getElementById('last-login');
-      if (loginEl) loginEl.textContent = 'Last login: ' + formatted;
-      try { localStorage.setItem('lastLogin', new Date().toISOString()); } catch(e){}
+      // Last login: read and update
+      (function(){
+        const stored = localStorage.getItem('lastLogin');
+        const lastLoginDate = stored ? new Date(stored) : new Date();
+        const loginEl = document.getElementById('last-login');
+        if (loginEl) loginEl.textContent = 'Last login: ' + formatLoginTime(lastLoginDate);
+        try { localStorage.setItem('lastLogin', new Date().toISOString()); } catch(e){}
+      })();
 
-      // Render transactions
-      renderTxTable();
-      renderTxCards();
-      renderDrawerList();
+      // Transactions rendering functions
+      function renderTxTableRows(txs){
+        const tbody = document.getElementById('tx-tbody');
+        if (!tbody) return;
+        tbody.innerHTML = txs.slice(0,3).map(tx => `
+          <tr>
+            <td>${tx.date}${tx.time ? ' • ' + tx.time : ''}</td>
+            <td>${tx.desc}</td>
+            <td class="amount ${tx.amount < 0 ? 'negative' : (tx.amount > 0 ? 'positive' : '')} text-right">${tx.amountRaw ?? fmtAmount(tx.amount)}</td>
+            <td class="text-right">${tx.balance || ''}</td>
+          </tr>
+        `).join('');
+      }
 
-      // Drawer toggle (for the slide-out drawer used on mobile)
-      const txToggle = document.getElementById('tx-toggle');
-      const drawer = document.querySelector('.transactions-drawer');
-      const drawerClose = document.querySelector('.drawer-close');
-      if (txToggle && drawer) {
-        txToggle.addEventListener('click', () => {
+      function renderTxCards(txs){
+        const cards = document.getElementById('tx-cards');
+        if (!cards) return;
+        cards.innerHTML = (txs.slice(0,6).map(tx => `
+          <div class="tx-card" role="article">
+            <div>
+              <div class="tx-date">${tx.date}${tx.time ? ' • ' + tx.time : ''}</div>
+              <div class="tx-desc">${tx.desc}</div>
+            </div>
+            <div style="text-align:right">
+              <div class="tx-amount ${tx.amount < 0 ? 'negative' : 'positive'}">${tx.amountRaw ?? fmtAmount(tx.amount)}</div>
+              <div class="tx-balance" style="font-size:.8rem;color:var(--muted)">${tx.balance||''}</div>
+            </div>
+          </div>
+        `).join('')) || '<div class="muted">No recent transactions</div>';
+      }
+
+      // Drawer advanced controls: filters, pagination, export
+      (function drawerModule(){
+        const btnViewAll = document.getElementById('tx-toggle');
+        const drawer = document.getElementById('tx-drawer');
+        const drawerBackdrop = document.getElementById('tx-backdrop');
+        const drawerClose = document.getElementById('drawer-close');
+        const drawerTbody = document.getElementById('drawer-tbody');
+
+        const txSearch = document.getElementById('tx-search');
+        const txClear = document.getElementById('tx-clear-search');
+        const filterType = document.getElementById('tx-filter-type');
+        const dateFrom = document.getElementById('tx-date-from');
+        const dateTo = document.getElementById('tx-date-to');
+        const exportBtn = document.getElementById('tx-export');
+
+        let page = 1;
+        const pageSize = 10;
+        let filtered = [];
+
+        function applyFilters(list){
+          const q = (txSearch?.value || '').trim().toLowerCase();
+          const type = filterType?.value || 'all';
+          const from = dateFrom?.value ? new Date(dateFrom.value) : null;
+          const to = dateTo?.value ? new Date(dateTo.value) : null;
+
+          return list.filter(item => {
+            if (type !== 'all') {
+              if (type === 'credit' && item.amount < 0) return false;
+              if (type === 'debit' && item.amount > 0) return false;
+              if (type === 'pending' && !(item.status && item.status.toLowerCase().includes('pending'))) return false;
+            }
+            if (from || to) {
+              const parsed = new Date(item.date);
+              if (from && parsed < from) return false;
+              if (to && parsed > new Date(to.getTime() + 86400000)) return false;
+            }
+            if (!q) return true;
+            return [item.date, item.desc, String(item.amount), item.balance, item.status].join(' ').toLowerCase().includes(q);
+          });
+        }
+
+        function renderDrawerPage(){
+          const list = filtered;
+          const pages = Math.max(1, Math.ceil(list.length / pageSize));
+          if (page > pages) page = pages;
+          const start = (page -1) * pageSize;
+          const slice = list.slice(start, start + pageSize);
+
+          document.getElementById('tx-page').textContent = page;
+          document.getElementById('tx-pages').textContent = pages;
+          document.getElementById('tx-count').textContent = list.length;
+
+          if (!drawerTbody) return;
+          drawerTbody.innerHTML = slice.map(tx => `
+            <tr>
+              <td>${tx.date}${tx.time ? ' • ' + tx.time : ''}</td>
+              <td>${tx.desc}</td>
+              <td class="text-right ${tx.amount < 0 ? 'amount negative' : 'amount positive'}">${tx.amountRaw ?? (tx.amount < 0 ? '−' : '+') + Math.abs(tx.amount).toLocaleString(undefined,{minimumFractionDigits:2})}</td>
+              <td class="text-right">${tx.balance || ''}</td>
+            </tr>
+          `).join('') || '<tr><td colspan="4" style="padding:18px;color:var(--muted)">No transactions found</td></tr>';
+        }
+
+        function refreshFiltered(){
+          const src = sourceTransactions();
+          filtered = applyFilters(src);
+          page = 1;
+          renderDrawerPage();
+        }
+
+        function openDrawer(){
+          refreshFiltered();
           drawer.classList.add('open');
           drawer.setAttribute('aria-hidden','false');
+          document.body.style.overflow = 'hidden';
+          setTimeout(()=> txSearch?.focus(), 120);
+          btnViewAll?.setAttribute('aria-expanded','true');
+        }
+        function closeDrawer(){
+          drawer.classList.remove('open');
+          drawer.setAttribute('aria-hidden','true');
+          document.body.style.overflow = '';
+          btnViewAll?.setAttribute('aria-expanded','false');
+          btnViewAll?.focus();
+        }
+
+        // Events
+        btnViewAll?.addEventListener('click', () => {
+          if (drawer.classList.contains('open')) closeDrawer(); else openDrawer();
+        });
+        drawerClose?.addEventListener('click', closeDrawer);
+        drawerBackdrop?.addEventListener('click', closeDrawer);
+
+        // Mini search (filter table rows)
+        const txMiniSearch = document.getElementById('tx-mini-search');
+        txMiniSearch?.addEventListener('input', (e) => {
+          const q = e.target.value.trim().toLowerCase();
+          const rows = Array.from(document.querySelectorAll('table.transactions tbody tr'));
+          rows.forEach(tr => {
+            const txt = tr.textContent.toLowerCase();
+            tr.style.display = (!q || txt.includes(q)) ? '' : 'none';
+          });
+        });
+
+        // Debounced filter input
+        let tid;
+        function debounce(fn, ms=200){ return (...a)=>{ clearTimeout(tid); tid = setTimeout(()=>fn(...a), ms); }; }
+        const onFilterChange = debounce(() => { refreshFiltered(); }, 220);
+
+        txSearch?.addEventListener('input', onFilterChange);
+        txClear?.addEventListener('click', ()=> { if (txSearch){ txSearch.value=''; refreshFiltered(); txSearch.focus(); }});
+        filterType?.addEventListener('change', onFilterChange);
+        dateFrom?.addEventListener('change', onFilterChange);
+        dateTo?.addEventListener('change', onFilterChange);
+
+        // Pager
+        document.getElementById('tx-prev')?.addEventListener('click', ()=> { if (page>1){ page--; renderDrawerPage(); }});
+        document.getElementById('tx-next')?.addEventListener('click', ()=> { const pages = Math.max(1, Math.ceil(filtered.length / pageSize)); if (page<pages){ page++; renderDrawerPage(); }});
+
+        // Export CSV
+        exportBtn?.addEventListener('click', ()=>{
+          const rows = filtered.map(tx => [tx.date, tx.time||'', tx.desc, tx.amountRaw ?? tx.amount, tx.balance || '']);
+          const csv = [['Date','Time','Description','Amount','Balance'], ...rows].map(r => r.map(c => `"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+          const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a'); a.href = url; a.download = `transactions_${new Date().toISOString().slice(0,10)}.csv`; document.body.appendChild(a); a.click();
+          setTimeout(()=>{ URL.revokeObjectURL(url); a.remove(); }, 400);
+        });
+
+        // Close on Escape
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && drawer?.classList.contains('open')) closeDrawer(); });
+
+        // Expose refreshFiltered for external updates (safe)
+        window.refreshTransactionDrawer = refreshFiltered;
+      })();
+
+      // Initial render for main table and cards
+      const initialTx = sourceTransactions();
+      renderTxTableRows(initialTx);
+      renderTxCards(initialTx);
+
+      // Drawer list initial render kept to open-time refresh only (not automatic)
+      // Settings form submit (basic placeholder)
+      const settingsForm = document.getElementById('settings-form');
+      if (settingsForm){
+        settingsForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const email = settingsForm.querySelector('#email').value;
+          alert('Settings saved for ' + (email || 'your account'));
         });
       }
-      if (drawerClose) drawerClose.addEventListener('click', () => {
-        drawer.classList.remove('open');
-        drawer.setAttribute('aria-hidden','true');
+
+      // Action wiring
+      const map = { 'act-deposit':'/deposit.html', 'act-withdraw':'/withdraw.html', 'act-transfer':'/transfer.html', 'act-trade':'/trade.html' };
+      Object.keys(map).forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('click', () => { window.location.href = map[id]; });
       });
+
+      // 2FA helper
+      const enable2fa = document.getElementById('enable-2fa');
+      if (enable2fa) enable2fa.addEventListener('click', () => { alert('Begin 2FA setup flow'); });
 
       // Overlay menu toggle
       const navBtn = document.getElementById('nav-toggle');
@@ -713,231 +676,15 @@ table.transactions tbody td { padding:12px 16px; font-size:0.95rem; border-top:1
       if (overlayClose) overlayClose.addEventListener('click', () => { menuOverlay.style.display = 'none'; menuOverlay.setAttribute('aria-hidden','true'); });
       if (overlayBackdrop) overlayBackdrop.addEventListener('click', () => { menuOverlay.style.display = 'none'; menuOverlay.setAttribute('aria-hidden','true'); });
 
-      // Settings save
-      const settingsForm = document.getElementById('settings-form');
-      if (settingsForm) {
-        settingsForm.addEventListener('submit', (e) => {
-          e.preventDefault();
-          const email = settingsForm.querySelector('#email').value;
-          alert('Settings saved for ' + (email || 'your account'));
-        });
-      }
-
-      // Primary action wiring
-      const map = { 'act-deposit':'/deposit.html', 'act-withdraw':'/withdraw.html', 'act-transfer':'/transfer.html', 'act-trade':'/trade.html' };
-      Object.keys(map).forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.addEventListener('click', () => { window.location.href = map[id]; });
-      });
-
-      // 2FA
-      const enable2fa = document.getElementById('enable-2fa');
-      if (enable2fa) enable2fa.addEventListener('click', () => { alert('Begin 2FA setup flow'); });
-
       // Responsive tx presentation
       function syncTxPresentation(){
         const small = window.matchMedia('(max-width:1100px)').matches;
-        const tableWrapper = document.querySelector('.transactions-table-wrapper');
-        const txCards = document.getElementById('tx-cards');
-        if (tableWrapper) tableWrapper.style.display = small ? 'none' : 'block';
-        if (txCards) txCards.style.display = small ? 'block' : 'none';
+        document.getElementById('tx-table-wrapper').style.display = small ? 'none' : 'block';
+        document.getElementById('tx-cards').style.display = small ? 'block' : 'none';
       }
       window.addEventListener('resize', syncTxPresentation);
       syncTxPresentation();
     });
   </script>
-<script>
-(function(){
-  const btnViewAll = document.getElementById('tx-toggle');
-  const drawer = document.getElementById('tx-drawer');
-  const drawerClose = document.getElementById('drawer-close');
-  const drawerBackdrop = document.getElementById('tx-backdrop');
-  const drawerTbody = document.getElementById('drawer-tbody');
-  const txSearch = document.getElementById('tx-search');
-  const txMiniSearch = document.getElementById('tx-mini-search');
-  const txClear = document.getElementById('tx-clear-search');
-  const filterType = document.getElementById('tx-filter-type');
-  const dateFrom = document.getElementById('tx-date-from');
-  const dateTo = document.getElementById('tx-date-to');
-  const exportBtn = document.getElementById('tx-export');
-
-  // SOURCE: prefer existing global transactions array; fallback to table rows
-  function sourceTransactions(){
-    if (window.transactions && Array.isArray(window.transactions)) return window.transactions.slice();
-    const rows = Array.from(document.querySelectorAll('table.transactions tbody tr'));
-    if (!rows.length) return [];
-    return rows.map(r => {
-      const cells = r.querySelectorAll('td');
-      return {
-        date: (cells[0]?.textContent||'').trim(),
-        desc: (cells[1]?.textContent||'').trim(),
-        amountRaw: (cells[2]?.textContent||'').trim(),
-        amount: parseFloat((cells[2]?.textContent||'').replace(/[^0-9\.\-]/g,'')) || 0,
-        balance: (cells[3]?.textContent||'').trim(),
-        time: ''
-      };
-    });
-  }
-
-  // Render small stacked cards for mobile
-  function renderTxCards(list){
-    const target = document.getElementById('tx-cards');
-    if (!target) return;
-    const items = list.slice(0,6);
-    target.innerHTML = items.map(tx => `
-      <div class="tx-card" role="article">
-        <div>
-          <div class="tx-date">${tx.date}${tx.time ? ' • ' + tx.time : ''}</div>
-          <div class="tx-desc">${tx.desc}</div>
-        </div>
-        <div style="text-align:right">
-          <div class="tx-amount ${tx.amount < 0 ? 'negative' : 'positive'}">${tx.amountRaw ?? ((tx.amount < 0 ? '−' : '+') + Math.abs(tx.amount).toLocaleString(undefined,{minimumFractionDigits:2}))}</div>
-          <div class="tx-balance" style="font-size:.8rem;color:var(--muted)">${tx.balance||''}</div>
-        </div>
-      </div>
-    `).join('');
-  }
-
-  // Drawer filtering/pagination
-  let page = 1, pageSize = 10, filtered = [];
-
-  function applyFilters(list){
-    const q = (txSearch?.value || '').trim().toLowerCase();
-    const type = filterType?.value || 'all';
-    const from = dateFrom?.value ? new Date(dateFrom.value) : null;
-    const to = dateTo?.value ? new Date(dateTo.value) : null;
-
-    return list.filter(item => {
-      if (type !== 'all') {
-        if (type === 'credit' && item.amount < 0) return false;
-        if (type === 'debit' && item.amount > 0) return false;
-        if (type === 'pending' && !(item.status && item.status.toLowerCase().includes('pending'))) return false;
-      }
-      if (from || to) {
-        const parsed = new Date(item.date);
-        if (from && parsed < from) return false;
-        if (to && parsed > new Date(to.getTime() + 86400000)) return false;
-      }
-      if (!q) return true;
-      return [item.date, item.desc, String(item.amount), item.balance, item.status].join(' ').toLowerCase().includes(q);
-    });
-  }
-
-  function renderDrawerPage(){
-    const list = filtered;
-    const pages = Math.max(1, Math.ceil(list.length / pageSize));
-    if (page > pages) page = pages;
-    const start = (page -1) * pageSize;
-    const slice = list.slice(start, start + pageSize);
-
-    document.getElementById('tx-page').textContent = page;
-    document.getElementById('tx-pages').textContent = pages;
-    document.getElementById('tx-count').textContent = list.length;
-
-    if (!drawerTbody) return;
-    drawerTbody.innerHTML = slice.map(tx => `
-      <tr>
-        <td>${tx.date}${tx.time ? ' • ' + tx.time : ''}</td>
-        <td>${tx.desc}</td>
-        <td class="text-right ${tx.amount < 0 ? 'amount negative' : 'amount positive'}">${tx.amountRaw ?? ((tx.amount < 0 ? '−' : '+') + Math.abs(tx.amount).toLocaleString(undefined,{minimumFractionDigits:2}))}</td>
-        <td class="text-right">${tx.balance || ''}</td>
-      </tr>
-    `).join('') || '<tr><td colspan="4" style="padding:18px;color:var(--muted)">No transactions found</td></tr>';
-  }
-
-  function refreshFiltered(){
-    const src = sourceTransactions();
-    filtered = applyFilters(src);
-    page = 1;
-    renderDrawerPage();
-    renderTxCards(src);
-  }
-
-  // Open / close drawer
-  function openDrawer(){
-    if (!drawer) return;
-    refreshFiltered();
-    drawer.classList.add('open');
-    drawer.setAttribute('aria-hidden','false');
-    document.body.style.overflow = 'hidden';
-    setTimeout(()=> txSearch?.focus(), 120);
-    btnViewAll?.setAttribute('aria-expanded','true');
-  }
-  function closeDrawer(){
-    if (!drawer) return;
-    drawer.classList.remove('open');
-    drawer.setAttribute('aria-hidden','true');
-    document.body.style.overflow = '';
-    btnViewAll?.setAttribute('aria-expanded','false');
-    btnViewAll?.focus();
-  }
-
-  // Handlers
-  btnViewAll?.addEventListener('click', () => {
-    if (drawer?.classList.contains('open')) closeDrawer(); else openDrawer();
-  });
-  drawerClose?.addEventListener('click', closeDrawer);
-  drawerBackdrop?.addEventListener('click', closeDrawer);
-
-  // Mini-search (filters table rows visually)
-  txMiniSearch?.addEventListener('input', (e) => {
-    const q = e.target.value.trim().toLowerCase();
-    const rows = Array.from(document.querySelectorAll('table.transactions tbody tr'));
-    rows.forEach(tr => {
-      const txt = tr.textContent.toLowerCase();
-      tr.style.display = (!q || txt.includes(q)) ? '' : 'none';
-    });
-  });
-
-  // Debounced filter changes for drawer
-  function debounce(fn, ms=200){ let t; return (...a)=>{ clearTimeout(t); t = setTimeout(()=>fn(...a), ms); }; }
-  const onFilterChange = debounce(()=> refreshFiltered(), 220);
-  txSearch?.addEventListener('input', onFilterChange);
-  txClear?.addEventListener('click', ()=>{ if (txSearch) { txSearch.value=''; refreshFiltered(); txSearch.focus(); }});
-  filterType?.addEventListener('change', onFilterChange);
-  dateFrom?.addEventListener('change', onFilterChange);
-  dateTo?.addEventListener('change', onFilterChange);
-
-  // Pagination buttons
-  document.getElementById('tx-prev')?.addEventListener('click', ()=>{ if (page>1){ page--; renderDrawerPage(); }});
-  document.getElementById('tx-next')?.addEventListener('click', ()=>{ const pages = Math.max(1, Math.ceil(filtered.length / pageSize)); if (page<pages){ page++; renderDrawerPage(); }});
-
-  // Export CSV
-  exportBtn?.addEventListener('click', ()=>{
-    const rows = filtered.map(tx => [tx.date, tx.time||'', tx.desc, tx.amountRaw ?? tx.amount, tx.balance || '']);
-    const csv = [['Date','Time','Description','Amount','Balance'], ...rows].map(r => r.map(c => `"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
-    const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a'); a.href = url; a.download = `transactions_${new Date().toISOString().slice(0,10)}.csv`; document.body.appendChild(a); a.click();
-    setTimeout(()=>{ URL.revokeObjectURL(url); a.remove(); }, 400);
-  });
-
-  // Close drawer on Escape
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && drawer?.classList.contains('open')) closeDrawer(); });
-
-  // Initial render for cards and table (non-drawer)
-  document.addEventListener('DOMContentLoaded', () => {
-    renderTxCards(sourceTransactions());
-  });
-})();
-</script>
-
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
