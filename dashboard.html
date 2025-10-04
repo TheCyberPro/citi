@@ -1,16 +1,45 @@
-<!DOCTYPE html> <html lang="en"> <head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>CITI Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CITI — Dashboard</title>
+
+  <!-- Inter font for a refined, modern look -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  />
+
   <link rel="stylesheet" href="styles.css" />
 </head>
-<body>
+<body class="dashboard-page">
+
+  <!-- HEADER: Hamburger on left, Logo on right -->
   <header class="site-header">
     <nav class="nav-wrapper">
       <div class="nav-inner">
-      <a href="/" class="nav__logo" aria-label="CITI Home">
-        <img src="assets/citi_logo.png" alt="CITI Logo" />
-      </a>
+        <!-- 1) Hamburger -->
+        <button class="nav-toggle" aria-label="Open menu">
+          <span></span><span></span><span></span>
+        </button>
+
+        <!-- 2) Logo -->
+        <a href="index.html" class="logo">
+          <img src="assets/citi_logo.png" alt="CITI Logo" />
+        </a>
+      </div>
+    </nav>
+
+    <!-- Overlay menu (unchanged) -->
+    <div class="menu-overlay" aria-hidden="true">
+      <div class="overlay-header">
+        <a href="index.html" class="overlay-logo">
+          <img src="assets/citi_logo.png" alt="CITI Logo" />
+        </a>
+        <button class="overlay-close" aria-label="Close menu">&times;</button>
+      </div>
       <ul class="overlay-menu">
         <li><a href="index.html#products">Products</a></li>
         <li><a href="index.html#solutions">Solutions</a></li>
@@ -25,98 +54,139 @@
     </div>
   </header>
 
-  <!-- DASHBOARD CONTENT -->
+  <!-- MAIN DASHBOARD -->
   <main class="dashboard container">
-    <h1>Account Overview</h1>
+    <h1 class="dashboard__title">Account Overview</h1>
 
-    <section class="dashboard-section balances">
+    <!-- BALANCES -->
+    <section class="balances grid grid--2cols">
       <div class="balance-card">
-        <h3>Checkings Balance</h3>
-        <p>$12,345.67</p>
+        <h3>Checking</h3>
+        <p class="balance-amount">$12,345.67</p>
       </div>
       <div class="balance-card">
-        <h3>Savings Balance</h3>
-        <p>$8,910.11</p>
+        <h3>Savings</h3>
+        <p class="balance-amount">$8,910.11</p>
       </div>
     </section>
 
-    <section class="dashboard-section">
-      <h2>Recent Transactions</h2>
-      <table class="transactions">
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Description</th>
-            <th>Amount</th>
-            <th>Balance</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Oct 1, 2025</td>
-            <td>Transfer to ACME Inc.</td>
-            <td>−$500.00</td>
-            <td>$11,845.67</td>
-          </tr>
-          <tr>
-            <td>Sep 30, 2025</td>
-            <td>Received from Stripe</td>
-            <td>+$2,000.00</td>
-            <td>$12,345.67</td>
-          </tr>
-        </tbody>
-      </table>
+    <!-- TRANSACTIONS -->
+    <section class="transactions-section">
+      <div class="section-header">
+        <h2>Recent Transactions</h2>
+        <button id="tx-toggle" class="btn-secondary">View All</button>
+      </div>
+
+      <!-- Table for desktop / large screens -->
+      <div class="transactions-table-wrapper">
+        <table class="transactions">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Description</th>
+              <th>Amount</th>
+              <th>Balance</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Oct 1, 2025</td>
+              <td>Transfer to ACME Inc.</td>
+              <td class="amount negative">−$500.00</td>
+              <td>$11,845.67</td>
+            </tr>
+            <tr>
+              <td>Sep 30, 2025</td>
+              <td>Received from Stripe</td>
+              <td class="amount positive">+$2,000.00</td>
+              <td>$12,345.67</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Side‐drawer for mobile / all devices -->
+      <aside class="transactions-drawer" aria-hidden="true">
+        <button class="drawer-close" aria-label="Close">&times;</button>
+        <h3 class="drawer-title">All Transactions</h3>
+        <ul class="transactions-list">
+          <li>
+            <span class="date">Oct 1, 2025</span>
+            <span class="desc">Transfer to ACME Inc.</span>
+            <span class="amount negative">−$500.00</span>
+          </li>
+          <li>
+            <span class="date">Sep 30, 2025</span>
+            <span class="desc">Received from Stripe</span>
+            <span class="amount positive">+$2,000.00</span>
+          </li>
+        </ul>
+      </aside>
     </section>
 
-    <section class="dashboard-section">
+    <!-- CARDS -->
+    <section class="cards-section">
       <h2>Cards</h2>
       <ul class="cards-list">
         <li>
-          <span>Primary Card •••• 3364</span>
-          <a href="#" class="link">Manage</a>
+          <div class="card-item">
+            <span class="card-name">Primary •••• 3364</span>
+            <a href="#" class="link">Manage</a>
+          </div>
         </li>
         <li>
-          <span>Checkings Card •••• 5678</span>
-          <a href="#" class="link">Manage</a>
+          <div class="card-item">
+            <span class="card-name">Savings •••• 5678</span>
+            <a href="#" class="link">Manage</a>
+          </div>
         </li>
       </ul>
     </section>
-    <!-- Settings -->
-    <section id="settings" class="dashboard-section">
+
+    <!-- SETTINGS -->
+    <section id="settings" class="settings-section">
       <h2>Account Settings</h2>
       <form class="settings-form">
         <label for="email">Email</label>
         <input id="email" type="email" placeholder="you@example.com" />
 
-        <label for="password">Change Password</label>
+        <label for="password">New Password</label>
         <input id="password" type="password" placeholder="••••••••" />
 
-        <button type="submit" class="btn btn-primary">Save Changes</button>
+        <button type="submit" class="btn-primary">Save Changes</button>
       </form>
     </section>
-
   </main>
 
-  <!-- NAV TOGGLE SCRIPT -->
+  <!-- NAV & DRAWER TOGGLE SCRIPT -->
   <script>
-    const btn    = document.querySelector('.nav-toggle');
-    const overlay = document.querySelector('.menu-overlay');
-    const close   = document.querySelector('.overlay-close');
+    // Header overlay toggle
+    const navBtn     = document.querySelector('.nav-toggle');
+    const navOverlay = document.querySelector('.menu-overlay');
+    const navClose   = document.querySelector('.overlay-close');
+    navBtn.addEventListener('click', () => {
+      navOverlay.classList.add('open');
+      navOverlay.setAttribute('aria-hidden','false');
+    });
+    navClose.addEventListener('click', () => {
+      navOverlay.classList.remove('open');
+      navOverlay.setAttribute('aria-hidden','true');
+    });
 
-    btn.addEventListener('click', () => {
-      overlay.classList.add('open');
-      overlay.setAttribute('aria-hidden','false');
+    // Transactions drawer toggle
+    const txBtn    = document.getElementById('tx-toggle');
+    const drawer   = document.querySelector('.transactions-drawer');
+    const drawerX  = document.querySelector('.drawer-close');
+    txBtn.addEventListener('click', () => {
+      drawer.classList.add('open');
+      drawer.setAttribute('aria-hidden','false');
     });
-    close.addEventListener('click', () => {
-      overlay.classList.remove('open');
-      overlay.setAttribute('aria-hidden','true');
-    });
-    overlay.addEventListener('click', e => {
-      if (e.target === overlay) {
-        overlay.classList.remove('open');
-        overlay.setAttribute('aria-hidden','true');
-      }
+    drawerX.addEventListener('click', () => {
+      drawer.classList.remove('open');
+      drawer.setAttribute('aria-hidden','true');
     });
   </script>
+
 </body>
 </html>
+
