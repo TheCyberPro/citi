@@ -1243,3 +1243,74 @@ body {
   color: var(--text);
   text-align: center;
 }
+/* Luxury trust footer */
+.trust-footer { margin-top: 22px; margin-bottom: 32px; }
+.trust-inner { max-width: 880px; margin: 0 auto; padding: 18px 20px; }
+
+/* subtle divider for visual separation */
+.trust-divider {
+  height: 1px;
+  width: 100%;
+  background: linear-gradient(90deg, transparent, rgba(100,110,125,0.06), transparent);
+  margin-bottom: 16px;
+  border-radius: 1px;
+}
+
+/* main content: centered row with badge + copy */
+.trust-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  text-align: center;
+}
+
+/* badge for trust signal */
+.trust-badge {
+  flex: 0 0 36px;
+  height: 36px;
+  width: 36px;
+  border-radius: 50%;
+  background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+  border: 1px solid rgba(255,255,255,0.03);
+  display: grid;
+  place-items: center;
+  color: #9ba8ff; /* subtle, premium tint for the icon */
+  box-shadow: 0 6px 20px rgba(15,20,40,0.12);
+}
+
+/* copy */
+.trust-text { display:flex; flex-direction:column; gap:6px; align-items:center; }
+
+/* primary line: readable, confident */
+.trust-lead {
+  font-size: 0.95rem;
+  color: var(--text, #0f1724);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+/* links styling */
+.trust-lead a {
+  color: var(--primary, #0051ff);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(0,81,255,0.12);
+  padding-bottom: 1px;
+}
+.trust-lead a:hover { text-decoration: underline; }
+
+/* secondary microcopy */
+.trust-sub {
+  font-size: 0.82rem;
+  color: var(--muted, #6b7280);
+  max-width: 64ch;
+}
+
+/* Responsive: keep everything centered and compact on small screens */
+@media (max-width: 640px) {
+  .trust-inner { padding: 12px; }
+  .trust-content { gap: 10px; padding: 6px 4px; }
+  .trust-badge { width:32px; height:32px; }
+  .trust-lead { font-size: 0.92rem; }
+  .trust-sub { font-size: 0.8rem; max-width: 46ch; }
+}
