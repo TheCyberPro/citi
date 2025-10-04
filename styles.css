@@ -436,6 +436,59 @@ body {
 .settings-form .btn-primary {
   margin-top: 0.5rem;
 }
+:root {
+  --max-width: 1200px; /* match your .container */
+}
+
+/* 1. Remove the old padding on the drawer itself */
+.transactions-drawer {
+  padding: 0;
+}
+
+/* 2. Give the inner container vertical padding & flex layout */
+.drawer-container {
+  padding: 1.5rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  position: relative; /* so .drawer-close can position itself */
+}
+
+/* 3. Position the close button inside the gutter of the centered container */
+.drawer-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+/* 4. Title styling */
+.drawer-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* 5. Ensure transactions-list spans full container width */
+.transactions-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Keep your existing grid on .transactions-list li */
+.transactions-list li {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  gap: 0.5rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--bg);
+}
+
 /*────────────────────────────────────────────────────────
   8. Grid & Cards (Home / Pricing)
 ────────────────────────────────────────────────────────*/
