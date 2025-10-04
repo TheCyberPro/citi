@@ -931,7 +931,7 @@
       }
 
       // Action wiring
-      const map = { 'act-deposit':'/deposit.html', 'act-withdraw':'/withdraw.html', 'act-transfer':'/transfer';
+      const map = { 'act-deposit':'/deposit.html', 'act-withdraw':'/withdraw.html', 'act-transfer':'/transfer.html';
       Object.keys(map).forEach(id => {
         const el = document.getElementById(id);
         if (el) el.addEventListener('click', () => { window.location.href = map[id]; });
