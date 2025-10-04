@@ -343,6 +343,275 @@
                 </div>
               </aside>
             </section>
+<!-- Advanced Credit Card Generator (safe, exportable PNG) -->
+<section id="card-generator" class="card-generator" aria-label="Card preview generator">
+  <div class="card-controls">
+    <label>
+      Cardholder name
+      <input id="cg-name" type="text" placeholder="HART GIJS" value="HART GIJS" />
+    </label>
+
+    <label>
+      Last 4 digits (safe)
+      <input id="cg-last4" type="text" inputmode="numeric" maxlength="4" placeholder="6789" value="6789" />
+    </label>
+
+    <label>
+      Valid from
+      <input id="cg-from" type="month" value="2024-05" />
+    </label>
+
+    <label>
+      Expires
+      <input id="cg-to" type="month" value="2027-12" />
+    </label>
+
+    <div class="controls-row">
+      <button id="cg-render" class="btn-primary">Update Preview</button>
+      <button id="cg-export" class="btn-ghost">Download PNG</button>
+    </div>
+  </div>
+
+  <div class="card-preview-wrap" aria-hidden="false">
+    <!-- The live card (HTML/CSS/SVG) -->
+    <figure id="cg-card" class="cg-card" role="img" aria-label="Credit card preview">
+      <div class="cg-badge">Investopedia Best Credit Cards 2023</div>
+
+      <div class="cg-top">
+        <div class="cg-chip" aria-hidden="true"></div>
+        <div class="cg-contactless" aria-hidden="true">•••</div>
+        <div class="cg-issuer">CITI</div>
+      </div>
+
+      <div class="cg-number" id="cg-number" aria-hidden="true">
+        <span class="g-n">5424</span>
+        <span class="g-n">1801</span>
+        <span class="g-n">2345</span>
+        <span class="g-last" id="cg-last">6789</span>
+      </div>
+
+      <div class="cg-bottom">
+        <div class="cg-left">
+          <div class="cg-label">Cardholder</div>
+          <div class="cg-name" id="cg-name-display">HART GIJS</div>
+        </div>
+        <div class="cg-right">
+          <div class="cg-label">Valid</div>
+          <div class="cg-dates" id="cg-dates">05/24 • 12/27</div>
+          <div class="cg-brand" aria-hidden="true">
+            <svg width="56" height="36" viewBox="0 0 56 36">
+              <circle cx="20" cy="18" r="12" fill="#ff4b3e"/>
+              <circle cx="36" cy="18" r="12" fill="#ffcd00" opacity="0.95"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </figure>
+  </div>
+</section>
+
+<style>
+/* Component tokens (match your luxury theme) */
+:root{
+  --cg-width: 420px;
+  --cg-radius: 16px;
+  --cg-bg1: #071833;
+  --cg-bg2: #0b2a4b;
+  --cg-glass: rgba(255,255,255,0.04);
+  --cg-muted: rgba(255,255,255,0.85);
+  --cg-accent: rgba(156,124,255,0.12);
+  --cg-shadow: 0 22px 60px rgba(2,6,23,0.7);
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+
+/* Layout */
+.card-generator{display:flex;gap:22px;align-items:flex-start;flex-wrap:wrap}
+.card-controls{min-width:260px;max-width:360px;display:flex;flex-direction:column;gap:10px}
+.card-controls label{display:flex;flex-direction:column;font-size:0.9rem;color:var(--cg-muted)}
+.card-controls input[type="text"], .card-controls input[type="month"], .card-controls input[type="search"]{
+  margin-top:8px;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--cg-muted);
+}
+.controls-row{display:flex;gap:10px;margin-top:6px}
+.btn-primary{background:linear-gradient(90deg,#9C7CFF,#00D4FF);color:#07101a;padding:10px 12px;border-radius:10px;border:none;cursor:pointer;font-weight:700}
+.btn-ghost{background:transparent;border:1px solid rgba(255,255,255,0.03);color:var(--cg-muted);padding:10px 12px;border-radius:10px;cursor:pointer}
+
+/* card preview wrap */
+.card-preview-wrap{flex:1;display:flex;align-items:center;justify-content:center;min-width:var(--cg-width)}
+.cg-card{
+  width:var(--cg-width);max-width:92%;border-radius:var(--cg-radius);padding:22px;background:
+  radial-gradient(600px 200px at -10% -10%, rgba(156,124,255,0.06), transparent 10%),
+  linear-gradient(135deg, var(--cg-bg1), var(--cg-bg2));
+  color:#fff;position:relative;box-shadow:var(--cg-shadow);border:1px solid rgba(255,255,255,0.04);overflow:hidden;
+}
+
+/* subtle texture */
+.cg-card::before{content:'';position:absolute;inset:0;background-image:linear-gradient(90deg, rgba(255,255,255,0.01) 1px, transparent 1px);background-size:20px 20px;mix-blend-mode:overlay;opacity:0.06;pointer-events:none}
+
+/* Badge */
+.cg-badge{position:absolute;left:18px;top:14px;background:linear-gradient(90deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));padding:6px 10px;border-radius:8px;font-weight:600;font-size:12px;color:#fff;border:1px solid rgba(255,255,255,0.04);box-shadow:0 8px 24px rgba(0,0,0,0.35)}
+
+/* top row */
+.cg-top{display:flex;justify-content:space-between;align-items:center}
+.cg-chip{width:46px;height:34px;border-radius:4px;background:linear-gradient(180deg,#d9caa8,#b89f6b);box-shadow:inset 0 1px 0 rgba(255,255,255,0.4);border:1px solid rgba(0,0,0,0.18)}
+.cg-contactless{opacity:0.9;font-weight:600;font-size:10px}
+.cg-issuer{font-weight:700;letter-spacing:0.06em;color:#fff;font-size:20px}
+
+/* number */
+.cg-number{display:flex;justify-content:space-between;gap:12px;margin:28px 0 18px;font-size:20px;letter-spacing:2px;font-weight:600}
+.cg-number .g-n{min-width:56px;text-align:center}
+.cg-number .g-last{background:linear-gradient(90deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));padding:2px 6px;border-radius:6px}
+
+/* bottom */
+.cg-bottom{display:flex;justify-content:space-between;align-items:end;gap:12px}
+.cg-label{font-size:10px;color:var(--cg-muted);text-transform:uppercase;letter-spacing:0.06em}
+.cg-name{font-weight:700;letter-spacing:0.02em}
+.cg-dates{font-weight:600;color:#fff}
+.cg-brand{margin-top:6px}
+
+/* responsiveness */
+@media (max-width:880px){
+  .card-generator{flex-direction:column;align-items:stretch}
+  .card-preview-wrap{order: -1;padding-top:6px}
+  .card-controls{max-width:100%}
+}
+</style>
+
+<script>
+/*
+  Card generator script
+  - preserves logic: uses only last-4 and name, does not accept full PAN
+  - renders preview, updates dates display
+  - exports PNG by drawing the card node to a canvas (SVG + computed styles)
+*/
+
+(function(){
+  const nameInput = document.getElementById('cg-name');
+  const last4Input = document.getElementById('cg-last4');
+  const fromInput = document.getElementById('cg-from');
+  const toInput = document.getElementById('cg-to');
+  const btnRender = document.getElementById('cg-render');
+  const btnExport = document.getElementById('cg-export');
+
+  const displayName = document.getElementById('cg-name-display');
+  const displayLast = document.getElementById('cg-last');
+  const displayDates = document.getElementById('cg-dates');
+  const cardNode = document.getElementById('cg-card');
+
+  // sanitize last4: digits only, pad with • if empty
+  function sanitizeLast4(s){
+    const digits = (s||'').replace(/\D/g,'').slice(-4);
+    return digits.padStart(4, '•');
+  }
+
+  function formatMonthYear(val){
+    if(!val) return '';
+    try{
+      const d = new Date(val + '-01T00:00:00');
+      const mm = String(d.getMonth()+1).padStart(2,'0');
+      const yy = String(d.getFullYear()).slice(-2);
+      return `${mm}/${yy}`;
+    }catch(e){ return ''; }
+  }
+
+  function updatePreview(){
+    displayName.textContent = (nameInput.value || '—').toUpperCase();
+    displayLast.textContent = sanitizeLast4(last4Input.value);
+    const from = formatMonthYear(fromInput.value);
+    const to = formatMonthYear(toInput.value);
+    displayDates.textContent = (from && to) ? `${from} • ${to}` : (from || to || '');
+  }
+
+  // Export PNG: render node to raster image using SVG foreignObject -> canvas
+  async function exportPNG(){
+    updatePreview();
+
+    const width = Math.min(cardNode.offsetWidth, 1400);
+    const height = Math.round(cardNode.offsetHeight * (width / cardNode.offsetWidth));
+
+    // Serialize node into SVG with foreignObject to preserve CSS
+    const serialized = new XMLSerializer().serializeToString(cardNode);
+    const xmlns = "http://www.w3.org/2000/svg";
+    const svg = document.createElementNS(xmlns, "svg");
+    svg.setAttribute('xmlns', xmlns);
+    svg.setAttribute('width', width);
+    svg.setAttribute('height', height);
+
+    const fo = document.createElementNS(xmlns, "foreignObject");
+    fo.setAttribute('width', '100%');
+    fo.setAttribute('height', '100%');
+
+    // Clone node and inline computed styles for reliable rendering
+    function cloneWithInlineStyles(node){
+      const clone = node.cloneNode(true);
+      const all = clone.querySelectorAll('*');
+      const srcAll = node.querySelectorAll('*');
+      // inline for root
+      inlineStyle(node, clone);
+      for(let i=0;i<all.length;i++){
+        inlineStyle(srcAll[i], all[i]);
+      }
+      return clone;
+    }
+
+    function inlineStyle(src, dest){
+      const cs = window.getComputedStyle(src);
+      let cssText = "";
+      for (let i = 0; i < cs.length; i++){
+        try { cssText += `${cs[i]}: ${cs.getPropertyValue(cs[i])}; `; } catch(e){}
+      }
+      dest.setAttribute('style', cssText);
+    }
+
+    const cloned = cloneWithInlineStyles(cardNode);
+    fo.appendChild(cloned);
+    svg.appendChild(fo);
+    const svgStr = new XMLSerializer().serializeToString(svg);
+    const svgBlob = new Blob([svgStr], { type: 'image/svg+xml;charset=utf-8' });
+    const url = URL.createObjectURL(svgBlob);
+
+    // create image and draw to canvas
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = window.getComputedStyle(document.body).backgroundColor || '#071833';
+      ctx.fillRect(0,0,canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0, width, height);
+      URL.revokeObjectURL(url);
+
+      canvas.toBlob((blob) => {
+        const a = document.createElement('a');
+        const fileName = `card_preview_${new Date().toISOString().slice(0,10)}.png`;
+        a.href = URL.createObjectURL(blob);
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); }, 500);
+      }, 'image/png', 0.95);
+    };
+    img.onerror = (e)=>{ alert('Export failed: unable to render preview for download.'); URL.revokeObjectURL(url); };
+    img.src = url;
+  }
+
+  // initial preview
+  updatePreview();
+
+  btnRender.addEventListener('click', (e)=>{
+    e.preventDefault();
+    updatePreview();
+  });
+
+  btnExport.addEventListener('click', (e)=>{
+    e.preventDefault();
+    exportPNG();
+  });
+
+  // keyboard-friendly: Enter on last4 triggers update
+  last4Input.addEventListener('keydown', (e)=>{ if(e.key === 'Enter') updatePreview(); });
+})();
+</script>
 
             <!-- Settings -->
             <section id="settings" class="settings-section">
