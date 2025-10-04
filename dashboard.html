@@ -241,6 +241,68 @@ button:focus, .transactions-list a:focus {
   outline: 2px solid rgba(156,124,255,0.14);
   outline-offset: 2px;
 }
+/* Transactions: polished table, cards and luxury drawer */
+.transactions-section { margin-top:18px; }
+.section-header { display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px; }
+.section-controls { display:flex;align-items:center;gap:10px; }
+.tx-mini-search { padding:8px 10px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--text);min-width:160px }
+
+/* Table wrapper */
+.transactions-table-wrapper { border-radius:12px; overflow:auto; border:1px solid rgba(255,255,255,0.02); background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent); }
+table.transactions { width:100%; border-collapse:collapse; min-width:680px; }
+table.transactions thead th { padding:14px 16px; text-align:left; color:var(--muted); font-size:0.9rem; border-bottom:1px solid rgba(255,255,255,0.02); }
+table.transactions tbody td { padding:12px 16px; font-size:0.95rem; border-top:1px solid rgba(255,255,255,0.02); }
+.text-right { text-align:right; }
+
+/* Small stacked cards */
+.tx-cards { display:none; gap:10px; margin-top:8px; }
+.tx-card { display:flex; justify-content:space-between; align-items:center; padding:12px; border-radius:10px; background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent); border:1px solid rgba(255,255,255,0.02) }
+.tx-date { font-size:0.9rem; color:var(--muted) }
+.tx-desc { font-weight:600 }
+
+/* Amount styles */
+.amount.negative, .tx-amount.negative { color:var(--danger); font-weight:700 }
+.amount.positive, .tx-amount.positive { color:var(--success); font-weight:700 }
+
+/* Luxury drawer shell + backdrop */
+.transactions-drawer { position:fixed; inset:0; z-index:1800; display:none; }
+.transactions-drawer.open { display:block; }
+.drawer-backdrop { position:absolute; inset:0; background:rgba(2,6,23,0.6); backdrop-filter: blur(6px); }
+.drawer-shell { position:absolute; right:0; top:6vh; bottom:6vh; width:560px; max-width:96%; background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border-left:1px solid rgba(255,255,255,0.03); border-radius:12px 0 0 12px; box-shadow:-30px 40px 120px rgba(2,6,23,0.7); display:flex; flex-direction:column; overflow:hidden; }
+
+/* Drawer header */
+.drawer-head { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; padding:18px; border-bottom:1px solid rgba(255,255,255,0.02) }
+.drawer-title { margin:0; font-size:1.15rem }
+.drawer-sub { color:var(--muted); font-size:0.85rem; margin-top:4px }
+
+/* Search and filters */
+.search-wrap { position:relative; }
+.tx-search { padding:10px 36px 10px 12px; border-radius:10px; border:1px solid rgba(255,255,255,0.04); background:transparent; color:var(--text); min-width:220px; }
+.btn-icon { position:absolute; right:6px; top:50%; transform:translateY(-50%); background:none; border:none; color:var(--muted); cursor:pointer; padding:6px; }
+.filters { display:flex; gap:8px; align-items:center; margin-left:8px }
+.date-input { padding:8px 10px; border-radius:8px; border:1px solid rgba(255,255,255,0.04); background:transparent; color:var(--text) }
+
+/* Drawer table */
+.drawer-body { padding:12px 16px 18px; display:flex; flex-direction:column; gap:12px; flex:1; overflow:hidden }
+.drawer-table-wrap { overflow:auto; border-radius:8px; border:1px solid rgba(255,255,255,0.02); }
+.drawer-table { width:100%; border-collapse:collapse; min-width:480px; }
+.drawer-table thead th { padding:12px 14px; text-align:left; color:var(--muted); font-size:0.9rem; border-bottom:1px solid rgba(255,255,255,0.02) }
+.drawer-table tbody td { padding:12px 14px; border-top:1px solid rgba(255,255,255,0.02); font-size:0.95rem }
+
+/* Drawer footer */
+.drawer-footer { display:flex; align-items:center; justify-content:space-between; gap:12px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.02) }
+.pager { display:flex; align-items:center; gap:8px }
+.pager-btn { padding:8px 10px; border-radius:8px; background:transparent; border:1px solid rgba(255,255,255,0.03); color:var(--text); cursor:pointer }
+.pager-info { font-size:0.95rem; color:var(--muted) }
+
+/* Responsive breakpoints */
+@media (max-width: 900px) {
+  table.transactions { display:none }
+  .transactions-table-wrapper { display:none }
+  .tx-cards { display:block }
+  .drawer-shell { width: calc(100% - 32px); left:16px; right:16px; top:6vh; bottom:6vh; border-radius:12px }
+  .tx-mini-search { display:none }
+}
 
   </style>
 </head>
