@@ -175,11 +175,6 @@ button:focus, a:focus{outline:2px solid rgba(156,124,255,0.14);outline-offset:2p
   </header>
 
   <!-- secure banner -->
-  <div class="secure-banner container" role="status" aria-live="polite">
-    <svg class="lock-icon" viewBox="0 0 24 24" aria-hidden="true" width="18" height="18"><path d="M12 1a5 5 0 0 0-5 5v4H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-1V6a5 5 0 0 0-5-5z" fill="currentColor"/></svg>
-    <span>You’re in a secure session — data is encrypted end-to-end.</span>
-  </div>
-
   <main class="container">
     <div class="grid">
       <section class="panel" aria-labelledby="transfer-title">
