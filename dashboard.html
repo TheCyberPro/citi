@@ -266,6 +266,79 @@ const now = new Date().toISOString();
 localStorage.setItem('lastLogin', now);
 
 </script>
+<script>
+  // Sample data; replace with real API or storage after login
+  const transactions = [
+    {
+      date: 'Sep 28, 2025',
+      time: '8:16 PM',
+      desc: 'Withdrawal',
+      amount: -2900.00,
+      currency: 'USD',
+      status: 'Successful'
+    },
+    {
+      date: 'Sep 27, 2025',
+      time: '',
+      desc: '—',
+      amount: 0,
+      currency: '',
+      status: 'Pending'
+    }
+    // …add more items here…
+  ];
+
+  // Format amount with two decimals + sign
+  function formatAmount(val) {
+    const abs = Math.abs(val).toLocaleString(undefined, { minimumFractionDigits: 2 });
+    return (val < 0 ? '−' : '+') + abs;
+  }
+
+  // Render list into any .tx-list container
+  function renderTxList(container) {
+    container.innerHTML = transactions.map(tx => `
+      <li class="tx-card">
+        <div class="tx-info">
+          <span class="tx-date">${tx.date}</span>
+          ${tx.time ? `<span class="tx-time">${tx.time}</span>` : ''}
+          <span class="tx-desc">${tx.desc}</span>
+        </div>
+        <div class="tx-details">
+          <span class="tx-amount ${tx.amount < 0 ? 'negative' : 'positive'}">
+            ${formatAmount(tx.amount)}
+          </span>
+          <span class="tx-currency">${tx.currency}</span>
+          <span class="tx-status">${tx.status}</span>
+        </div>
+      </li>
+    `).join('');
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    // Populate both the inline list and drawer list
+    document.querySelectorAll('.tx-list').forEach(renderTxList);
+
+    // Drawer toggle logic
+    const btn    = document.getElementById('tx-toggle');
+    const drawer = document.querySelector('.transactions-drawer');
+    const close  = document.querySelector('.drawer-close');
+
+    btn.addEventListener('click', () => {
+      drawer.classList.add('open');
+      drawer.setAttribute('aria-hidden','false');
+    });
+    close.addEventListener('click', () => {
+      drawer.classList.remove('open');
+      drawer.setAttribute('aria-hidden','true');
+    });
+    drawer.addEventListener('click', e => {
+      if (e.target === drawer) {
+        drawer.classList.remove('open');
+        drawer.setAttribute('aria-hidden','true');
+      }
+    });
+  });
+</script>
 
 </body>
 </html>
