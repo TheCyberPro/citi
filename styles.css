@@ -42,6 +42,29 @@ a {
   text-decoration: none;
   color: inherit;
 }
+/*───────────────────────────────────────────────────
+  Root & Base
+───────────────────────────────────────────────────*/
+:root {
+  --bg: #f7f8fa;
+  --surface: #ffffff;
+  --surface-alt: #fcfcfd;
+  --primary: #0051ff;
+  --on-primary: #ffffff;
+  --text: #1f2933;
+  --muted: #6b7280;
+  --negative: #e00;
+  --positive: #008000;
+  --radius: 8px;
+  --font: 'Inter', sans-serif;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+}
 
 /*────────────────────────────────────────────────────────
   2. Layout Containers & Sections
