@@ -281,6 +281,67 @@
   .settings-grid { grid-template-columns: 1fr; }
   .side-panel { order: 2; }
 }
+/* Card image preview (responsive, preserves aspect ratio ~ 85.6 x 54 mm => 1.585) */
+.cg-card {
+  width: clamp(240px, 46vw, 420px);         /* fluid width that caps on desktop */
+  aspect-ratio: 1.585 / 1;                 /* intrinsic card ratio */
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  display: block;
+  background: transparent;                 /* image provides appearance */
+  box-shadow: 0 22px 60px rgba(2,6,23,0.7);
+  border: 1px solid rgba(255,255,255,0.04);
+  margin: 0 auto;
+}
+
+/* artwork fills the card */
+.cg-art {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  -webkit-user-drag: none;
+  user-select: none;
+}
+
+/* overlay for dynamic text (last4 + name) */
+.cg-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: clamp(10px, 2.2vw, 22px);
+  gap: clamp(6px, 1.2vw, 10px);
+}
+
+/* last 4 digits (top-right feel) */
+.cg-last {
+  align-self: flex-end;
+  background: rgba(255,255,255,0.06);
+  padding: .25em .5em;
+  border-radius: 6px;
+  font-weight:700;
+  color: #fff;
+  font-size: clamp(11px, 1.8vw, 14px);
+  letter-spacing: 1.2px;
+  backdrop-filter: blur(4px);
+}
+
+/* cardholder name (bottom-left) */
+.cg-name {
+  font-weight:700;
+  color:#fff;
+  font-size: clamp(12px, 2.0vw, 16px);
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  mix-blend-mode: screen;
+}
+
+/* ensure good hit area elsewhere and maintain layout */
+.cg-card img[alt="Card artwork"] { display:block; }
 
   </style>
 </head>
@@ -466,38 +527,13 @@
             </section>
 
     <!-- The live card (HTML/CSS/SVG) -->
-    <figure id="cg-card" class="cg-card" role="img" aria-label="Credit card preview">
-
-      <div class="cg-top">
-        <div class="cg-chip" aria-hidden="true"></div>
-        <div class="cg-contactless" aria-hidden="true">•••</div>
-        <div class="cg-issuer">CITI</div>
-      </div>
-
-      <div class="cg-number" id="cg-number" aria-hidden="true">
-        <span class="g-n">5429</span>
-        <span class="g-n">****</span>
-        <span class="g-n">****</span>
-        <span class="g-last" id="cg-last">8002</span>
-      </div>
-
-      <div class="cg-bottom">
-        <div class="cg-left">
-          <div class="cg-label">Cardholder</div>
-          <div class="cg-name" id="cg-name-display">HART GIJS</div>
-        </div>
-        <div class="cg-right">
-          <div class="cg-label">Valid</div>
-          <div class="cg-dates" id="cg-dates">05/27</div>
-          <div class="cg-brand" aria-hidden="true">
-            <svg width="56" height="36" viewBox="0 0 56 36">
-              <circle cx="20" cy="18" r="12" fill="#ff4b3e"/>
-              <circle cx="36" cy="18" r="12" fill="#ffcd00" opacity="0.95"/>
-            </svg>
-          </div>
-        </div>
-      </div>
-    </figure>
+<figure id="cg-card" class="cg-card" role="img" aria-label="Credit card preview">
+  <img src="assets/creditcard.png" alt="Card artwork" class="cg-art" />
+  <div class="cg-overlay">
+    <div class="cg-last" id="cg-last">••••</div>
+    <div class="cg-name" id="cg-name-display">HART GIJS</div>
+  </div>
+</figure>
   </div>
 </section>
 <!-- BEGIN: Advanced Account Settings + Cards + 2FA + Footer (drop-in) -->
@@ -1238,5 +1274,25 @@
       });
     });
   </script>
+<script>
+/* Ensure overlay values remain synced when your existing card-generator updates #cg-name-display and #cg-last */
+document.addEventListener('DOMContentLoaded', () => {
+  // support old IDs in case other code writes to them
+  const srcName = document.getElementById('cg-name-display');
+  const srcLast = document.getElementById('cg-last');
+  // if your previous code updated different IDs, map them here
+  function syncOverlay(){
+    const targetName = document.querySelector('.cg-name#cg-name-display') || srcName;
+    const targetLast = document.querySelector('.cg-last#cg-last') || srcLast;
+    // no-op if elements missing
+    if (!targetName && !targetLast) return;
+    // keep current text (existing scripts still write to these IDs)
+  }
+  // run once and also expose for external code
+  syncOverlay();
+  window.updateCardOverlay = syncOverlay;
+});
+</script>
+
 </body>
 </html>
