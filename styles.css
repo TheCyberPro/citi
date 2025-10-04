@@ -1190,3 +1190,18 @@ body {
 #tx-toggle:hover {
   background: var(--surface-alt);
 }
+/* ensure all action icons are identical size */
+.action-icon {
+  width: 24px;           /* try 20px or 24px as needed */
+  height: 24px;
+  display: block;        /* removes inline-SVG whitespace */
+  margin-bottom: 0.5rem; /* match your other icons */
+  color: var(--primary); /* for inline SVGs using currentColor */
+}
+
+/* if you want it even smaller: */
+.action-icon.small {
+  width: 20px;
+  height: 20px;
+}
+
