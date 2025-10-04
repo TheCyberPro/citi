@@ -149,6 +149,99 @@
     }
 
     button:focus, a:focus{outline:2px solid rgba(156,124,255,0.14);outline-offset:2px}
+/* Transactions: responsive table, stacked cards, and polished drawer */
+
+/* Table wrapper: allow horizontal scroll but keep padding and rounded corners */
+.transactions-table-wrapper {
+  border-radius: 12px;
+  overflow: auto;
+  background: linear-gradient(180deg, rgba(255,255,255,0.01), transparent);
+  border: 1px solid rgba(255,255,255,0.02);
+}
+
+/* Table spacing and readable type scale */
+table.transactions {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 680px; /* ensures columns stay readable on narrow desktops */
+}
+table.transactions thead th {
+  padding: 14px 16px;
+  text-align: left;
+  color: var(--muted);
+  font-size: 0.9rem;
+  border-bottom: 1px solid rgba(255,255,255,0.02);
+}
+table.transactions tbody td {
+  padding: 12px 16px;
+  border-top: 1px solid rgba(255,255,255,0.02);
+  font-size: 0.95rem;
+}
+
+/* Amount styling */
+.amount.negative { color: var(--danger); font-weight: 700; }
+.amount.positive { color: var(--success); font-weight: 700; }
+
+/* Mobile-friendly stacked list (hidden on wide screens) */
+.transactions-list, .tx-cards {
+  display: none;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  gap: 10px;
+}
+.transactions-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 10px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.01), transparent);
+  border: 1px solid rgba(255,255,255,0.02);
+}
+
+/* Drawer container styles (keeps your markup) */
+.transactions-drawer {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 420px;
+  max-width: 95%;
+  height: 100%;
+  background: linear-gradient(180deg, rgba(2,6,23,0.96), rgba(2,6,23,0.99));
+  box-shadow: -28px 0 80px rgba(0,0,0,0.7);
+  transition: right .28s ease;
+  z-index: 1400;
+  padding: 20px;
+  border-left: 1px solid rgba(255,255,255,0.03);
+}
+.transactions-drawer.open { right: 0; }
+
+/* Drawer header close button */
+.drawer-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 24px;
+  cursor: pointer;
+}
+
+/* Make table hidden and stacked list visible on small viewports */
+@media (max-width: 900px) {
+  table.transactions { display: none; }
+  .transactions-list { display: block; }
+  .transactions-table-wrapper { display: none; }
+}
+
+/* Accessibility: focus ring for interactive elements inside transactions */
+button:focus, .transactions-list a:focus {
+  outline: 2px solid rgba(156,124,255,0.14);
+  outline-offset: 2px;
+}
+
   </style>
 </head>
 <body>
@@ -199,7 +292,6 @@
   <!-- Optional repeating secure banner -->
   <div class="secure-banner container" role="status" aria-live="polite">
     <svg class="lock-icon" viewBox="0 0 24 24" aria-hidden="true" width="18" height="18"><path d="M12 1a5 5 0 0 0-5 5v4H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-1V6a5 5 0 0 0-5-5z" fill="currentColor"/></svg>
-    <span>You’re in a secure session — data is encrypted end-to-end.</span>
   </div>
 
   <main class="dashboard container" role="main">
