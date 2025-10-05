@@ -3,7 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Transfer — CITI</title>
+  <title>Transfer funds — CITI</title>
+
   <style>
     :root{
       --bg:#0f1724;
@@ -22,28 +23,31 @@
                   radial-gradient(900px 400px at 90% 90%, rgba(0,200,190,0.05), transparent 10%),
                   var(--bg);
       color:#e6eef8;
+      -webkit-font-smoothing:antialiased;
       display:flex;
       align-items:center;
       justify-content:center;
       padding:28px;
     }
 
-    .wrap{
+    .container{
       width:980px;
       max-width:96%;
       display:grid;
-      grid-template-columns:1fr 360px;
-      gap:20px;
+      grid-template-columns: 1fr 360px;
+      gap:22px;
+      align-items:start;
     }
 
-    .card{
+    .panel{
       background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02));
       border:1px solid rgba(255,255,255,0.04);
       padding:20px;
       border-radius:12px;
+      box-shadow: 0 6px 30px rgba(2,6,23,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
     }
 
-    .top{
+    .brand-row{
       display:flex;
       align-items:center;
       justify-content:space-between;
@@ -51,11 +55,23 @@
       margin-bottom:12px;
     }
 
-    .brand-left{display:flex;gap:12px;align-items:center}
-    .logo{width:44px;height:44px;border-radius:8px;background:linear-gradient(135deg,#fff,#f3f3f3);box-shadow:0 8px 24px rgba(124,92,255,0.12)}
-    .brand-title{font-weight:700;font-size:16px}
-    .brand-sub{font-size:13px;color:var(--muted);margin-top:2px}
+    .brand{
+      display:flex;
+      gap:12px;
+      align-items:center;
+    }
+    .logo{
+      width:44px;height:44px;border-radius:10px;
+      background:linear-gradient(135deg,#fff 0%, #f0f0f0 100%);
+      box-shadow: 0 6px 18px rgba(124,92,255,0.14);
+    }
+    .title{font-weight:700;font-size:16px;color:#f4f7fb}
+    .subtitle{font-size:13px;color:var(--muted);margin-top:2px}
 
+    form .row{
+      display:flex;gap:12px;margin-bottom:12px;
+      align-items:end;
+    }
     label{display:block;font-size:13px;color:var(--muted);margin-bottom:8px}
     input[type="text"], input[type="number"], select, textarea{
       width:100%;
@@ -63,83 +79,77 @@
       border-radius:10px;
       background:var(--glass);
       border:1px solid rgba(255,255,255,0.03);
-      color:#e8f0ff;
-      font-size:14px;
-      outline:none;
+      color:#e8f0ff;font-size:14px;outline:none;
     }
 
-    .row{display:flex;gap:12px;margin-bottom:12px}
-    .muted{color:var(--muted);font-size:13px}
+    .muted {color:var(--muted);font-size:13px}
 
-    .actions{display:flex;gap:12px;align-items:center;margin-top:8px}
+    .balance-card{
+      display:flex;flex-direction:column;padding:18px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.006));
+      border:1px solid rgba(255,255,255,0.03);
+    }
+
+    .balance-label{font-size:13px;color:var(--muted)}
+    .balance-amount{font-size:28px;font-weight:700;margin-top:6px;color:#fff}
+
     .btn{
-      padding:10px 14px;border-radius:10px;border:0;cursor:pointer;font-weight:700;color:#08101a;background:linear-gradient(90deg,var(--accent),#5ec9ff);
-      box-shadow:0 8px 30px rgba(124,92,255,0.14);
+      display:inline-flex;align-items:center;justify-content:center;padding:12px 16px;border-radius:10px;cursor:pointer;border:0;font-weight:700;
+      color:#08101a;background:linear-gradient(90deg,var(--accent),#5ec9ff);box-shadow: 0 8px 30px rgba(124,92,255,0.14);
     }
-    .btn-ghost{
-      background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted);font-weight:700;padding:10px 14px;border-radius:10px;
-    }
-    .balance-card{padding:16px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.006));border:1px solid rgba(255,255,255,0.03)}
-    .balance-amt{font-size:28px;font-weight:800;color:#fff;margin-top:8px}
-    .history{margin-top:12px}
-    .history-list{max-height:320px;overflow:auto;margin-top:10px;display:flex;flex-direction:column;gap:8px;padding-right:6px}
-    .tx{padding:10px;border-radius:10px;background:rgba(255,255,255,0.02);display:flex;justify-content:space-between;align-items:center;border:1px solid rgba(255,255,255,0.02)}
+    .btn:active{transform:translateY(1px)}
+    .btn-ghost{background:transparent;color:var(--muted);border:1px solid rgba(255,255,255,0.04);box-shadow:none}
+
+    .history-list{margin-top:12px;display:flex;flex-direction:column;gap:10px;max-height:320px;overflow:auto;padding-right:6px}
+    .tx{padding:12px;border-radius:10px;background:rgba(255,255,255,0.02);display:flex;justify-content:space-between;align-items:center;border:1px solid rgba(255,255,255,0.02)}
     .tx .left{display:flex;flex-direction:column}
-    .tx .title{font-weight:700}
+    .tx .title{font-weight:600;font-size:14px}
     .tx .meta{font-size:12px;color:var(--muted);margin-top:4px}
     .tx .amount{font-weight:800}
 
-    .small{font-size:12px;color:var(--muted)}
+    .small-note{font-size:13px;color:var(--muted);margin-top:8px}
 
-    @media (max-width:900px){
-      .wrap{grid-template-columns:1fr}
-    }
-
-    /* Print styles for receipt print window */
-    @media print {
-      body *{visibility:hidden}
-      #printable, #printable *{visibility:visible}
-      #printable{position:fixed;left:0;top:0;width:100%}
+    @media (max-width:920px){
+      .container{grid-template-columns:1fr;gap:16px}
     }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="card">
-      <div class="top">
-        <div class="brand-left">
+  <div class="container" role="main">
+    <div class="panel" aria-labelledby="panel-title">
+      <div class="brand-row">
+        <div class="brand">
           <div class="logo" aria-hidden="true"></div>
           <div>
-            <div class="brand-title">Transfer funds</div>
-            <div class="brand-sub">Send money instantly to saved recipients or any bank account</div>
+            <div id="panel-title" class="title">Transfer funds</div>
+            <div class="subtitle">Send money instantly to saved recipients or any bank account</div>
           </div>
         </div>
         <div class="muted">Logged in as <strong>AUTHOR</strong></div>
       </div>
 
-      <nav style="display:flex;gap:12px;margin-bottom:14px;">
-        <a id="nav-dashboard" class="small muted" href="dashboard.html">Dashboard</a>
-        <div class="small muted">Make a transfer</div>
+      <nav style="display:flex;gap:12px;margin-bottom:16px">
+        <button id="nav-dashboard" class="btn-ghost">Dashboard</button>
+        <button class="btn-ghost" disabled>Make a transfer</button>
       </nav>
 
       <form id="transferForm" autocomplete="off" novalidate>
         <div class="row">
           <div style="flex:1">
             <label for="recipientName">Recipient name</label>
-            <input id="recipientName" name="recipientName" type="text" placeholder="Jane Doe" value="Jane Doe" required />
+            <input id="recipientName" name="recipientName" type="text" value="Jane Doe" required />
           </div>
-          <div style="width:140px">
+          <div style="width:160px">
             <label for="bankCode">Bank code</label>
-            <input id="bankCode" name="bankCode" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="012" value="012" />
+            <input id="bankCode" name="bankCode" type="text" value="012" inputmode="numeric" />
           </div>
         </div>
 
         <div class="row">
           <div style="flex:1">
-            <label for="accountNumber">Account number</label>
-            <input id="accountNumber" name="accountNumber" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="1234567890" value="1234567890" required />
+            <label for="toAccount">Account number</label>
+            <input id="toAccount" name="toAccount" type="text" value="1234567890" inputmode="numeric" required />
           </div>
-          <div style="width:140px">
+          <div style="width:160px">
             <label for="currency">Currency</label>
             <select id="currency" name="currency">
               <option value="JPY">JPY</option>
@@ -152,279 +162,277 @@
 
         <div style="margin-bottom:12px">
           <label for="amount">Amount</label>
-          <input id="amount" name="amount" type="number" min="0.01" step="0.01" value="0.00" placeholder="0.00" required />
+          <input id="amount" name="amount" type="number" min="0.01" step="0.01" value="0.00" required />
         </div>
 
         <div style="margin-bottom:12px">
           <label for="note">Note (optional)</label>
-          <input id="note" name="note" type="text" placeholder="For rent, invoice #123" value="For rent, invoice #123" />
+          <input id="note" name="note" type="text" value="For rent, invoice #123" />
         </div>
 
-        <div class="actions">
-          <button id="sendBtn" type="button" class="btn">Send transfer</button>
-          <button id="resetBtn" type="button" class="btn-ghost">Reset</button>
-          <div style="margin-left:auto" class="muted">Available balance <strong id="availableBalance">¥0.00</strong></div>
+        <div style="display:flex;gap:12px;align-items:center;margin-top:10px">
+          <button type="submit" id="sendBtn" class="btn">Send transfer</button>
+          <button type="button" id="resetBtn" class="btn btn-ghost">Reset</button>
+          <div style="margin-left:auto" class="muted">Available balance <strong id="balanceDisplay">¥0.00</strong></div>
         </div>
 
-        <div style="margin-top:10px" class="small muted">This balance updates immediately after each transfer</div>
+        <p class="small-note">This balance updates immediately after each transfer</p>
       </form>
 
-      <div style="margin-top:16px" class="history">
-        <div style="display:flex;align-items:center;justify-content:space-between">
-          <div class="brand-sub">Recent activity</div>
-          <div class="small muted" style="display:flex;gap:8px;align-items:center">
-            <span>Latest transfers and debits</span>
-            <button id="clearHistory" class="btn-ghost" style="padding:6px 8px;font-size:12px">Clear</button>
-          </div>
-        </div>
-
-        <div class="history-list" id="txList" aria-live="polite"></div>
+      <div style="margin-top:18px;display:flex;justify-content:space-between;align-items:center">
+        <div class="subtitle">Recent activity</div>
+        <div class="muted">Latest transfers and debits</div>
       </div>
+
+      <div style="display:flex;gap:10px;margin-top:12px;align-items:center">
+        <button id="clearHistory" class="btn btn-ghost">Clear</button>
+      </div>
+
+      <div class="history-list" id="historyList" aria-live="polite"></div>
     </div>
 
-    <div class="card balance-card">
+    <aside class="panel balance-card" aria-labelledby="balance-title">
       <div>
-        <div class="small muted">Available balance</div>
-        <div class="balance-amt" id="balanceMain">¥0.00</div>
-        <div class="small muted" id="balanceCurrency">Currency: JPY</div>
+        <div id="balance-title" class="balance-label">Available balance</div>
+        <div class="balance-amount" id="balanceAmount">¥0.00</div>
+        <div class="muted" id="currencyLabel">Currency: JPY</div>
       </div>
-    </div>
+
+      <div style="margin-top:18px">
+        <div class="subtitle">Recent Transactions</div>
+        <div class="muted small-note">Showing debits</div>
+        <div class="history-list" id="sideHistory"></div>
+      </div>
+    </aside>
   </div>
 
   <script>
-    // Storage keys
     const BALANCE_KEY = 'balance';
     const TX_KEY = 'transactions';
 
-    // Helpers
-    function safeParse(key, fallback) {
-      try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; } catch { return fallback; }
+    function safeParse(key, fallback){
+      try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch { return fallback; }
     }
 
-    function write(key, val) { localStorage.setItem(key, JSON.stringify(val)); }
-
-    function formatCurrency(amount, currency) {
+    function formatAmount(amount, currency){
       try {
         return new Intl.NumberFormat(undefined, { style: 'currency', currency }).format(amount);
       } catch {
-        return (currency || '') + ' ' + Number(amount).toFixed(2);
+        return (currency ? currency + ' ' : '') + Number(amount).toFixed(2);
       }
     }
 
-    function escapeHtml(s){ if(s===null||s===undefined) return ''; return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'})[m]); }
-
-    // Init defaults if not present
-    function initStorage() {
-      if (!localStorage.getItem(BALANCE_KEY)) {
-        // Defaulting to JPY 0.00 to match your sample
-        write(BALANCE_KEY, { amount: 0.00, currency: 'JPY' });
+    function initStorage(){
+      if(!localStorage.getItem(BALANCE_KEY)){
+        // start with zero JPY as your example shows ¥0.00
+        localStorage.setItem(BALANCE_KEY, JSON.stringify({ amount: 0.00, currency: 'JPY' }));
       }
-      if (!localStorage.getItem(TX_KEY)) {
-        write(TX_KEY, []);
+      if(!localStorage.getItem(TX_KEY)){
+        localStorage.setItem(TX_KEY, JSON.stringify([]));
       }
     }
 
-    // Read / write helpers
     function getBalance(){ return safeParse(BALANCE_KEY, { amount:0, currency:'JPY' }); }
-    function setBalance(b){ write(BALANCE_KEY, b); }
-
+    function setBalance(b){ localStorage.setItem(BALANCE_KEY, JSON.stringify(b)); }
     function getTxs(){ return safeParse(TX_KEY, []); }
-    function setTxs(txs){ write(TX_KEY, txs); }
+    function setTxs(txs){ localStorage.setItem(TX_KEY, JSON.stringify(txs)); }
 
-    // Render UI
-    function renderBalanceUI(){
+    function renderBalance(){
       const b = getBalance();
-      document.getElementById('balanceMain').textContent = formatCurrency(b.amount, b.currency);
-      document.getElementById('availableBalance').textContent = formatCurrency(b.amount, b.currency);
-      document.getElementById('balanceCurrency').textContent = 'Currency: ' + (b.currency || '—');
-      // set currency selector to account currency if possible
-      const currencySelect = document.getElementById('currency');
-      if (currencySelect) currencySelect.value = b.currency || 'JPY';
+      document.getElementById('balanceAmount').textContent = formatAmount(b.amount, b.currency);
+      document.getElementById('balanceDisplay').textContent = formatAmount(b.amount, b.currency);
+      document.getElementById('currencyLabel').textContent = 'Currency: ' + (b.currency || '—');
+      // keep currency select in sync
+      const sel = document.getElementById('currency');
+      if(sel) sel.value = b.currency || sel.value;
     }
 
-    function renderTxList(){
-      const list = document.getElementById('txList');
+    function renderHistory(){
+      const list = document.getElementById('historyList');
+      const side = document.getElementById('sideHistory');
       list.innerHTML = '';
+      side.innerHTML = '';
       const txs = getTxs().slice().reverse(); // newest first
-      if (!txs.length) {
-        const row = document.createElement('div');
-        row.className = 'tx';
-        row.innerHTML = `<div class="left"><div class="title">No activity</div><div class="meta">Your recent transfers and debits will appear here</div></div><div class="amount muted">—</div>`;
-        list.appendChild(row);
+
+      if(!txs.length){
+        const none = createTxRow({ title: 'No transactions', meta: 'Your recent debits will appear here', amount: '—', warn: true });
+        list.appendChild(none);
+        side.appendChild(none.cloneNode(true));
         return;
       }
 
       txs.forEach(tx => {
-        const row = document.createElement('div');
-        row.className = 'tx';
-        const amtSign = tx.direction === 'debit' ? '-' : '';
-        const amtColor = tx.direction === 'debit' ? 'var(--danger)' : 'var(--success)';
-        row.innerHTML = `
-          <div class="left">
-            <div class="title">${escapeHtml(tx.title || (tx.direction==='debit' ? 'Transfer' : 'Credit'))}</div>
-            <div class="meta">${new Date(tx.timestamp).toLocaleString()} · ${escapeHtml(tx.toName || tx.toAccount || '')}</div>
-          </div>
-          <div class="amount" style="color:${amtColor}">${amtSign}${formatCurrency(tx.amount, tx.currency)}</div>
-        `;
+        // show all debits; keep it simple and show direction/type info
+        const row = createTxRow({
+          title: tx.description || 'Transfer',
+          meta: new Date(tx.timestamp).toLocaleString() + ' · To ' + tx.toAccount + ' · ' + tx.currency,
+          amount: (tx.type === 'debit' ? '-' : '') + formatAmount(tx.amount, tx.currency),
+          success: tx.success
+        });
         list.appendChild(row);
+        side.appendChild(row.cloneNode(true));
       });
     }
 
-    // Create transaction record
-    function pushTx(tx){
-      const txs = getTxs();
-      txs.push(tx);
-      setTxs(txs);
-      window.dispatchEvent(new StorageEvent('storage', { key: TX_KEY, newValue: JSON.stringify(txs) }));
+    function createTxRow({ title, meta, amount, success=true, warn=false }){
+      const div = document.createElement('div');
+      div.className = 'tx';
+      const left = document.createElement('div'); left.className = 'left';
+      const t = document.createElement('div'); t.className = 'title'; t.textContent = title;
+      const m = document.createElement('div'); m.className = 'meta'; m.textContent = meta;
+      left.appendChild(t); left.appendChild(m);
+      const a = document.createElement('div'); a.className = 'amount'; a.textContent = amount;
+      if(!success) a.style.color = 'var(--danger)';
+      div.appendChild(left); div.appendChild(a);
+      return div;
     }
 
-    // Receipt print
-    function openReceiptPrint(tx){
-      const printWin = window.open('', '_blank', 'noopener,noreferrer');
-      if (!printWin) {
-        alert('Popup blocked. Allow popups to print a receipt.');
-        return;
-      }
+    function makeTxId(){ return 'tx_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2,8); }
 
+    function printReceipt(tx){
+      const printWin = window.open('', '_blank', 'noopener,noreferrer');
+      if(!printWin){ alert('Please allow popups to print the receipt.'); return; }
       const html = `
         <!doctype html>
         <html>
         <head>
-          <meta charset="utf-8" />
-          <title>Transfer Receipt</title>
+          <meta charset="utf-8">
+          <title>Receipt</title>
           <style>
-            body{font-family:Inter,Arial,Helvetica,sans-serif;margin:0;color:#111;padding:28px;background:#fff}
-            .wrap{max-width:680px;margin:0 auto;border:1px solid #eee;padding:18px;border-radius:8px}
-            h1{margin:0 0 8px;font-size:18px}
+            body{font-family:Arial,Helvetica,sans-serif;color:#111;background:#fff;padding:28px}
+            .wrap{max-width:680px;margin:0 auto;border:1px solid #eee;padding:20px;border-radius:6px}
+            h1{font-size:20px;margin:0 0 8px}
             .pair{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px dashed #eee}
             .pair:last-child{border-bottom:0}
-            .amount{font-weight:800;font-size:20px}
-            .small{font-size:12px;color:#666;margin-top:12px}
+            .amount{font-size:18px;font-weight:800}
+            .small{color:#666;font-size:12px}
           </style>
         </head>
         <body>
-          <div class="wrap" id="printable">
+          <div class="wrap">
             <h1>Transaction Receipt</h1>
-            <div class="pair"><div>Transaction ID</div><div>${escapeHtml(tx.id)}</div></div>
-            <div class="pair"><div>Type</div><div>${escapeHtml(tx.type)}</div></div>
-            <div class="pair"><div>Recipient</div><div>${escapeHtml(tx.toName || tx.toAccount)}</div></div>
-            <div class="pair"><div>Account</div><div>${escapeHtml(tx.toAccount || '')}</div></div>
-            <div class="pair"><div>Bank code</div><div>${escapeHtml(tx.bankCode || '')}</div></div>
-            <div class="pair"><div>Reference</div><div>${escapeHtml(tx.note || '—')}</div></div>
-            <div class="pair"><div>Date</div><div>${new Date(tx.timestamp).toLocaleString()}</div></div>
-            <div class="pair"><div>Amount</div><div class="amount">${formatCurrency(tx.amount, tx.currency)}</div></div>
-            <p class="small">This is a system generated receipt. Keep for your records.</p>
+            <div class="small">Transaction ID: ${escapeHtml(tx.id)}</div>
+            <div style="margin-top:12px">
+              <div class="pair"><div><strong>Recipient</strong></div><div>${escapeHtml(tx.recipientName)}</div></div>
+              <div class="pair"><div><strong>To account</strong></div><div>${escapeHtml(tx.toAccount)}</div></div>
+              <div class="pair"><div><strong>Bank code</strong></div><div>${escapeHtml(tx.bankCode || '—')}</div></div>
+              <div class="pair"><div><strong>Amount</strong></div><div class="amount">${formatAmount(tx.amount, tx.currency)}</div></div>
+              <div class="pair"><div><strong>Note</strong></div><div>${escapeHtml(tx.description || '—')}</div></div>
+              <div class="pair"><div><strong>Date</strong></div><div>${new Date(tx.timestamp).toLocaleString()}</div></div>
+              <div class="pair"><div><strong>Status</strong></div><div>${tx.success ? 'Completed' : 'Failed'}</div></div>
+            </div>
+            <p class="small" style="margin-top:12px">Keep this receipt for your records.</p>
           </div>
-          <script>window.print(); setTimeout(()=>window.close(),500);</script>
+          <script>window.print(); setTimeout(()=>window.close(),700);</script>
         </body>
         </html>
       `;
-      printWin.document.open();
-      printWin.document.write(html);
-      printWin.document.close();
+      printWin.document.open(); printWin.document.write(html); printWin.document.close();
     }
 
-    // Transfer logic: validation, deduction, tx record, receipt
-    function doTransfer(){
-      const toName = document.getElementById('recipientName').value.trim();
-      const toAccount = document.getElementById('accountNumber').value.trim();
-      const bankCode = document.getElementById('bankCode').value.trim();
-      const currency = document.getElementById('currency').value;
-      const amount = parseFloat(document.getElementById('amount').value);
-      const note = document.getElementById('note').value.trim();
+    function escapeHtml(s){
+      if(s === undefined || s === null) return '';
+      return String(s).replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'})[m]);
+    }
 
-      if (!toName) { alert('Recipient name is required'); return; }
-      if (!toAccount) { alert('Account number is required'); return; }
-      if (!amount || isNaN(amount) || amount <= 0) { alert('Enter a valid amount greater than 0'); return; }
+    function onTransfer(e){
+      e && e.preventDefault();
+      const recipientName = document.getElementById('recipientName').value.trim();
+      const toAccount = document.getElementById('toAccount').value.trim();
+      const bankCode = document.getElementById('bankCode').value.trim();
+      const amount = parseFloat(document.getElementById('amount').value);
+      const currency = document.getElementById('currency').value || getBalance().currency || 'JPY';
+      const description = document.getElementById('note').value.trim();
+
+      if(!toAccount){ alert('Please enter an account number.'); return; }
+      if(!recipientName){ alert('Please enter the recipient name.'); return; }
+      if(!amount || isNaN(amount) || amount <= 0){ alert('Enter an amount greater than 0.'); return; }
 
       const balance = getBalance();
 
-      // Basic currency check: if different, ask user
-      if (currency !== balance.currency) {
-        if (!confirm('Transfer currency differs from account currency. Continue?')) return;
+      // Simple currency mismatch prompt
+      if(currency !== balance.currency){
+        if(!confirm('Selected currency differs from your account currency. Proceed?')) return;
       }
 
-      if (amount > balance.amount) {
-        alert('Insufficient funds');
+      if(amount > balance.amount){
+        alert('Insufficient funds. Reduce amount or fund your account.');
         return;
       }
 
-      // Deduct balance immediately and persist
-      const newBalance = { amount: Number((balance.amount - amount).toFixed(2)), currency: balance.currency };
-      setBalance(newBalance);
-      window.dispatchEvent(new StorageEvent('storage', { key: BALANCE_KEY, newValue: JSON.stringify(newBalance) }));
-
-      // Build transaction record
+      // Build transaction
       const tx = {
-        id: 'tx_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2,8),
+        id: makeTxId(),
         timestamp: Date.now(),
-        direction: 'debit',
-        type: 'Transfer',
-        title: `Transfer to ${toName}`,
-        toName,
+        recipientName,
         toAccount,
         bankCode,
         amount: Number(amount),
         currency,
-        note
+        description,
+        type: 'debit',
+        success: true
       };
 
-      // Push tx
-      pushTx(tx);
+      // Deduct balance and persist
+      const newBal = { amount: Number((balance.amount - amount).toFixed(2)), currency: balance.currency };
+      setBalance(newBal);
 
-      // Render updates
-      renderBalanceUI();
-      renderTxList();
+      const txs = getTxs();
+      txs.push(tx);
+      setTxs(txs);
+
+      // Update UI immediately
+      renderBalance();
+      renderHistory();
 
       // Print receipt
-      openReceiptPrint(tx);
+      printReceipt(tx);
 
-      // show confirmation
-      alert('Transfer successful — receipt printing');
-
-      // Reset form amount and note only (keep recipient for convenience)
-      document.getElementById('amount').value = '0.00';
-      document.getElementById('note').value = '';
+      // feedback and reset form (preserve currency)
+      alert('Transfer successful. A receipt will be printed.');
+      document.getElementById('transferForm').reset();
+      document.getElementById('currency').value = newBal.currency;
     }
 
-    // Event wiring
-    document.getElementById('sendBtn').addEventListener('click', doTransfer);
-    document.getElementById('resetBtn').addEventListener('click', ()=> {
-      if (!confirm('Reset form?')) return;
-      document.getElementById('transferForm').reset();
-      // keep currency in sync with account
-      const b = getBalance();
-      document.getElementById('currency').value = b.currency || 'JPY';
-      document.getElementById('amount').value = '0.00';
+    document.getElementById('transferForm').addEventListener('submit', onTransfer);
+    document.getElementById('resetBtn').addEventListener('click', ()=>{ if(confirm('Reset the transfer form?')) document.getElementById('transferForm').reset(); });
+    document.getElementById('clearHistory').addEventListener('click', ()=>{
+      if(!confirm('Clear transaction history? This cannot be undone.')) return;
+      setTxs([]); renderHistory();
+    });
+    document.getElementById('nav-dashboard').addEventListener('click', ()=>{
+      // navigate to dashboard if present
+      window.location.href = 'dashboard.html';
     });
 
-    document.getElementById('clearHistory').addEventListener('click', ()=> {
-      if (!confirm('Clear transaction history? This cannot be undone.')) return;
-      setTxs([]);
-      renderTxList();
+    // Observe same-origin storage changes (other tabs) to refresh UI
+    window.addEventListener('storage', (e)=>{
+      if(e.key === BALANCE_KEY) renderBalance();
+      if(e.key === TX_KEY) renderHistory();
     });
 
-    // Navigation to dashboard (if exists)
-    document.getElementById('nav-dashboard').addEventListener('click', (e) => {
-      // allow natural navigation but ensure storage is current so dashboard reads latest
-      // no preventDefault; user will navigate
-    });
-
-    // Storage observer to react to changes in other tabs
-    window.addEventListener('storage', (e) => {
-      if (e.key === BALANCE_KEY) renderBalanceUI();
-      if (e.key === TX_KEY) renderTxList();
-    });
-
-    // Init
+    // Initialize
     (function init(){
       initStorage();
-      renderBalanceUI();
-      renderTxList();
+      renderBalance();
+      renderHistory();
+      // Show example values from user input snippet
+      document.getElementById('recipientName').value = 'Jane Doe';
+      document.getElementById('toAccount').value = '1234567890';
+      document.getElementById('bankCode').value = '012';
+      document.getElementById('amount').value = '0.00';
+      document.getElementById('note').value = 'For rent, invoice #123';
+      // ensure currency matches stored balance
+      const b = getBalance();
+      if(b.currency) document.getElementById('currency').value = b.currency;
     })();
 
-    // Expose simple debug API
-    window._citi = { getBalance, setBalance: setBalance, getTxs, pushTx };
+    // Small debug helpers (available on window)
+    window._citi = {
+      getBalance, setBalance, getTxs, setTxs
+    };
   </script>
 </body>
 </html>
+
