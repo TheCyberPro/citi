@@ -3,177 +3,159 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Transfer — CITI</title>
+  <title>Transfer — Mobile CITI</title>
   <style>
     :root{
       --bg:#0f1724;
-      --card:#0b1220;
       --muted:#9aa4b2;
       --accent:#7c5cff;
       --glass: rgba(255,255,255,0.03);
-      --success:#3bd671;
-      --danger:#ff6b6b;
       font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
     }
-    html,body{height:100%}
+    html,body{height:100%;margin:0}
     body{
-      margin:0;
       background:
-        radial-gradient(1200px 600px at 10% 10%, rgba(124,92,255,0.12), transparent 8%),
-        radial-gradient(900px 400px at 90% 90%, rgba(0,200,190,0.05), transparent 10%),
+        radial-gradient(900px 400px at 10% 10%, rgba(124,92,255,0.10), transparent 6%),
         var(--bg);
       color:#e6eef8;
       -webkit-font-smoothing:antialiased;
       display:flex;
-      align-items:center;
+      align-items:flex-start;
       justify-content:center;
-      padding:28px;
+      padding:18px;
     }
 
-    .container{
-      width:980px;
-      max-width:96%;
-      display:grid;
-      grid-template-columns:1fr 360px;
-      gap:22px;
-      align-items:start;
-    }
-
-    .panel{
+    .card{
+      width:100%;
+      max-width:720px;
       background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02));
       border:1px solid rgba(255,255,255,0.04);
-      padding:20px;
+      padding:16px;
       border-radius:12px;
-      box-shadow: 0 6px 30px rgba(2,6,23,0.6);
+      box-shadow: 0 8px 30px rgba(2,6,23,0.6);
     }
 
-    .brand-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
-    .brand{display:flex;gap:12px;align-items:center}
-    .logo{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,#fff,#f0f0f0)}
-    .title{font-weight:700;font-size:16px;color:#f4f7fb}
-    .subtitle{font-size:13px;color:var(--muted)}
-    label{display:block;font-size:13px;color:var(--muted);margin-bottom:8px}
-    input,select,button,textarea{width:100%;padding:12px;border-radius:10px;background:var(--glass);border:1px solid rgba(255,255,255,0.03);color:#e8f0ff}
-    .row{display:flex;gap:12px;margin-bottom:12px;align-items:end}
+    .brand{display:flex;gap:12px;align-items:center;margin-bottom:12px}
+    .logo{width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,#fff,#f0f0f0)}
+    h1{margin:0;font-size:18px}
     .muted{color:var(--muted);font-size:13px}
+
+    label{display:block;font-size:13px;color:var(--muted);margin-top:10px;margin-bottom:8px}
+    input,button,textarea{width:100%;padding:12px;border-radius:10px;background:var(--glass);border:1px solid rgba(255,255,255,0.03);color:#e8f0ff;font-size:15px;outline:none}
+    .row{display:flex;gap:10px}
     .btn{background:linear-gradient(90deg,var(--accent),#5ec9ff);border:0;padding:12px;border-radius:10px;color:#08101a;font-weight:700;cursor:pointer}
     .btn-ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted);cursor:pointer;border-radius:10px;padding:10px}
-    .history-list{margin-top:12px;display:flex;flex-direction:column;gap:10px;max-height:320px;overflow:auto}
-    .tx{padding:12px;border-radius:10px;background:rgba(255,255,255,0.02);display:flex;justify-content:space-between;align-items:center}
-    .balance-amount{font-size:28px;font-weight:700;color:#fff;margin-top:6px}
-    @media (max-width:920px){ .container{grid-template-columns:1fr;gap:16px} .row{flex-direction:column} }
+
+    .meta{font-size:13px;color:var(--muted);margin-top:8px}
+
+    .history{margin-top:14px;display:flex;flex-direction:column;gap:10px;max-height:300px;overflow:auto;padding-right:6px}
+    .tx{background:rgba(255,255,255,0.02);padding:12px;border-radius:10px;display:flex;justify-content:space-between;align-items:center}
+    .tx .left{display:flex;flex-direction:column}
+    .tx .title{font-weight:700;font-size:14px}
+    .tx .meta{font-size:12px;color:var(--muted);margin-top:4px}
+
+    .balance-row{display:flex;justify-content:space-between;align-items:center;margin-top:12px}
+    .balance-amount{font-weight:800;font-size:20px}
+
+    /* Modal receipt */
+    .modal {
+      position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(2,6,23,0.6);z-index:60;padding:18px;
+    }
+    .modal.open { display:flex }
+    .receipt {
+      width:100%;max-width:560px;background:#fff;color:#111;border-radius:10px;padding:18px;box-sizing:border-box;
+    }
+    .receipt h2{margin:0 0 8px;font-size:18px}
+    .receipt .row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px dashed #eee}
+    .receipt .row:last-child{border-bottom:0}
+    .receipt .amount{font-weight:800;font-size:18px}
+
+    @media (max-width:520px){ .row{flex-direction:column} .receipt{padding:14px} }
   </style>
 </head>
 <body>
-  <div class="container" role="main">
-    <div class="panel" aria-labelledby="panel-title">
-      <div class="brand-row">
-        <div class="brand">
-          <div class="logo" aria-hidden="true"></div>
-          <div>
-            <div id="panel-title" class="title">Transfer funds</div>
-            <div class="subtitle">Send money instantly to saved recipients or any bank account</div>
-          </div>
-        </div>
-        <div class="muted">Logged in as <strong>AUTHOR</strong></div>
+  <div class="card" role="main">
+    <div class="brand">
+      <div class="logo" aria-hidden="true"></div>
+      <div>
+        <h1>Transfer</h1>
+        <div class="muted">Send money to saved recipients or any bank account</div>
       </div>
-
-      <nav style="display:flex;gap:12px;margin-bottom:16px">
-        <button id="nav-dashboard" class="btn-ghost">Dashboard</button>
-        <button class="btn-ghost" disabled>Make a transfer</button>
-      </nav>
-
-      <form id="transferForm" autocomplete="off" novalidate>
-        <div class="row">
-          <div style="flex:1">
-            <label for="recipientName">Recipient name</label>
-            <input id="recipientName" name="recipientName" type="text" value="Jane Doe" required />
-          </div>
-          <div style="width:160px">
-            <label for="bankCode">Bank code</label>
-            <input id="bankCode" name="bankCode" type="text" value="012" inputmode="numeric" />
-          </div>
-        </div>
-
-        <div class="row">
-          <div style="flex:1">
-            <label for="toAccount">Account number</label>
-            <input id="toAccount" name="toAccount" type="text" value="1234567890" inputmode="numeric" required />
-          </div>
-          <div style="width:160px">
-            <label for="currency">Currency</label>
-            <select id="currency" name="currency">
-              <option value="JPY">JPY</option>
-              <option value="USD">USD</option>
-              <option value="NZD">NZD</option>
-              <option value="EUR">EUR</option>
-            </select>
-          </div>
-        </div>
-
-        <div style="margin-bottom:12px">
-          <label for="amount">Amount</label>
-          <input id="amount" name="amount" type="number" min="0.01" step="0.01" value="0.00" required />
-        </div>
-
-        <div style="margin-bottom:12px">
-          <label for="note">Note (optional)</label>
-          <input id="note" name="note" type="text" value="For rent, invoice #123" />
-        </div>
-
-        <div style="display:flex;gap:12px;align-items:center;margin-top:10px">
-          <button type="submit" id="sendBtn" class="btn">Send transfer</button>
-          <button type="button" id="resetBtn" class="btn-ghost">Reset</button>
-          <div style="margin-left:auto" class="muted">Available balance <strong id="balanceDisplay">¥0.00</strong></div>
-        </div>
-
-        <p class="muted" style="margin-top:8px">This balance updates immediately after each transfer</p>
-      </form>
-
-      <div style="margin-top:18px;display:flex;justify-content:space-between;align-items:center">
-        <div class="subtitle">Recent activity</div>
-        <div class="muted">Latest transfers and debits</div>
-      </div>
-
-      <div style="display:flex;gap:10px;margin-top:12px;align-items:center">
-        <button id="clearHistory" class="btn-ghost">Clear</button>
-      </div>
-
-      <div class="history-list" id="historyList" aria-live="polite"></div>
     </div>
 
-    <aside class="panel" aria-labelledby="balance-title">
-      <div>
-        <div id="balance-title" class="muted">Available balance</div>
-        <div class="balance-amount" id="balanceAmount">¥0.00</div>
-        <div class="muted" id="currencyLabel">Currency: JPY</div>
+    <form id="transferForm" autocomplete="off" novalidate>
+      <label for="recipientName">Recipient name</label>
+      <input id="recipientName" name="recipientName" type="text" value="Jane Doe" required />
+
+      <div class="row">
+        <div style="flex:1">
+          <label for="toAccount">Account number</label>
+          <input id="toAccount" name="toAccount" type="text" value="1234567890" inputmode="numeric" required />
+        </div>
+        <div style="width:120px">
+          <label for="bankCode">Bank code</label>
+          <input id="bankCode" name="bankCode" type="text" value="012" inputmode="numeric" />
+        </div>
       </div>
 
-      <div style="margin-top:18px">
-        <div class="subtitle">Recent Transactions</div>
-        <div class="muted" style="margin-top:6px">Showing debits</div>
-        <div class="history-list" id="sideHistory"></div>
+      <label for="amount">Amount (¥)</label>
+      <input id="amount" name="amount" type="number" min="1" step="1" value="0" inputmode="numeric" />
+
+      <label for="note">Note (optional)</label>
+      <input id="note" name="note" type="text" value="For rent, invoice #123" />
+
+      <div style="display:flex;gap:10px;margin-top:12px">
+        <button type="submit" class="btn" style="flex:1">Send transfer</button>
+        <button type="button" id="resetBtn" class="btn-ghost" style="width:120px">Reset</button>
       </div>
-    </aside>
+    </form>
+
+    <div class="balance-row">
+      <div class="meta">Available balance</div>
+      <div class="balance-amount" id="balanceDisplay">¥0</div>
+    </div>
+    <div class="meta">This balance updates immediately after each transfer</div>
+
+    <div style="margin-top:16px">
+      <div class="muted">Recent activity</div>
+      <div class="history" id="historyList" aria-live="polite"></div>
+    </div>
+  </div>
+
+  <!-- In-page modal receipt (prints via window.print) -->
+  <div id="receiptModal" class="modal" role="dialog" aria-hidden="true">
+    <div class="receipt" id="receiptContent">
+      <!-- populated dynamically -->
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <h2>Transaction Receipt</h2>
+        <button id="closeReceipt" style="background:#eee;border:0;padding:6px 10px;border-radius:6px;cursor:pointer">Close</button>
+      </div>
+      <div id="receiptBody" style="margin-top:12px"></div>
+      <div style="margin-top:12px;font-size:13px;color:#666">Keep this receipt for your records</div>
+      <div style="height:8px"></div>
+      <div style="display:flex;gap:8px;justify-content:flex-end">
+        <button id="printReceiptBtn" class="btn" style="background:#111;color:#fff">Print</button>
+      </div>
+    </div>
   </div>
 
   <script>
-    // Shared keys
+    // Storage keys (shared)
     const BALANCE_KEY = 'balance';
     const TX_KEY = 'transactions';
 
     // Utilities
-    function safeParse(key, fallback) { try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch { return fallback; } }
-    function formatAmount(amount, currency) { try { return new Intl.NumberFormat(undefined, { style:'currency', currency }).format(amount); } catch { return (currency ? currency + ' ' : '') + Number(amount).toFixed(2); } }
-    function uid() { return 'tx_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2,8); }
-    function escapeHtml(s) { if (s == null) return ''; return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'})[m]); }
+    const safeParse = (k, f) => { try { return JSON.parse(localStorage.getItem(k)) ?? f } catch { return f } };
+    const format = (n) => '¥' + Number(n).toLocaleString();
+    const uid = () => 'tx_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2,8);
+    const escapeHtml = s => { if (s == null) return ''; return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'})[m]); };
 
-    // Storage (no synthetic storage events)
+    // Storage primitives (no synthetic storage events)
     function initStorage() {
-      if (!localStorage.getItem(BALANCE_KEY)) localStorage.setItem(BALANCE_KEY, JSON.stringify({ amount: 0.00, currency: 'JPY' }));
+      if (!localStorage.getItem(BALANCE_KEY)) localStorage.setItem(BALANCE_KEY, JSON.stringify({ amount: 0, currency: 'JPY' }));
       if (!localStorage.getItem(TX_KEY)) localStorage.setItem(TX_KEY, JSON.stringify([]));
     }
-    function getBalance() { return safeParse(BALANCE_KEY, { amount: 0.00, currency: 'JPY' }); }
+    function getBalance() { return safeParse(BALANCE_KEY, { amount: 0, currency: 'JPY' }); }
     function setBalance(b) { localStorage.setItem(BALANCE_KEY, JSON.stringify(b)); }
     function getTxs() { return safeParse(TX_KEY, []); }
     function setTxs(txs) { localStorage.setItem(TX_KEY, JSON.stringify(txs)); }
@@ -181,83 +163,113 @@
     // Renderers
     function renderBalance() {
       const b = getBalance();
-      document.getElementById('balanceAmount').textContent = formatAmount(b.amount, b.currency);
-      document.getElementById('balanceDisplay').textContent = formatAmount(b.amount, b.currency);
-      document.getElementById('currencyLabel').textContent = 'Currency: ' + (b.currency || '—');
-      const sel = document.getElementById('currency'); if (sel) sel.value = b.currency || sel.value;
-    }
-
-    function createTxElement(tx) {
-      const el = document.createElement('div'); el.className = 'tx';
-      const left = document.createElement('div'); left.style.display = 'flex'; left.style.flexDirection = 'column';
-      const t = document.createElement('div'); t.style.fontWeight = 600; t.textContent = tx.description || 'Transfer';
-      const m = document.createElement('div'); m.className = 'muted'; m.textContent = new Date(tx.timestamp).toLocaleString() + ' · To ' + (tx.toAccount || tx.to || 'external') + ' · ' + tx.currency;
-      left.appendChild(t); left.appendChild(m);
-      const a = document.createElement('div'); a.textContent = (tx.type === 'debit' ? '-' : '') + formatAmount(tx.amount, tx.currency);
-      if (!tx.success) a.style.color = 'var(--danger)';
-      el.appendChild(left); el.appendChild(a);
-      return el;
+      document.getElementById('balanceDisplay').textContent = format(b.amount);
     }
 
     function renderHistory() {
-      const list = document.getElementById('historyList');
-      const side = document.getElementById('sideHistory');
-      list.innerHTML = ''; side.innerHTML = '';
+      const wrap = document.getElementById('historyList');
+      wrap.innerHTML = '';
       const txs = getTxs().slice().reverse();
       if (!txs.length) {
-        const none = document.createElement('div'); none.className = 'tx';
-        none.innerHTML = '<div><div style="font-weight:600">No transactions</div><div class="muted">Your recent debits will appear here</div></div><div class="muted">—</div>';
-        list.appendChild(none); side.appendChild(none.cloneNode(true)); return;
+        const none = document.createElement('div');
+        none.className = 'tx';
+        none.innerHTML = '<div class="left"><div class="title">No transactions</div><div class="meta">Your recent debits will appear here</div></div><div class="meta">—</div>';
+        wrap.appendChild(none);
+        return;
       }
       txs.forEach(tx => {
-        const row = createTxElement(tx);
-        list.appendChild(row);
-        side.appendChild(row.cloneNode(true));
+        if (tx.type !== 'debit') return;
+        const el = document.createElement('div');
+        el.className = 'tx';
+        el.innerHTML = `<div class="left"><div class="title">${escapeHtml(tx.description || 'Transfer')}</div><div class="meta">${new Date(tx.timestamp).toLocaleString()} · To ${escapeHtml(tx.toAccount || tx.to || 'external')}</div></div><div class="meta">${format(tx.amount)}</div>`;
+        wrap.appendChild(el);
       });
     }
 
-    // Receipt printing (opens new window, prints, closes)
-    function printReceipt(tx) {
-      const w = window.open('', '_blank', 'noopener,noreferrer');
-      if (!w) { alert('Popup blocked. Allow popups to print the receipt. Transaction saved.'); return; }
-      const html = `<!doctype html>
-        <html><head><meta charset="utf-8"><title>Receipt</title>
-        <style>body{font-family:Arial,Helvetica,sans-serif;padding:24px;color:#111}.wrap{max-width:680px;margin:0 auto;border:1px solid #eee;padding:20px;border-radius:6px}h1{margin:0 0 8px}.row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px dashed #eee}.amount{font-weight:800;font-size:18px}.small{color:#666;font-size:12px}</style>
-        </head><body><div class="wrap">
-        <h1>Transaction Receipt</h1>
-        <div class="small">Transaction ID: ${escapeHtml(tx.id)}</div>
-        <div style="margin-top:12px">
-          <div class="row"><div><strong>Recipient</strong></div><div>${escapeHtml(tx.recipientName)}</div></div>
-          <div class="row"><div><strong>Account</strong></div><div>${escapeHtml(tx.toAccount)}</div></div>
-          <div class="row"><div><strong>Bank code</strong></div><div>${escapeHtml(tx.bankCode || '—')}</div></div>
-          <div class="row"><div><strong>Amount</strong></div><div class="amount">${formatAmount(tx.amount, tx.currency)}</div></div>
-          <div class="row"><div><strong>Note</strong></div><div>${escapeHtml(tx.description || '—')}</div></div>
-          <div class="row"><div><strong>Date</strong></div><div>${new Date(tx.timestamp).toLocaleString()}</div></div>
-          <div class="row"><div><strong>Status</strong></div><div>${tx.success ? 'Completed' : 'Failed'}</div></div>
+    // Modal helpers
+    const modal = document.getElementById('receiptModal');
+    const receiptBody = document.getElementById('receiptBody');
+    const closeReceipt = document.getElementById('closeReceipt');
+    const printReceiptBtn = document.getElementById('printReceiptBtn');
+
+    function openReceiptModal(tx) {
+      // build receipt HTML
+      receiptBody.innerHTML = `
+        <div style="padding-top:8px">
+          <div style="display:flex;justify-content:space-between;padding:6px 0"><div><strong>Transaction ID</strong></div><div>${escapeHtml(tx.id)}</div></div>
+          <div style="display:flex;justify-content:space-between;padding:6px 0"><div><strong>Recipient</strong></div><div>${escapeHtml(tx.recipientName)}</div></div>
+          <div style="display:flex;justify-content:space-between;padding:6px 0"><div><strong>Account</strong></div><div>${escapeHtml(tx.toAccount)}</div></div>
+          <div style="display:flex;justify-content:space-between;padding:6px 0"><div><strong>Bank code</strong></div><div>${escapeHtml(tx.bankCode || '—')}</div></div>
+          <div style="display:flex;justify-content:space-between;padding:6px 0"><div><strong>Amount</strong></div><div class="amount">${format(tx.amount)}</div></div>
+          <div style="display:flex;justify-content:space-between;padding:6px 0"><div><strong>Note</strong></div><div>${escapeHtml(tx.description || '—')}</div></div>
+          <div style="display:flex;justify-content:space-between;padding:6px 0"><div><strong>Date</strong></div><div>${new Date(tx.timestamp).toLocaleString()}</div></div>
+          <div style="display:flex;justify-content:space-between;padding:6px 0"><div><strong>Status</strong></div><div>${tx.success ? 'Completed' : 'Failed'}</div></div>
         </div>
-        <p class="small" style="margin-top:12px">Keep this receipt for your records.</p>
-        </div><script>window.print();setTimeout(()=>window.close(),700);</script></body></html>`;
-      w.document.open(); w.document.write(html); w.document.close();
+      `;
+      modal.classList.add('open');
+      modal.setAttribute('aria-hidden', 'false');
+      // Attach print behavior
+      printReceiptBtn.onclick = () => {
+        // Temporarily open print with only receipt content
+        // Create a print-only iframe to avoid printing the rest of the app UI
+        const iframe = document.createElement('iframe');
+        iframe.style.position = 'fixed';
+        iframe.style.right = '0';
+        iframe.style.bottom = '0';
+        iframe.style.width = '0';
+        iframe.style.height = '0';
+        iframe.style.border = '0';
+        document.body.appendChild(iframe);
+        const doc = iframe.contentWindow.document;
+        doc.open();
+        doc.write(`
+          <!doctype html><html><head><meta charset="utf-8"><title>Receipt</title>
+          <style>body{font-family:Arial,Helvetica,sans-serif;color:#111;padding:18px} .wrap{max-width:600px;margin:0 auto} .row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px dashed #eee} .amount{font-weight:800;font-size:18px}</style>
+          </head><body><div class="wrap">${receiptBody.innerHTML}</div></body></html>
+        `);
+        doc.close();
+        // Wait a tick then print
+        iframe.onload = () => {
+          try {
+            iframe.contentWindow.focus();
+            iframe.contentWindow.print();
+          } catch (err) {
+            // fallback: window.print will print whole app
+            window.print();
+          } finally {
+            setTimeout(() => { document.body.removeChild(iframe); }, 700);
+          }
+        };
+        // If iframe load doesn't fire, trigger print anyway after short delay
+        setTimeout(() => {
+          try { iframe.contentWindow.print(); } catch {}
+        }, 300);
+      };
     }
 
-    // Transfer handler: validate, deduct balance, append tx, render, print
-    function onTransfer(e) {
-      e && e.preventDefault();
+    function closeReceiptModal() {
+      modal.classList.remove('open');
+      modal.setAttribute('aria-hidden', 'true');
+      receiptBody.innerHTML = '';
+    }
+
+    closeReceipt.addEventListener('click', closeReceiptModal);
+    modal.addEventListener('click', (e) => { if (e.target === modal) closeReceiptModal(); });
+
+    // Transfer flow
+    document.getElementById('transferForm').addEventListener('submit', function (e) {
+      e.preventDefault();
       const recipientName = document.getElementById('recipientName').value.trim();
       const toAccount = document.getElementById('toAccount').value.trim();
       const bankCode = document.getElementById('bankCode').value.trim();
-      const amount = parseFloat(document.getElementById('amount').value);
-      const currency = document.getElementById('currency').value || getBalance().currency || 'JPY';
+      const amount = Math.floor(Number(document.getElementById('amount').value || 0));
       const description = document.getElementById('note').value.trim();
 
       if (!recipientName) { alert('Enter recipient name'); return; }
       if (!toAccount) { alert('Enter account number'); return; }
-      if (!amount || isNaN(amount) || amount <= 0) { alert('Enter an amount greater than 0'); return; }
+      if (!amount || amount <= 0) { alert('Enter an amount greater than 0'); return; }
 
       const balance = getBalance();
-      if (currency !== balance.currency) {
-        if (!confirm('Transfer currency differs from account currency. Proceed?')) return;
-      }
       if (amount > balance.amount) { alert('Insufficient funds'); return; }
 
       const tx = {
@@ -266,58 +278,64 @@
         recipientName,
         toAccount,
         bankCode,
-        amount: Number(amount),
-        currency,
+        amount,
+        currency: 'JPY',
         description,
         type: 'debit',
         success: true
       };
 
-      // Persist: deduct balance and append tx
-      const newBal = { amount: Number((balance.amount - amount).toFixed(2)), currency: balance.currency };
+      // Persist: deduct and append
+      const newBal = { amount: Number((balance.amount - amount).toFixed(0)), currency: 'JPY' };
       setBalance(newBal);
       const txs = getTxs();
       txs.push(tx);
       setTxs(txs);
 
+      // Update UI
       renderBalance();
       renderHistory();
 
-      // Print receipt
-      printReceipt(tx);
+      // Open in-page receipt modal (avoids popups)
+      openReceiptModal(tx);
 
-      alert('Transfer successful. Receipt printing triggered (or blocked by popup blocker). Transaction saved to history.');
+      // Reset form but keep minimal defaults
       document.getElementById('transferForm').reset();
-      document.getElementById('currency').value = newBal.currency;
-    }
+      document.getElementById('recipientName').value = recipientName; // keep UX stable on mobile
+    });
 
-    // Wire up
-    document.getElementById('transferForm').addEventListener('submit', onTransfer);
-    document.getElementById('resetBtn').addEventListener('click', function () { if (confirm('Reset the transfer form?')) document.getElementById('transferForm').reset(); });
-    document.getElementById('clearHistory').addEventListener('click', function () { if (!confirm('Clear transaction history? This cannot be undone.')) return; setTxs([]); renderHistory(); });
-    document.getElementById('nav-dashboard').addEventListener('click', function () { window.location.href = 'dashboard.html'; });
+    document.getElementById('resetBtn').addEventListener('click', function () {
+      if (confirm('Reset the transfer form?')) document.getElementById('transferForm').reset();
+    });
 
-    // React to native storage events (other tabs/containers)
+    // Storage listeners for cross-tab updates (do not trigger from code)
     window.addEventListener('storage', function (e) {
       if (e.key === BALANCE_KEY) renderBalance();
       if (e.key === TX_KEY) renderHistory();
     });
 
     // Init
-    (function init() {
+    function init() {
       initStorage();
       renderBalance();
       renderHistory();
-      // Prefill sample fields from your snippet
+      // Prefill sample values for convenience (remove if undesired)
       document.getElementById('recipientName').value = 'Jane Doe';
       document.getElementById('toAccount').value = '1234567890';
       document.getElementById('bankCode').value = '012';
-      document.getElementById('amount').value = '0.00';
+      document.getElementById('amount').value = '0';
       document.getElementById('note').value = 'For rent, invoice #123';
-      const b = getBalance(); if (b.currency) document.getElementById('currency').value = b.currency;
-      // Expose read-only helpers for debugging
+      // Expose debug helpers (read-only)
       window._citi = { getBalance, getTxs };
-    })();
+    }
+
+    // Expose storage helpers
+    function getBalance() { return safeParse(BALANCE_KEY, { amount: 0, currency: 'JPY' }); }
+    function setBalance(b) { localStorage.setItem(BALANCE_KEY, JSON.stringify(b)); }
+    function getTxs() { return safeParse(TX_KEY, []); }
+    function setTxs(txs) { localStorage.setItem(TX_KEY, JSON.stringify(txs)); }
+
+    init();
   </script>
 </body>
 </html>
