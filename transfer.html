@@ -5,54 +5,57 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Transfer — CITI</title>
 
-  <!-- Inline CSS matching a luxury/withdraw look (drop-in for withdraw.css) -->
+  <!-- Minimal luxury CSS matching typical withdraw page styles -->
   <style>
     :root{
-      --bg:#0f1222;
-      --card:#0f1724;
-      --muted:#97a0b5;
+      --bg:#0f1724;
+      --card:#0b1220;
+      --muted:#9aa4b2;
       --accent:#7c5cff;
-      --glass: rgba(255,255,255,0.04);
-      --success:#18c295;
+      --glass: rgba(255,255,255,0.03);
+      --success:#3bd671;
       --danger:#ff6b6b;
-      --text:#e6eef8;
-      --shadow: 0 6px 24px rgba(2,6,23,0.6);
+      --gold: linear-gradient(90deg,#ffd166,#f9a826);
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
     }
-
-    *{box-sizing:border-box}
     html,body{height:100%}
     body{
       margin:0;
-      background: linear-gradient(180deg, #071028 0%, #071026 50%, #0b1322 100%);
-      color:var(--text);
+      background: radial-gradient(1200px 600px at 10% 10%, rgba(124,92,255,0.12), transparent 8%),
+                  radial-gradient(900px 400px at 90% 90%, rgba(0,200,190,0.05), transparent 10%),
+                  var(--bg);
+      color:#e6eef8;
       -webkit-font-smoothing:antialiased;
       -moz-osx-font-smoothing:grayscale;
-      padding:32px;
       display:flex;
-      align-items:flex-start;
+      align-items:center;
       justify-content:center;
+      padding:28px;
     }
 
     .container{
-      width:100%;
-      max-width:980px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      border-radius:12px;
-      box-shadow: var(--shadow);
-      padding:28px;
+      width:960px;
+      max-width:96%;
       display:grid;
       grid-template-columns: 1fr 380px;
-      gap:20px;
+      gap:24px;
+      align-items:start;
     }
 
-    header.site-header{
-      grid-column:1/-1;
+    .panel{
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02));
+      border:1px solid rgba(255,255,255,0.04);
+      padding:22px;
+      border-radius:12px;
+      box-shadow: 0 6px 30px rgba(2,6,23,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
+    }
+
+    .brand-row{
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap:16px;
-      margin-bottom:6px;
+      gap:12px;
+      margin-bottom:12px;
     }
 
     .brand{
@@ -61,482 +64,403 @@
       align-items:center;
     }
     .logo{
-      width:44px;
-      height:44px;
-      border-radius:10px;
-      background:linear-gradient(135deg,var(--accent),#4ca1ff);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-weight:700;
-      color:white;
-      box-shadow:0 6px 18px rgba(124,92,255,0.18);
+      width:48px;height:48px;border-radius:10px;
+      background:linear-gradient(135deg,#fff 0%, #f0f0f0 100%);
+      box-shadow: 0 6px 18px rgba(124,92,255,0.14);
     }
-    h1{font-size:18px;margin:0}
-    p.lead{margin:0;color:var(--muted);font-size:13px}
-
-    /* Left column (form) */
-    .card{
-      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      border-radius:12px;
-      padding:20px;
-      box-shadow: 0 8px 32px rgba(2,8,20,0.6);
-      border:1px solid rgba(255,255,255,0.03);
+    .title{
+      font-weight:600;
+      letter-spacing:0.2px;
+      font-size:16px;
+      color:#f4f7fb;
+    }
+    .subtitle{
+      font-size:12px;color:var(--muted);margin-top:2px;
     }
 
+    form .row{
+      display:flex;gap:12px;margin-bottom:12px;
+    }
     label{
-      display:block;
-      font-size:13px;
-      color:var(--muted);
-      margin-bottom:8px;
+      display:block;font-size:13px;color:var(--muted);margin-bottom:8px;
     }
 
-    input[type="text"], input[type="number"], select{
+    input[type="text"], input[type="number"], select, textarea{
       width:100%;
       padding:12px 14px;
+      border-radius:10px;
       background:var(--glass);
-      border:1px solid rgba(255,255,255,0.04);
-      color:var(--text);
-      border-radius:8px;
+      border:1px solid rgba(255,255,255,0.03);
+      color:#e8f0ff;
       font-size:14px;
-      margin-bottom:14px;
+      outline:none;
+      box-shadow: none;
     }
 
-    .row{
-      display:flex;
-      gap:12px;
+    .note{
+      font-size:13px;color:var(--muted);margin-top:8px;
     }
-    .row .col{flex:1}
 
-    .actions{
-      display:flex;
-      gap:12px;
-      margin-top:6px;
+    .balance-card{
+      display:flex;flex-direction:column;padding:18px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.006));
+      border:1px solid rgba(255,255,255,0.03);
     }
+
+    .balance-label{font-size:13px;color:var(--muted)}
+    .balance-amount{font-size:28px;font-weight:700;margin-top:6px;color:#fff;letter-spacing:0.6px}
 
     .btn{
-      padding:12px 16px;
-      border-radius:10px;
-      border:none;
-      cursor:pointer;
-      font-weight:600;
-      font-size:14px;
       display:inline-flex;
-      gap:10px;
-      align-items:center;
-    }
-    .btn-primary{
-      background: linear-gradient(90deg,var(--accent),#4ca1ff);
-      color:white;
-      box-shadow: 0 8px 24px rgba(124,92,255,0.18);
-    }
-    .btn-ghost{
-      background:transparent;
-      color:var(--text);
-      border:1px solid rgba(255,255,255,0.04);
-    }
-
-    /* Right column (summary + history) */
-    .summary{
-      display:flex;
-      flex-direction:column;
-      gap:14px;
-    }
-
-    .balance{
-      padding:18px;
-      border-radius:12px;
-      background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.02));
-      border:1px solid rgba(255,255,255,0.03);
-    }
-    .balance .label{color:var(--muted);font-size:13px}
-    .balance .amount{font-size:28px;font-weight:700;margin-top:6px}
-
-    .small{
-      font-size:13px;color:var(--muted)
-    }
-
-    .history{
-      max-height:360px;
-      overflow:auto;
-      padding:12px;
-      border-radius:10px;
-      background:rgba(255,255,255,0.01);
-      border:1px solid rgba(255,255,255,0.03);
-    }
-
-    .tx{
-      display:flex;
-      justify-content:space-between;
-      gap:10px;
-      padding:12px;
-      border-radius:8px;
-      align-items:center;
-      margin-bottom:8px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.005), transparent);
-      border:1px solid rgba(255,255,255,0.02);
-    }
-    .tx .meta{display:flex;flex-direction:column}
-    .tx .meta .who{font-weight:600}
-    .tx .meta .when{font-size:12px;color:var(--muted)}
-    .tx .amt{font-weight:700}
-    .tx.credit .amt{color:var(--success)}
-    .tx.debit .amt{color:var(--danger)}
-
-    /* Receipt modal */
-    .receipt-modal{
-      position:fixed;
-      inset:0;
-      display:none;
       align-items:center;
       justify-content:center;
-      background:rgba(2,6,23,0.6);
-      z-index:60;
+      gap:10px;
+      padding:12px 16px;
+      border-radius:10px;
+      cursor:pointer;
+      border:0;
+      font-weight:600;
+      color:#08101a;
+      background:linear-gradient(90deg,var(--accent),#5ec9ff);
+      box-shadow: 0 8px 30px rgba(124,92,255,0.14);
+      transition: transform .12s ease, box-shadow .12s ease;
     }
-    .receipt-card{
-      width:520px;
-      max-width:95%;
-      background:linear-gradient(180deg,#071020,#0f1324);
-      border-radius:12px;
-      padding:18px;
-      color:var(--text);
-      box-shadow:0 12px 48px rgba(2,6,23,0.6);
-      border:1px solid rgba(255,255,255,0.03);
+    .btn:active{transform:translateY(1px)}
+    .btn-danger{
+      color:#fff;background:linear-gradient(90deg,#ff6b6b,#ff4d4d);
+      box-shadow: 0 8px 24px rgba(255,107,107,0.12);
     }
-    .receipt-card h3{margin:0 0 8px 0}
-    .receipt-row{display:flex;justify-content:space-between;margin:6px 0;color:var(--muted)}
-    .receipt-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:12px}
+
+    .muted-block{font-size:13px;color:var(--muted);margin-top:8px}
+
+    .history-list{
+      margin-top:12px;
+      display:flex;flex-direction:column;gap:10px;
+      max-height:320px;overflow:auto;padding-right:6px;
+    }
+    .tx{
+      padding:12px;border-radius:10px;background:rgba(255,255,255,0.02);display:flex;justify-content:space-between;align-items:center;border:1px solid rgba(255,255,255,0.02);
+    }
+    .tx .left{display:flex;flex-direction:column}
+    .tx .title{font-weight:600;font-size:14px}
+    .tx .meta{font-size:12px;color:var(--muted);margin-top:4px}
+    .tx .amount{font-weight:700}
+
+    .helper{
+      font-size:13px;color:var(--muted);margin-top:6px;
+    }
+
+    /* Print styles for receipt window */
+    @media print {
+      body *{visibility:hidden}
+      #printable, #printable *{visibility:visible}
+      #printable{position:fixed;left:0;top:0;width:100%}
+    }
 
     /* Responsive */
-    @media (max-width:980px){
-      .container{grid-template-columns:1fr; padding:18px}
-      header.site-header{flex-direction:column;align-items:flex-start;gap:6px}
+    @media (max-width:900px){
+      .container{grid-template-columns:1fr;gap:16px}
     }
   </style>
 </head>
 <body>
-  <main class="container" role="main">
-    <header class="site-header">
-      <div class="brand">
-        <div class="logo">C</div>
-        <div>
-          <h1>Transfer funds</h1>
-          <p class="lead">Send money instantly to saved recipients or any bank account</p>
+  <div class="container">
+    <div class="panel">
+      <div class="brand-row">
+        <div class="brand">
+          <div class="logo" aria-hidden="true"></div>
+          <div>
+            <div class="title">Transfer Funds</div>
+            <div class="subtitle">Send money securely to another account</div>
+          </div>
         </div>
+        <div class="muted-block">Account: <strong id="accountId">—</strong></div>
       </div>
 
-      <div style="display:flex;gap:12px;align-items:center">
-        <div class="small">Logged in as <strong>AUTHOR</strong></div>
-        <button class="btn btn-ghost" id="nav-dashboard">Dashboard</button>
-      </div>
-    </header>
-
-    <!-- Left: Transfer form -->
-    <section class="card" aria-labelledby="transfer-title">
-      <h2 id="transfer-title" style="margin-top:0">Make a transfer</h2>
-
-      <form id="transferForm" onsubmit="return false" autocomplete="off">
-        <label for="toName">Recipient name</label>
-        <input id="toName" name="toName" type="text" placeholder="Jane Doe" required />
+      <form id="transferForm" autocomplete="off" novalidate>
+        <div class="row">
+          <div style="flex:1">
+            <label for="toAccount">Recipient Account Number</label>
+            <input id="toAccount" name="toAccount" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="1234567890" required />
+          </div>
+          <div style="width:160px">
+            <label for="currency">Currency</label>
+            <select id="currency" name="currency" required>
+              <option value="USD">USD</option>
+              <option value="NZD">NZD</option>
+              <option value="JPY">JPY</option>
+              <option value="EUR">EUR</option>
+            </select>
+          </div>
+        </div>
 
         <div class="row">
-          <div class="col">
-            <label for="toAccount">Account number</label>
-            <input id="toAccount" name="toAccount" type="text" placeholder="1234567890" pattern="[0-9]{6,20}" required />
+          <div style="flex:1">
+            <label for="amount">Amount</label>
+            <input id="amount" name="amount" type="number" min="0.01" step="0.01" placeholder="0.00" required />
+            <div class="helper">All transfers are final. Ensure recipient details are correct.</div>
           </div>
-          <div class="col">
-            <label for="bank">Bank code</label>
-            <input id="bank" name="bank" type="text" placeholder="012" required />
+          <div style="width:200px">
+            <label for="type">Transfer Type</label>
+            <select id="type" name="type">
+              <option value="internal">Internal</option>
+              <option value="external">External</option>
+            </select>
           </div>
         </div>
 
-        <label for="amount">Amount</label>
-        <input id="amount" name="amount" type="number" min="1" step="0.01" placeholder="0.00" required />
-
-        <label for="note">Note (optional)</label>
-        <input id="note" name="note" type="text" placeholder="For rent, invoice #123" />
-
-        <div class="actions">
-          <button id="btnTransfer" class="btn btn-primary" type="button">Send transfer</button>
-          <button id="btnReset" class="btn btn-ghost" type="reset">Reset</button>
+        <div style="margin-top:8px">
+          <label for="note">Reference / Note (optional)</label>
+          <input id="note" name="note" type="text" placeholder="Invoice 2025-09-01" />
         </div>
 
-        <p id="formMessage" class="small" style="margin-top:12px"></p>
+        <div style="display:flex;gap:12px;margin-top:16px;align-items:center">
+          <button type="submit" class="btn" id="sendBtn">Send Transfer</button>
+          <button type="button" id="resetBtn" class="btn btn-danger" style="background:transparent;color:var(--muted);box-shadow:none;border:1px solid rgba(255,255,255,0.04)">Reset</button>
+          <div style="margin-left:auto" class="muted-block">Available Balance: <strong id="balanceDisplay">—</strong></div>
+        </div>
       </form>
-    </section>
 
-    <!-- Right: Balance & history -->
-    <aside class="summary">
-      <div class="balance card">
-        <div class="label">Available balance</div>
-        <div class="amount" id="balanceAmount">¥0.00</div>
-        <div class="small" style="margin-top:8px">This balance updates immediately after each transfer</div>
+      <div class="note">Transfers are processed instantly for internal accounts and may take 1–3 business days for external accounts.</div>
+    </div>
+
+    <div class="panel balance-card">
+      <div>
+        <div class="balance-label">Current Balance</div>
+        <div class="balance-amount" id="balanceAmount">—</div>
+        <div class="muted-block" id="currencyLabel">Currency: —</div>
       </div>
 
-      <div class="card" style="padding:12px">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-          <div><strong>Recent activity</strong><div class="small">Latest transfers and debits</div></div>
-          <button id="clearHistory" class="btn btn-ghost">Clear</button>
-        </div>
-        <div id="history" class="history" aria-live="polite"></div>
-      </div>
-    </aside>
-
-    <!-- Receipt modal / print content -->
-    <div id="receiptModal" class="receipt-modal" role="dialog" aria-modal="true" aria-hidden="true">
-      <div class="receipt-card" role="document">
-        <h3>Transaction receipt</h3>
-        <div id="receiptContent">
-          <div class="receipt-row"><span class="small">Status</span><strong id="rStatus">Success</strong></div>
-          <div class="receipt-row"><span class="small">Date</span><span id="rDate"></span></div>
-          <div class="receipt-row"><span class="small">Amount</span><span id="rAmount"></span></div>
-          <div class="receipt-row"><span class="small">To</span><span id="rTo"></span></div>
-          <div class="receipt-row"><span class="small">Account</span><span id="rAccount"></span></div>
-          <div class="receipt-row"><span class="small">Bank</span><span id="rBank"></span></div>
-          <div class="receipt-row"><span class="small">Note</span><span id="rNote"></span></div>
-          <div class="receipt-row"><span class="small">Balance after</span><span id="rBalanceAfter"></span></div>
+      <div style="margin-top:18px">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div class="subtitle">Recent Transactions</div>
+          <div class="muted-block">Showing debits</div>
         </div>
 
-        <div class="receipt-actions">
-          <button id="printBtn" class="btn btn-primary">Print</button>
-          <button id="closeReceipt" class="btn btn-ghost">Close</button>
-        </div>
+        <div class="history-list" id="historyList" aria-live="polite"></div>
       </div>
     </div>
-  </main>
+  </div>
 
-  <!-- Script: handles transfers, balance, history, receipt & persistence -->
   <script>
-    /* Data keys for localStorage */
-    const BALANCE_KEY = 'citi_balance_v1';
-    const TX_KEY = 'citi_txs_v1';
+    // Configuration: storage keys
+    const BALANCE_KEY = 'balance'; // { amount: number, currency: string }
+    const TX_KEY = 'transactions'; // array of tx objects
 
-    /* Utility */
-    function fmt(amount){
-      const n = Number(amount) || 0;
-      return new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' }).format(Math.round(n));
-    }
-    function nowIso(){ return new Date().toISOString(); }
-    function humanDate(iso){
-      const d = new Date(iso);
-      return d.toLocaleString();
-    }
-
-    /* Initialize with sensible default if empty */
-    function initStorage(){
-      if(localStorage.getItem(BALANCE_KEY) === null){
-        // set a default starting balance (adjust as desired)
-        localStorage.setItem(BALANCE_KEY, String(250000)); // 250,000 JPY
+    // Utility: format currency with basic fallback
+    function formatAmount(amount, currency) {
+      try {
+        return new Intl.NumberFormat(undefined, { style: 'currency', currency }).format(amount);
+      } catch (e) {
+        return (currency ? currency + ' ' : '') + Number(amount).toFixed(2);
       }
-      if(!Array.isArray(JSON.parse(localStorage.getItem(TX_KEY) || 'null'))){
+    }
+
+    // Initialize demo data if none exists (safe default)
+    function initData() {
+      const b = localStorage.getItem(BALANCE_KEY);
+      if (!b) {
+        const initial = { amount: 5000.00, currency: 'USD' };
+        localStorage.setItem(BALANCE_KEY, JSON.stringify(initial));
+      }
+      const t = localStorage.getItem(TX_KEY);
+      if (!t) {
         localStorage.setItem(TX_KEY, JSON.stringify([]));
       }
     }
 
-    /* Getters & setters */
-    function getBalance(){ return Number(localStorage.getItem(BALANCE_KEY) || 0); }
-    function setBalance(v){ localStorage.setItem(BALANCE_KEY, String(Math.round(v))); renderBalance(); }
-    function getTxs(){ return JSON.parse(localStorage.getItem(TX_KEY) || '[]'); }
-    function pushTx(tx){ const arr = getTxs(); arr.unshift(tx); localStorage.setItem(TX_KEY, JSON.stringify(arr)); renderHistory(); }
-
-    /* UI elements */
-    const balanceEl = document.getElementById('balanceAmount');
-    const historyEl = document.getElementById('history');
-    const form = document.getElementById('transferForm');
-    const btn = document.getElementById('btnTransfer');
-    const msg = document.getElementById('formMessage');
-
-    /* Receipt modal elements */
-    const receiptModal = document.getElementById('receiptModal');
-    const rDate = document.getElementById('rDate');
-    const rAmount = document.getElementById('rAmount');
-    const rTo = document.getElementById('rTo');
-    const rAccount = document.getElementById('rAccount');
-    const rBank = document.getElementById('rBank');
-    const rNote = document.getElementById('rNote');
-    const rBalanceAfter = document.getElementById('rBalanceAfter');
-    const printBtn = document.getElementById('printBtn');
-    const closeReceipt = document.getElementById('closeReceipt');
-
-    /* Render functions */
-    function renderBalance(){
-      balanceEl.textContent = fmt(getBalance());
+    function readBalance() {
+      try {
+        return JSON.parse(localStorage.getItem(BALANCE_KEY)) || { amount:0, currency:'USD' };
+      } catch { return { amount:0, currency:'USD' }; }
+    }
+    function writeBalance(b) {
+      localStorage.setItem(BALANCE_KEY, JSON.stringify(b));
     }
 
-    function renderHistory(){
-      const txs = getTxs();
-      historyEl.innerHTML = txs.length ? txs.map(txHtml).join('') : '<div class="small">No transactions yet</div>';
+    function readTxs() {
+      try {
+        return JSON.parse(localStorage.getItem(TX_KEY)) || [];
+      } catch { return []; }
+    }
+    function writeTxs(txs) {
+      localStorage.setItem(TX_KEY, JSON.stringify(txs));
     }
 
-    function txHtml(tx){
-      // single-line per rules
-      const cls = tx.type === 'credit' ? 'tx credit' : 'tx debit';
-      const when = humanDate(tx.date);
-      const who = tx.toName || tx.memo || '—';
-      const amt = (tx.type === 'debit' ? '-' : '+') + new Intl.NumberFormat('ja-JP', {style:'currency',currency:'JPY'}).format(Math.round(tx.amount));
-      return `<div class="${cls}"><div class="meta"><div class="who">${escapeHtml(who)}</div><div class="when">${when}</div></div><div class="amt">${amt}</div></div>`;
+    // Render UI
+    function renderBalance() {
+      const b = readBalance();
+      document.getElementById('balanceAmount').textContent = formatAmount(b.amount, b.currency);
+      document.getElementById('balanceDisplay').textContent = formatAmount(b.amount, b.currency);
+      document.getElementById('currencyLabel').textContent = 'Currency: ' + (b.currency || '—');
+      // account id placeholder
+      document.getElementById('accountId').textContent = 'ACCT-001';
     }
 
-    /* Basic escaping */
-    function escapeHtml(s=''){ return String(s).replace(/[&<>"']/g, (m)=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;" }[m])); }
-
-    /* Transfer logic */
-    function validateForm(data){
-      const amt = Number(data.amount);
-      if(!data.toName || !data.toAccount || isNaN(amt) || amt <= 0) return 'Please complete recipient and amount fields with a value greater than zero.';
-      if(!/^[0-9]{6,20}$/.test(data.toAccount)) return 'Account number must be 6–20 digits.';
-      return null;
+    function renderHistory() {
+      const list = document.getElementById('historyList');
+      list.innerHTML = '';
+      const txs = readTxs().slice().reverse(); // newest first
+      if (!txs.length) {
+        const row = document.createElement('div');
+        row.className = 'tx';
+        row.innerHTML = '<div class="left"><div class="title">No transactions</div><div class="meta">Your recent debits will appear here</div></div><div class="amount muted">—</div>';
+        list.appendChild(row);
+        return;
+      }
+      txs.forEach(tx => {
+        // Only show debits for compactness (you can show all types)
+        if (typeof tx.amount === 'number' && tx.type === 'debit') {
+          const row = document.createElement('div');
+          row.className = 'tx';
+          row.innerHTML =
+            `<div class="left">
+              <div class="title">${escapeHtml(tx.description || 'Transfer')}</div>
+              <div class="meta">${new Date(tx.timestamp).toLocaleString()} · To ${escapeHtml(tx.toAccount)} · ${escapeHtml(tx.currency)}</div>
+             </div>
+             <div class="amount" style="color:${tx.success ? 'var(--success)' : 'var(--danger)'}">${tx.success ? '-' : ''}${formatAmount(tx.amount, tx.currency)}</div>`;
+          list.appendChild(row);
+        }
+      });
     }
 
-    function onTransfer(){
-      msg.textContent = '';
-      const data = {
-        toName: document.getElementById('toName').value.trim(),
-        toAccount: document.getElementById('toAccount').value.trim(),
-        bank: document.getElementById('bank').value.trim(),
-        amount: Number(document.getElementById('amount').value),
-        note: document.getElementById('note').value.trim(),
-        date: nowIso(),
-      };
+    // sanitation for simple text
+    function escapeHtml(s) {
+      if (!s && s !== 0) return '';
+      return String(s).replace(/[&<>"']/g, function(m) { return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'})[m]; });
+    }
 
-      const err = validateForm(data);
-      if(err){ msg.textContent = err; return; }
+    // Receipt print: open new window with printable content
+    function printReceipt(tx) {
+      // Build a minimal printable HTML
+      const win = window.open('', '_blank', 'noopener,noreferrer');
+      if (!win) {
+        alert('Please allow popups to enable printing the receipt.');
+        return;
+      }
+      const html = `
+        <!doctype html>
+        <html>
+        <head>
+          <meta charset="utf-8" />
+          <title>Receipt - Transfer</title>
+          <style>
+            body{font-family:Inter,Arial,Helvetica,sans-serif;color:#111;background:#fff;padding:28px;}
+            .wrap{max-width:680px;margin:0 auto;border:1px solid #eee;padding:24px;border-radius:8px;}
+            h1{margin:0 0 6px;font-size:20px;}
+            p{margin:6px 0;color:#333}
+            .meta{margin-top:12px;padding:12px;background:#f7f7fb;border-radius:8px}
+            .amount{font-size:22px;font-weight:800;margin-top:12px}
+            .small{font-size:12px;color:#666}
+            .pair{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed #eee}
+            .pair:last-child{border-bottom:0}
+          </style>
+        </head>
+        <body>
+          <div class="wrap" id="printable">
+            <h1>Transaction Receipt</h1>
+            <p class="small">Transaction ID: ${escapeHtml(tx.id)}</p>
+            <div class="meta">
+              <div class="pair"><div><strong>Type</strong></div><div>${escapeHtml(tx.kind)}</div></div>
+              <div class="pair"><div><strong>To</strong></div><div>${escapeHtml(tx.toAccount)}</div></div>
+              <div class="pair"><div><strong>Amount</strong></div><div class="amount">${formatAmount(tx.amount, tx.currency)}</div></div>
+              <div class="pair"><div><strong>Currency</strong></div><div>${escapeHtml(tx.currency)}</div></div>
+              <div class="pair"><div><strong>Reference</strong></div><div>${escapeHtml(tx.description || '—')}</div></div>
+              <div class="pair"><div><strong>Date</strong></div><div>${new Date(tx.timestamp).toLocaleString()}</div></div>
+              <div class="pair"><div><strong>Status</strong></div><div>${tx.success ? 'Completed' : 'Failed'}</div></div>
+            </div>
+            <p class="small" style="margin-top:16px">This receipt documents the transfer. Keep it for your records.</p>
+          </div>
+          <script>window.print(); setTimeout(()=>window.close(), 750);</script>
+        </body>
+        </html>
+      `;
+      win.document.open();
+      win.document.write(html);
+      win.document.close();
+    }
 
-      const current = getBalance();
-      if(data.amount > current){
-        msg.textContent = 'Insufficient balance for this transfer.';
+    // Create unique tx id
+    function makeTxId() {
+      return 'tx_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2,8);
+    }
+
+    // Main transfer handler
+    document.getElementById('transferForm').addEventListener('submit', function(e){
+      e.preventDefault();
+      const toAccount = (document.getElementById('toAccount').value || '').trim();
+      const amountRaw = parseFloat(document.getElementById('amount').value);
+      const currency = document.getElementById('currency').value || readBalance().currency || 'USD';
+      const type = document.getElementById('type').value || 'internal';
+      const note = document.getElementById('note').value || '';
+
+      if (!toAccount) { alert('Please enter a recipient account number.'); return; }
+      if (!amountRaw || isNaN(amountRaw) || amountRaw <= 0) { alert('Enter a valid amount greater than 0.'); return; }
+
+      const balance = readBalance();
+
+      // Currency naive check: if currencies differ, reject (simple approach)
+      if (currency !== balance.currency) {
+        if (!confirm('Transfer currency differs from your account currency. Proceed and allow conversion?')) return;
+      }
+
+      // Check funds
+      if (amountRaw > balance.amount) {
+        alert('Insufficient funds. Please reduce the transfer amount.');
         return;
       }
 
-      // Deduct balance immediately
-      const after = current - Math.round(data.amount);
-      setBalance(after);
-
-      // Create transaction record (debit)
+      // Prepare transaction
       const tx = {
-        id: 'tx_' + Date.now(),
-        type: 'debit',
-        amount: Math.round(data.amount),
-        toName: data.toName,
-        toAccount: data.toAccount,
-        bank: data.bank,
-        note: data.note,
-        date: data.date,
+        id: makeTxId(),
+        timestamp: Date.now(),
+        toAccount: toAccount,
+        amount: Number(amountRaw),
+        currency: currency,
+        type: type,
+        kind: 'Transfer',
+        description: note,
+        success: true // in a real app, success depends on server response
       };
-      pushTx(tx);
 
-      // Also create a small credit record on the "recipient" side if desired (not deducted from sender)
-      // pushTx({ ...tx, type: 'credit', id: 'txc_' + Date.now() }); // optional; commented out
+      // Persist: deduct balance, record tx
+      const newBalance = Object.assign({}, balance, { amount: Number((balance.amount - amountRaw).toFixed(2)) });
+      writeBalance(newBalance);
 
-      // Show receipt and enable printing
-      showReceipt(tx, after);
+      const txs = readTxs();
+      txs.push(Object.assign({}, tx, { direction: 'outbound', status: 'completed', type: 'debit' }));
+      writeTxs(txs);
 
-      // Reset form but keep recipient for convenience
-      document.getElementById('amount').value = '';
-      document.getElementById('note').value = '';
-      msg.textContent = 'Transfer completed';
-      msg.style.color = 'var(--success)';
-      setTimeout(()=>{ msg.textContent=''; msg.style.color=''; }, 3500);
-    }
-
-    /* Receipt: populate and show */
-    function showReceipt(tx, balanceAfter){
-      rDate.textContent = humanDate(tx.date);
-      rAmount.textContent = fmt(tx.amount);
-      rTo.textContent = escapeHtml(tx.toName);
-      rAccount.textContent = escapeHtml(tx.toAccount);
-      rBank.textContent = escapeHtml(tx.bank || '—');
-      rNote.textContent = escapeHtml(tx.note || '—');
-      rBalanceAfter.textContent = fmt(balanceAfter);
-
-      receiptModal.style.display = 'flex';
-      receiptModal.setAttribute('aria-hidden', 'false');
-      // prepare print content by cloning innerHTML
-      printBtn.onclick = () => printReceipt(tx, balanceAfter);
-    }
-
-    function closeModal(){
-      receiptModal.style.display = 'none';
-      receiptModal.setAttribute('aria-hidden', 'true');
-    }
-
-    /* Print: opens print dialog with a clean receipt markup */
-    function printReceipt(tx, balanceAfter){
-      const printWin = window.open('', '_blank', 'toolbar=no,location=no,menubar=no');
-      if(!printWin) { alert('Popup blocked. Please allow popups to print the receipt.'); return; }
-
-      const html = `
-<!doctype html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>Receipt</title>
-<style>
-  body{font-family:Arial,Helvetica,sans-serif;color:#0b1220;padding:24px}
-  .wrap{max-width:540px;margin:0 auto}
-  h1{font-size:18px;margin-bottom:8px}
-  .row{display:flex;justify-content:space-between;margin:8px 0}
-  .muted{color:#666;font-size:13px}
-  .amt{font-size:20px;font-weight:700;margin-top:8px}
-  .footer{margin-top:24px;color:#444;font-size:13px}
-</style>
-</head>
-<body>
-  <div class="wrap">
-    <h1>Transaction receipt</h1>
-    <div class="row"><div class="muted">Date</div><div>${humanDate(tx.date)}</div></div>
-    <div class="row"><div class="muted">Recipient</div><div>${escapeHtml(tx.toName)}</div></div>
-    <div class="row"><div class="muted">Account</div><div>${escapeHtml(tx.toAccount)}</div></div>
-    <div class="row"><div class="muted">Bank</div><div>${escapeHtml(tx.bank || '—')}</div></div>
-    <div class="row"><div class="muted">Note</div><div>${escapeHtml(tx.note || '—')}</div></div>
-    <div class="row"><div class="muted">Amount</div><div class="amt">${fmt(tx.amount)}</div></div>
-    <div class="row"><div class="muted">Balance after</div><div>${fmt(balanceAfter)}</div></div>
-    <div class="footer">Reference: ${tx.id}</div>
-  </div>
-  <script>window.onload = function(){ window.print(); setTimeout(()=>window.close(), 600); };</script>
-</body>
-</html>
-      `;
-      printWin.document.open();
-      printWin.document.write(html);
-      printWin.document.close();
-    }
-
-    /* Dashboard navigation: opens dashboard.html if present; still update localStorage for dashboard to read */
-    document.getElementById('nav-dashboard').addEventListener('click', ()=>{
-      // try to navigate to dashboard if exists; otherwise stay
-      window.location.href = 'dashboard.html';
-    });
-
-    document.getElementById('closeReceipt').addEventListener('click', closeModal);
-    receiptModal.addEventListener('click', (e)=>{ if(e.target === receiptModal) closeModal(); });
-
-    document.getElementById('clearHistory').addEventListener('click', ()=>{
-      if(!confirm('Clear transaction history? This cannot be undone.')) return;
-      localStorage.setItem(TX_KEY, JSON.stringify([]));
-      renderHistory();
-    });
-
-    btn.addEventListener('click', onTransfer);
-
-    /* On load */
-    (function(){
-      initStorage();
+      // Update UI immediately
       renderBalance();
       renderHistory();
 
-      // If this page is opened after an external deposit, the dashboard may have pushed a transaction
-      // Observe storage changes (other tabs) to update UI
-      window.addEventListener('storage', (e)=>{
-        if(e.key === BALANCE_KEY) renderBalance();
-        if(e.key === TX_KEY) renderHistory();
-      });
-    })();
+      // Print receipt
+      printReceipt(tx);
 
-    /* Expose for debug in console if needed */
-    window._citi = {
-      getBalance, setBalance, getTxs, pushTx
-    };
+      // Small success feedback
+      alert('Transfer successful. A receipt will be printed.');
+
+      // Reset form
+      document.getElementById('transferForm').reset();
+      document.getElementById('currency').value = newBalance.currency;
+    });
+
+    document.getElementById('resetBtn').addEventListener('click', function(){
+      if (confirm('Reset the transfer form?')) {
+        document.getElementById('transferForm').reset();
+      }
+    });
+
+    // Initialize on load
+    (function init(){
+      initData();
+      // Set default currency to current balance currency
+      const balance = readBalance();
+      const currencySelect = document.getElementById('currency');
+      currencySelect.value = balance.currency || 'USD';
+      renderBalance();
+      renderHistory();
+    })();
   </script>
 </body>
 </html>
