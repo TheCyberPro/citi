@@ -432,87 +432,171 @@ document.addEventListener('click', e => {
 });
 </script>
 <script>
-/* resilient print: try popup, fall back to in-page printable overlay */
-function printReceiptResilient(tx){
-  const htmlFragment = `
-    <div id="citi-print-overlay" style="
-      position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.55);display:flex;align-items:center;justify-content:center;padding:20px;
-    ">
-      <div style="background:#fff;color:#07101a;border-radius:12px;max-width:520px;width:100%;padding:20px;box-shadow:0 20px 60px rgba(2,6,23,0.6);">
-        <h2 style="margin:0 0 8px">Transaction Receipt</h2>
-        <div style="font-size:13px;color:#555;margin-bottom:12px">${new Date(tx.date).toLocaleString()}</div>
-        <div style="display:flex;justify-content:space-between;padding:8px 0;border-top:1px solid #eee"><div>From</div><div>${tx.from}</div></div>
-        <div style="display:flex;justify-content:space-between;padding:8px 0;border-top:1px solid #eee"><div>To</div><div>${tx.to||'—'}</div></div>
-        <div style="display:flex;justify-content:space-between;padding:12px 0;border-top:1px solid #eee;font-weight:700"><div>Amount</div><div>${(tx.amount<0?'-':'')}$${Math.abs(tx.amount).toFixed(2)}</div></div>
-        <div style="display:flex;justify-content:space-between;padding:8px 0;border-top:1px solid #eee"><div>Balance</div><div>$${Number(tx.balance).toFixed(2)}</div></div>
-        <div style="margin-top:12px;color:#777;font-size:12px">Reference: ${tx.id}</div>
-        <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:14px">
-          <button id="citi-print-close" style="padding:8px 12px;border-radius:8px;border:1px solid #ddd;background:#fff;cursor:pointer">Close</button>
-          <button id="citi-print-now" style="padding:8px 12px;border-radius:8px;border:none;background:linear-gradient(90deg,#8F6BFF,#00D4FF);color:#07101a;cursor:pointer">Print</button>
-        </div>
-      </div>
-    </div>
-  `;
+/* Drop-in: idempotent commit, update balances, append tx row, resilient print */
+(function(){
+  if (window.__citi_tx_installed) return;
+  window.__citi_tx_installed = true;
 
-  // Try popup first
-  try {
-    const popup = window.open('', '_blank', 'width=520,height=720,scrollbars=yes');
-    if (popup) {
-      popup.document.open();
-      popup.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>Receipt</title>
-        <style>body{font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial;padding:20px;color:#07101a} .row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #eee} .total{font-weight:800}</style>
-        </head><body>${document.createElement('div').innerHTML = htmlFragment}</body></html>`);
-      popup.document.close();
-      // Ensure print once content is ready
-      popup.onload = () => { try { popup.print(); popup.close(); } catch(e){} };
-      return;
-    }
-  } catch(e) {
-    // continue to fallback
+  const BAL_KEY = 'citi_balances_prod';
+  const TX_KEY  = 'citi_transactions_prod';
+  const IN_FLIGHT_FLAG = '__citi_tx_inflight';
+
+  function loadBalances(){ try { return JSON.parse(localStorage.getItem(BAL_KEY)) || { checking:62345.67, savings:758910.11 }; } catch(e){ return { checking:62345.67, savings:758910.11 }; } }
+  function saveBalances(b){ localStorage.setItem(BAL_KEY, JSON.stringify(b)); }
+  function loadTxs(){ try { return JSON.parse(localStorage.getItem(TX_KEY)) || []; } catch(e){ return []; } }
+  function saveTxs(txs){ localStorage.setItem(TX_KEY, JSON.stringify(txs)); }
+
+  function fmtCurrency(n){ return '$' + Number(n).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}); }
+  function prettyDateISO(d){ return new Date(d).toLocaleString(undefined, {month:'short', day:'numeric', year:'numeric', hour:'numeric', minute:'2-digit', hour12:true}); }
+
+  function appendTxToDom(tx){
+    const tbody = document.querySelector('#tx-tbody') || document.querySelector('table.transactions tbody');
+    if (!tbody) return;
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${prettyDateISO(tx.date)}</td><td>${tx.desc || tx.to || tx.from}</td><td class="text-right">${fmtCurrency(tx.amount)}</td><td class="text-right">${fmtCurrency(tx.balance)}</td>`;
+    tbody.insertBefore(tr, tbody.firstChild);
+    if (tbody.children.length > 200) tbody.removeChild(tbody.lastChild);
   }
 
-  // Fallback: insert overlay into current document
-  // Remove any existing overlay first
-  const existing = document.getElementById('citi-print-overlay');
-  if (existing) existing.remove();
-  const wrapper = document.createElement('div');
-  wrapper.innerHTML = htmlFragment;
-  // Since htmlFragment contains innerHTML set hack above, rebuild content properly:
-  wrapper.innerHTML = `
-    <div id="citi-print-overlay" style="position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.55);display:flex;align-items:center;justify-content:center;padding:20px;">
+  function printReceiptResilient(tx){
+    // Try popup
+    try {
+      const popup = window.open('', '_blank', 'width=520,height=720,scrollbars=yes');
+      if (popup) {
+        const doc = popup.document;
+        doc.open();
+        doc.write(`<!doctype html><html><head><meta charset="utf-8"><title>Receipt</title>
+          <style>body{font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial;padding:20px;color:#07101a} .row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #eee}.total{font-weight:800}</style>
+          </head><body>
+          <h2>Transaction Receipt</h2>
+          <div class="row"><div>Date</div><div>${prettyDateISO(tx.date)}</div></div>
+          <div class="row"><div>From</div><div>${tx.from}</div></div>
+          <div class="row"><div>To</div><div>${tx.to || '—'}</div></div>
+          <div class="row"><div>Amount</div><div class="total">${fmtCurrency(tx.amount)}</div></div>
+          <div class="row"><div>Balance</div><div>${fmtCurrency(tx.balance)}</div></div>
+          <div style="margin-top:12px;color:#666;font-size:12px">Reference: ${tx.id}</div>
+          <script>window.onload=function(){ setTimeout(()=>{ try{ window.print(); }catch(e){} setTimeout(()=>window.close(),600); },120); };</script>
+          </body></html>`);
+        doc.close();
+        return;
+      }
+    } catch(e){ /* ignore and fallback */ }
+
+    // Fallback overlay in-page
+    if (document.getElementById('citi-print-overlay')) return;
+    const overlay = document.createElement('div');
+    overlay.id = 'citi-print-overlay';
+    overlay.style = 'position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.55);display:flex;align-items:center;justify-content:center;padding:20px;';
+    overlay.innerHTML = `
       <div style="background:#fff;color:#07101a;border-radius:12px;max-width:520px;width:100%;padding:20px;box-shadow:0 20px 60px rgba(2,6,23,0.6);">
         <h2 style="margin:0 0 8px">Transaction Receipt</h2>
-        <div style="font-size:13px;color:#555;margin-bottom:12px">${new Date(tx.date).toLocaleString()}</div>
+        <div style="font-size:13px;color:#555;margin-bottom:12px">${prettyDateISO(tx.date)}</div>
         <div style="display:flex;justify-content:space-between;padding:8px 0;border-top:1px solid #eee"><div>From</div><div>${tx.from}</div></div>
         <div style="display:flex;justify-content:space-between;padding:8px 0;border-top:1px solid #eee"><div>To</div><div>${tx.to||'—'}</div></div>
-        <div style="display:flex;justify-content:space-between;padding:12px 0;border-top:1px solid #eee;font-weight:700"><div>Amount</div><div>${(tx.amount<0?'-':'')}$${Math.abs(tx.amount).toFixed(2)}</div></div>
-        <div style="display:flex;justify-content:space-between;padding:8px 0;border-top:1px solid #eee"><div>Balance</div><div>$${Number(tx.balance).toFixed(2)}</div></div>
+        <div style="display:flex;justify-content:space-between;padding:12px 0;border-top:1px solid #eee;font-weight:700"><div>Amount</div><div>${fmtCurrency(tx.amount)}</div></div>
+        <div style="display:flex;justify-content:space-between;padding:8px 0;border-top:1px solid #eee"><div>Balance</div><div>${fmtCurrency(tx.balance)}</div></div>
         <div style="margin-top:12px;color:#777;font-size:12px">Reference: ${tx.id}</div>
         <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:14px">
           <button id="citi-print-close" style="padding:8px 12px;border-radius:8px;border:1px solid #ddd;background:#fff;cursor:pointer">Close</button>
           <button id="citi-print-now" style="padding:8px 12px;border-radius:8px;border:none;background:linear-gradient(90deg,#8F6BFF,#00D4FF);color:#07101a;cursor:pointer">Print</button>
         </div>
-      </div>
-    </div>
-  `;
-  document.body.appendChild(wrapper.firstElementChild);
+      </div>`;
+    document.body.appendChild(overlay);
+    document.getElementById('citi-print-close').addEventListener('click', ()=> overlay.remove());
+    document.getElementById('citi-print-now').addEventListener('click', ()=> {
+      const printWin = window.open('', '_blank', 'width=520,height=720');
+      if (!printWin) { alert('Popup blocked. Allow popups to print.'); return; }
+      printWin.document.open();
+      printWin.document.write('<!doctype html><html><head><meta charset="utf-8"><title>Receipt</title><style>body{font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial;padding:20px;color:#07101a}</style></head><body>');
+      printWin.document.write(overlay.querySelector('div').outerHTML);
+      printWin.document.write('<script>window.onload=function(){ setTimeout(()=>{ window.print(); setTimeout(()=>window.close(),400); },120); }<\/script></body></html>');
+      printWin.document.close();
+    });
+  }
 
-  // wire buttons
-  const overlay = document.getElementById('citi-print-overlay');
-  if (!overlay) return;
-  document.getElementById('citi-print-close').addEventListener('click', () => overlay.remove());
-  document.getElementById('citi-print-now').addEventListener('click', () => {
-    // print only the overlay content
-    const el = overlay.querySelector('div > div'); // inner card
-    const printWin = window.open('', '_blank', 'width=520,height=720');
-    if (!printWin) { alert('Popup blocked. Allow popups to print.'); return; }
-    printWin.document.open();
-    printWin.document.write('<!doctype html><html><head><meta charset="utf-8"><title>Receipt</title><style>body{font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial;padding:20px;color:#07101a}</style></head><body>');
-    printWin.document.write(el.outerHTML);
-    printWin.document.write('<script>window.onload=function(){ setTimeout(()=>{ window.print(); setTimeout(()=>window.close(),400); },120); }<\/script></body></html>');
-    printWin.document.close();
-  });
-}
+  function commitTransaction(opts){
+    if (window[IN_FLIGHT_FLAG]) return null;
+    window[IN_FLIGHT_FLAG] = true;
+    try {
+      const balances = loadBalances();
+      const txs = loadTxs();
+      const from = (opts.from || 'checking').toLowerCase();
+      const amount = Number(opts.amount) || 0;
+      if (!amount || amount <= 0) throw new Error('Invalid amount');
+      if (typeof balances[from] !== 'number') balances[from] = Number(balances[from]) || 0;
+      balances[from] = Number((balances[from] - amount).toFixed(2));
+      saveBalances(balances);
+      const tx = {
+        id: 'tx_' + Date.now(),
+        date: new Date().toISOString(),
+        type: opts.type || 'transfer',
+        from: from,
+        to: opts.to || opts.recipient || '',
+        desc: opts.desc || (opts.type === 'withdraw' ? 'Withdrawal' : 'Transfer'),
+        amount: -Math.abs(amount),
+        balance: balances[from]
+      };
+      txs.unshift(tx);
+      saveTxs(txs);
+      window.transactions = txs.slice();
+      appendTxToDom(tx);
+      printReceiptResilient(tx);
+      return tx;
+    } finally {
+      // release inflight after slight delay so UI animations complete
+      setTimeout(()=> { try { window[IN_FLIGHT_FLAG] = false; } catch(e){} }, 600);
+    }
+  }
+
+  function hookConfirmButton(){
+    const btn = document.getElementById('confirm-send') || document.querySelector('[data-action="confirm-send"]') || document.querySelector('button[id*="confirm"]') || null;
+    if (!btn) return;
+    if (btn.dataset.citiHook === '1') return;
+    btn.dataset.citiHook = '1';
+    btn.addEventListener('click', function(ev){
+      ev.preventDefault();
+      // Prevent double clicks at the handler level
+      if (btn.dataset.citiProcessing === '1') return;
+      btn.dataset.citiProcessing = '1';
+      setTimeout(()=> { btn.dataset.citiProcessing = '0'; }, 1200);
+
+      const fromEl = document.getElementById('from-account') || document.querySelector('.from-account');
+      const amountEl = document.getElementById('amount') || document.querySelector('input[name="amount"]') || document.querySelector('input[type="number"]');
+      const toEl = document.getElementById('to-recipient') || document.getElementById('external-account') || document.querySelector('[name="recipient"]') || null;
+      const type = (location.pathname.indexOf('withdraw') !== -1) ? 'withdraw' : 'transfer';
+      const from = fromEl ? (fromEl.value || fromEl.textContent || '').toLowerCase().split(' ')[0] : 'checking';
+      const amount = amountEl ? parseFloat((amountEl.value || amountEl.textContent || '0').replace(/[^0-9.\-]/g,'')) : 0;
+      const to = toEl ? (toEl.value || toEl.textContent || '') : '';
+
+      if (!amount || amount <= 0) { alert('Enter a valid amount'); btn.dataset.citiProcessing='0'; return; }
+      try {
+        btn.disabled = true;
+        const originalText = btn.textContent;
+        btn.textContent = 'Processing…';
+        const tx = commitTransaction({ type, from, to, amount, desc: type === 'withdraw' ? 'Withdrawal' : 'Transfer' });
+        setTimeout(()=> {
+          btn.disabled = false;
+          btn.textContent = originalText;
+          const backdrop = document.getElementById('confirm-backdrop');
+          if (backdrop) backdrop.style.display = 'none';
+          try { location.assign('dashboard.html'); } catch(e){}
+        }, 700);
+      } catch(err){
+        alert('Transaction failed: ' + (err && err.message ? err.message : 'unknown'));
+        btn.disabled = false;
+        btn.dataset.citiProcessing = '0';
+      }
+    });
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', hookConfirmButton);
+  else hookConfirmButton();
+
+  // expose for manual use and debugging
+  window.commitTransaction = commitTransaction;
+  window.citiBalancesLoad = loadBalances;
+  window.citiTxsLoad = loadTxs;
+})();
 </script>
 
 </body>
