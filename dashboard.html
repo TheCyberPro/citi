@@ -1249,111 +1249,167 @@ document.addEventListener('DOMContentLoaded', () => {
       <head>
         <meta charset="utf-8"/>
         <title>Receipt</title>
-        <style>
-          body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial; color:#07101a;padding:24px}
-          .rcpt{max-width:420px;margin:0 auto;border:1px solid #eee;padding:18px;border-radius:10px}
-          h2{margin:0 0 8px 0}
-          .row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px dashed #eee}
-          .muted{color:#666;font-size:0.95rem}
-          .total{font-weight:800;font-size:1.05rem}
-          .small{font-size:0.85rem;color:#999;margin-top:12px}
-          @media print{@page{margin:12mm}}
-        </style>
-      </head>
-      <body>
-        <div class="rcpt">
-          <h2>Transaction Receipt</h2>
-          <div class="muted">Date: ${prettyDate(tx.date)}</div>
-          <div style="height:12px"></div>
-          <div class="row"><div>From</div><div>${tx.from || '—'}</div></div>
-          <div class="row"><div>To</div><div>${tx.to || tx.desc || '—'}</div></div>
-          <div class="row"><div>Amount</div><div class="total">${fmtCurrency(tx.amount)}</div></div>
-          <div class="row"><div>Balance</div><div>${fmtCurrency(tx.balance)}</div></div>
-          <div class="small">Reference: ${tx.id || tx.date}</div>
-        </div>
-        <script>window.onload = function(){ window.print(); setTimeout(()=>window.close(), 600); };</script>
-      </body>
-      </html>
-    `;
-    const w = window.open('', '_blank', 'width=520,height=720,scrollbars=yes');
-    if (!w) return alert('Popup blocked. Allow popups to print a receipt.');
-    w.document.open();
-    w.document.write(receiptHtml);
-    w.document.close();
+<script>
+/* Commit transaction, update balances, append tx row, print receipt
+   Paste before </body> on transfer.html and withdraw.html
+*/
+(function(){
+  const BAL_KEY = 'citi_balances_v2';
+  const TX_KEY = 'citi_transactions_v2';
+
+  // Safe parser / formatter
+  function loadBalances(){ try { return JSON.parse(localStorage.getItem(BAL_KEY)) || { checking:62345.67, savings:758910.11 }; } catch(e){ return { checking:62345.67, savings:758910.11 }; } }
+  function saveBalances(b){ localStorage.setItem(BAL_KEY, JSON.stringify(b)); }
+  function loadTxs(){ try { return JSON.parse(localStorage.getItem(TX_KEY)) || []; } catch(e){ return []; } }
+  function saveTxs(txs){ localStorage.setItem(TX_KEY, JSON.stringify(txs)); }
+
+  function fmtCurrency(n){
+    if (n === null || n === undefined) return '—';
+    return '$' + Number(n).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
+  }
+  function prettyDateISO(d){
+    const dt = new Date(d);
+    return dt.toLocaleString(undefined, {month:'short', day:'numeric', year:'numeric', hour:'numeric', minute:'2-digit', hour12:true});
   }
 
-  // Public entry: call commitTransaction({type:'transfer'|'withdraw', from:'checking', to:'Jane', amount:123.45, desc:'Payment'}) 
-  window.commitTransaction = function(opts){
-    try {
-      const balances = loadBalances();
-      const from = (opts.from || 'checking').toLowerCase();
-      const amount = Number(opts.amount) || 0;
-      if (!amount || amount <= 0) { throw new Error('Invalid amount'); }
-      // subtract for send (amount leaves from account)
-      if (typeof balances[from] !== 'number') balances[from] = Number(balances[from]) || 0;
-      balances[from] = Number((balances[from] - amount).toFixed(2));
-      // build tx
-      const tx = {
-        id: 'tx_' + Date.now(),
-        date: nowISO(),
-        from: from,
-        to: opts.to || opts.recipient || '',
-        desc: opts.desc || (opts.type === 'withdraw' ? 'Withdrawal' : 'Transfer'),
-        amount: -Math.abs(amount),
-        balance: balances[from]
-      };
-      // persist balances and push tx
-      saveBalances(balances);
-      pushTransaction(tx);
-      // optional: add to server here (AJAX) — omitted by design
-      // print receipt
-      printReceipt(tx);
-      return tx;
-    } catch(err){
-      console.error('commitTransaction failed', err);
-      throw err;
-    }
-  };
+  // DOM helpers
+  function appendTxToDom(tx){
+    // try tx table tbody first (#tx-tbody)
+    const tbody = document.querySelector('#tx-tbody') || document.querySelector('table.transactions tbody');
+    if (!tbody) return;
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${prettyDateISO(tx.date)}</td>
+      <td>${tx.desc || tx.to || tx.from}</td>
+      <td class="text-right ${tx.amount < 0 ? 'negative' : 'positive'}">${fmtCurrency(tx.amount)}</td>
+      <td class="text-right">${fmtCurrency(tx.balance)}</td>
+    `;
+    // insert at top so newest first
+    tbody.insertBefore(tr, tbody.firstChild);
+    // keep DOM trimmed (optional)
+    if (tbody.children.length > 200) tbody.removeChild(tbody.lastChild);
+  }
 
-  // If the page uses confirm modal buttons with id confirm-send, hook them to commitTransaction automatically
-  function autoHookConfirmButton(){
+  // Create and open printable receipt
+  function printReceipt(tx){
+    const html = `
+      <!doctype html><html><head><meta charset="utf-8"><title>Receipt</title>
+      <style>
+        body{font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial;color:#07101a;padding:20px}
+        .rcpt{max-width:520px;margin:0 auto;border:0;padding:0}
+        h2{margin:0 0 8px}
+        .row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #eee}
+        .total{font-weight:800}
+        @media print{@page{margin:12mm}}
+      </style>
+      </head><body>
+      <div class="rcpt">
+        <h2>Transaction Receipt</h2>
+        <div class="row"><div class="muted">Date</div><div>${prettyDateISO(tx.date)}</div></div>
+        <div class="row"><div>From</div><div>${tx.from}</div></div>
+        <div class="row"><div>To</div><div>${tx.to || tx.desc || '—'}</div></div>
+        <div class="row"><div>Amount</div><div class="total">${fmtCurrency(tx.amount)}</div></div>
+        <div class="row"><div>Balance</div><div>${fmtCurrency(tx.balance)}</div></div>
+        <div style="margin-top:12px;color:#666;font-size:12px">Reference: ${tx.id}</div>
+      </div>
+      <script>window.onload=function(){ setTimeout(()=>{ window.print(); setTimeout(()=>window.close(),600); },120); };</script>
+      </body></html>
+    `;
+    const w = window.open('','_blank','width=520,height=720,scrollbars=yes');
+    if (!w) { alert('Popup blocked. Allow popups to print receipt.'); return; }
+    w.document.open(); w.document.write(html); w.document.close();
+  }
+
+  // Main commit function
+  function commitTransaction(opts){
+    // opts: {type:'transfer'|'withdraw', from:'checking', to:'recipient', amount:123.45, desc:'...'}
+    const balances = loadBalances();
+    const txs = loadTxs();
+    const from = (opts.from || 'checking').toLowerCase();
+    const amount = Number(opts.amount) || 0;
+    if (!amount || amount <= 0) throw new Error('Invalid amount');
+    if (typeof balances[from] !== 'number') balances[from] = Number(balances[from]) || 0;
+
+    // subtract from source
+    balances[from] = Number((balances[from] - amount).toFixed(2));
+    saveBalances(balances);
+
+    const tx = {
+      id: 'tx_' + Date.now(),
+      date: new Date().toISOString(),
+      type: opts.type || 'transfer',
+      from: from,
+      to: opts.to || opts.recipient || '',
+      desc: opts.desc || (opts.type === 'withdraw' ? 'Withdrawal' : 'Transfer'),
+      amount: -Math.abs(amount),
+      balance: balances[from]
+    };
+
+    // prepend in-memory and persisted history
+    txs.unshift(tx);
+    saveTxs(txs);
+    // keep window.transactions in sync if other code relies on it
+    window.transactions = txs.slice();
+
+    // append to dashboard DOM if present
+    appendTxToDom(tx);
+
+    // open receipt
+    printReceipt(tx);
+
+    return tx;
+  }
+
+  // Hook confirm-send button automatically if present
+  function hookConfirmButton(){
     const confirmBtn = document.getElementById('confirm-send');
     if (!confirmBtn) return;
-    if (confirmBtn.dataset.hooked === '1') return;
-    confirmBtn.dataset.hooked = '1';
-    confirmBtn.addEventListener('click', function(){
-      // read common fields (best-effort)
+    if (confirmBtn.dataset.citiHook === '1') return;
+    confirmBtn.dataset.citiHook = '1';
+    confirmBtn.addEventListener('click', (ev) => {
+      ev.preventDefault();
+      // read the common fields from page
       const fromEl = document.getElementById('from-account');
       const amountEl = document.getElementById('amount');
       const toEl = document.getElementById('to-recipient') || document.getElementById('external-account') || document.querySelector('[name="recipient"]');
-      const type = (document.body.id === 'withdraw-page' || window.location.pathname.indexOf('withdraw') !== -1) ? 'withdraw' : 'transfer';
+      const type = (location.pathname.indexOf('withdraw') !== -1) ? 'withdraw' : 'transfer';
       const from = fromEl ? fromEl.value : 'checking';
       const amount = amountEl ? parseFloat(amountEl.value) : 0;
       const to = toEl ? toEl.value : '';
+      if (!amount || amount <= 0) { alert('Enter a valid amount'); return; }
+
       try {
-        if (!amount || amount <= 0) { alert('Enter a valid amount'); return; }
-        // commit transaction
-        const tx = window.commitTransaction({ type, from, to, amount, desc: type === 'withdraw' ? 'Withdrawal' : 'Transfer' });
-        // provide brief success UI then redirect (preserve existing nav pattern)
         confirmBtn.disabled = true;
         confirmBtn.textContent = 'Processing…';
-        setTimeout(()=> {
+        // commit and then restore UI after short delay
+        const tx = commitTransaction({ type, from, to, amount, desc: type === 'withdraw' ? 'Withdrawal' : 'Transfer' });
+        setTimeout(() => {
           confirmBtn.disabled = false;
-          confirmBtn.textContent = 'Send';
-          // try to return to dashboard if path exists
-          if (location.pathname.indexOf('transfer') !== -1 || location.pathname.indexOf('withdraw') !== -1) {
-            location.assign('dashboard.html');
+          confirmBtn.textContent = 'Confirm';
+          // try to close modal if your modal handler exists
+          const backdrop = document.getElementById('confirm-backdrop');
+          if (backdrop) backdrop.style.display = 'none';
+          // navigate back to dashboard if desired
+          if (confirmBtn.dataset.redirect !== 'no') {
+            try { location.assign('dashboard.html'); } catch(e){}
           }
         }, 700);
-      } catch(e) {
-        alert('Transaction failed: ' + (e && e.message ? e.message : 'unknown'));
+      } catch (err) {
+        alert('Transaction failed: ' + (err.message || err));
+        confirmBtn.disabled = false;
+        confirmBtn.textContent = 'Confirm';
       }
     });
   }
 
-  // init hook attempt at DOMContentLoaded
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', autoHookConfirmButton);
-  else autoHookConfirmButton();
+  // If the page uses a different confirm button id (e.g., #confirm-send exists elsewhere), or you want manual commit,
+  // call window.commitTransaction({ from:'checking', amount:45, to:'Jane' })
+  window.commitTransaction = commitTransaction;
+
+  // Initialize: attempt to hook immediately or on DOM ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', hookConfirmButton);
+  } else hookConfirmButton();
 
 })();
 </script>
