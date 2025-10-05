@@ -13,6 +13,82 @@
     table{width:100%;border-collapse:collapse;margin-top:12px}
     td,th{padding:8px;border-bottom:1px solid #f0f0f5;font-size:14px}
     #tx-tbody tr:first-child td{background:#fffbe6}
+/* Transfer page layout reset and form container polish */
+.transfer-page, body.transfer-page, #transfer-root, .transfer-root {
+  box-sizing: border-box;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  margin: 0;
+  padding: 0;
+}
+
+.main-transfer-container, .transfer-container, #transfer-container {
+  max-width: 900px;
+  width: 100%;
+  margin: 24px auto;
+  padding: 18px;
+  background: transparent;
+  display: block;
+}
+
+/* constrain the form columns into a simple stack/grid */
+.transfer-form, form.transfer, .transfer-form-inner {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  align-items: start;
+}
+
+/* normalize inputs and selects used on this page only */
+.transfer-form input[type="text"],
+.transfer-form input[type="number"],
+.transfer-form input[type="tel"],
+.transfer-form textarea,
+.transfer-form select,
+#amount, #to-recipient, #from-account {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(15,20,30,0.08);
+  background: #fff;
+  box-shadow: none;
+  font-size: 15px;
+  box-sizing: border-box;
+}
+
+/* buttons */
+#confirm-send, .btn-primary-strong {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:48px;
+  padding:12px 18px;
+  border-radius:12px;
+  border:0;
+  background:linear-gradient(90deg,#8F6BFF,#00D4FF);
+  color:#07101a;
+  font-weight:800;
+  cursor:pointer;
+}
+
+/* keep layout responsive */
+@media (min-width:720px){
+  .transfer-form.two-col, form.transfer.two-col { grid-template-columns: 1fr 1fr; gap:16px; }
+}
+
+/* ensure the transactions table is readable */
+#tx-table, table.transactions {
+  width:100%;
+  border-collapse:collapse;
+  background:transparent;
+}
+#tx-table td, #tx-table th, table.transactions td, table.transactions th {
+  padding:10px 8px;
+  border-bottom:1px solid rgba(0,0,0,0.04);
+  font-size:14px;
+}
+
   </style>
 </head>
 <body>
