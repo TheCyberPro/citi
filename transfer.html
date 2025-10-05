@@ -152,10 +152,10 @@
 
     // Storage primitives (no synthetic storage events)
     function initStorage() {
-      if (!localStorage.getItem(BALANCE_KEY)) localStorage.setItem(BALANCE_KEY, JSON.stringify({ amount: 0, currency: 'JPY' }));
+      if (!localStorage.getItem(BALANCE_KEY)) localStorage.setItem(BALANCE_KEY, JSON.stringify({ amount: 0, currency: 'USD' }));
       if (!localStorage.getItem(TX_KEY)) localStorage.setItem(TX_KEY, JSON.stringify([]));
     }
-    function getBalance() { return safeParse(BALANCE_KEY, { amount: 0, currency: 'JPY' }); }
+    function getBalance() { return safeParse(BALANCE_KEY, { amount: 0, currency: 'USD' }); }
     function setBalance(b) { localStorage.setItem(BALANCE_KEY, JSON.stringify(b)); }
     function getTxs() { return safeParse(TX_KEY, []); }
     function setTxs(txs) { localStorage.setItem(TX_KEY, JSON.stringify(txs)); }
@@ -279,14 +279,14 @@
         toAccount,
         bankCode,
         amount,
-        currency: 'JPY',
+        currency: 'USD',
         description,
         type: 'debit',
         success: true
       };
 
       // Persist: deduct and append
-      const newBal = { amount: Number((balance.amount - amount).toFixed(0)), currency: 'JPY' };
+      const newBal = { amount: Number((balance.amount - amount).toFixed(0)), currency: 'USD' };
       setBalance(newBal);
       const txs = getTxs();
       txs.push(tx);
@@ -330,7 +330,7 @@
     }
 
     // Expose storage helpers
-    function getBalance() { return safeParse(BALANCE_KEY, { amount: 0, currency: 'JPY' }); }
+    function getBalance() { return safeParse(BALANCE_KEY, { amount: 0, currency: 'USD' }); }
     function setBalance(b) { localStorage.setItem(BALANCE_KEY, JSON.stringify(b)); }
     function getTxs() { return safeParse(TX_KEY, []); }
     function setTxs(txs) { localStorage.setItem(TX_KEY, JSON.stringify(txs)); }
