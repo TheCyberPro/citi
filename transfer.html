@@ -3,114 +3,51 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Transfer funds — CITI</title>
+  <title>Transfer — CITI</title>
 
+  <!-- CSS aligned with withdraw style (luxury/dark) -->
   <style>
     :root{
-      --bg:#0f1724;
-      --card:#0b1220;
-      --muted:#9aa4b2;
-      --accent:#7c5cff;
-      --glass: rgba(255,255,255,0.03);
-      --success:#3bd671;
-      --danger:#ff6b6b;
+      --bg:#0f1724; --card:#0b1220; --muted:#9aa4b2; --accent:#7c5cff;
+      --glass: rgba(255,255,255,0.03); --success:#3bd671; --danger:#ff6b6b;
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
     }
     html,body{height:100%}
     body{
-      margin:0;
-      background: radial-gradient(1200px 600px at 10% 10%, rgba(124,92,255,0.12), transparent 8%),
-                  radial-gradient(900px 400px at 90% 90%, rgba(0,200,190,0.05), transparent 10%),
-                  var(--bg);
-      color:#e6eef8;
-      -webkit-font-smoothing:antialiased;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:28px;
+      margin:0;background:
+        radial-gradient(1200px 600px at 10% 10%, rgba(124,92,255,0.12), transparent 8%),
+        radial-gradient(900px 400px at 90% 90%, rgba(0,200,190,0.05), transparent 10%),
+        var(--bg);
+      color:#e6eef8;-webkit-font-smoothing:antialiased;display:flex;align-items:center;justify-content:center;padding:28px;
     }
-
-    .container{
-      width:980px;
-      max-width:96%;
-      display:grid;
-      grid-template-columns: 1fr 360px;
-      gap:22px;
-      align-items:start;
-    }
-
-    .panel{
-      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02));
-      border:1px solid rgba(255,255,255,0.04);
-      padding:20px;
-      border-radius:12px;
-      box-shadow: 0 6px 30px rgba(2,6,23,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
-    }
-
-    .brand-row{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      margin-bottom:12px;
-    }
-
-    .brand{
-      display:flex;
-      gap:12px;
-      align-items:center;
-    }
-    .logo{
-      width:44px;height:44px;border-radius:10px;
-      background:linear-gradient(135deg,#fff 0%, #f0f0f0 100%);
-      box-shadow: 0 6px 18px rgba(124,92,255,0.14);
-    }
+    .container{width:980px;max-width:96%;display:grid;grid-template-columns:1fr 360px;gap:22px;align-items:start}
+    .panel{background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02));border:1px solid rgba(255,255,255,0.04);padding:20px;border-radius:12px;box-shadow:0 6px 30px rgba(2,6,23,0.6), inset 0 1px 0 rgba(255,255,255,0.02)}
+    .brand-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+    .brand{display:flex;gap:12px;align-items:center}
+    .logo{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,#fff,#f0f0f0);box-shadow:0 6px 18px rgba(124,92,255,0.14)}
     .title{font-weight:700;font-size:16px;color:#f4f7fb}
     .subtitle{font-size:13px;color:var(--muted);margin-top:2px}
-
-    form .row{
-      display:flex;gap:12px;margin-bottom:12px;
-      align-items:end;
-    }
+    nav{display:flex;gap:12px;margin-bottom:16px}
+    .row{display:flex;gap:12px;margin-bottom:12px;align-items:end}
     label{display:block;font-size:13px;color:var(--muted);margin-bottom:8px}
     input[type="text"], input[type="number"], select, textarea{
-      width:100%;
-      padding:12px 14px;
-      border-radius:10px;
-      background:var(--glass);
-      border:1px solid rgba(255,255,255,0.03);
-      color:#e8f0ff;font-size:14px;outline:none;
+      width:100%;padding:12px 14px;border-radius:10px;background:var(--glass);border:1px solid rgba(255,255,255,0.03);color:#e8f0ff;font-size:14px;outline:none;
     }
-
-    .muted {color:var(--muted);font-size:13px}
-
-    .balance-card{
-      display:flex;flex-direction:column;padding:18px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.006));
-      border:1px solid rgba(255,255,255,0.03);
-    }
-
+    .muted{color:var(--muted);font-size:13px}
+    .balance-card{display:flex;flex-direction:column;padding:18px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.006));border:1px solid rgba(255,255,255,0.03)}
     .balance-label{font-size:13px;color:var(--muted)}
     .balance-amount{font-size:28px;font-weight:700;margin-top:6px;color:#fff}
-
-    .btn{
-      display:inline-flex;align-items:center;justify-content:center;padding:12px 16px;border-radius:10px;cursor:pointer;border:0;font-weight:700;
-      color:#08101a;background:linear-gradient(90deg,var(--accent),#5ec9ff);box-shadow: 0 8px 30px rgba(124,92,255,0.14);
-    }
+    .btn{display:inline-flex;align-items:center;justify-content:center;padding:12px 16px;border-radius:10px;cursor:pointer;border:0;font-weight:700;color:#08101a;background:linear-gradient(90deg,var(--accent),#5ec9ff);box-shadow:0 8px 30px rgba(124,92,255,0.14)}
     .btn:active{transform:translateY(1px)}
-    .btn-ghost{background:transparent;color:var(--muted);border:1px solid rgba(255,255,255,0.04);box-shadow:none}
-
+    .btn-ghost{background:transparent;color:var(--muted);border:1px solid rgba(255,255,255,0.04);box-shadow:none;padding:10px 12px;border-radius:10px}
     .history-list{margin-top:12px;display:flex;flex-direction:column;gap:10px;max-height:320px;overflow:auto;padding-right:6px}
     .tx{padding:12px;border-radius:10px;background:rgba(255,255,255,0.02);display:flex;justify-content:space-between;align-items:center;border:1px solid rgba(255,255,255,0.02)}
     .tx .left{display:flex;flex-direction:column}
     .tx .title{font-weight:600;font-size:14px}
     .tx .meta{font-size:12px;color:var(--muted);margin-top:4px}
     .tx .amount{font-weight:800}
-
     .small-note{font-size:13px;color:var(--muted);margin-top:8px}
-
-    @media (max-width:920px){
-      .container{grid-template-columns:1fr;gap:16px}
-    }
+    @media (max-width:920px){.container{grid-template-columns:1fr;gap:16px}}
   </style>
 </head>
 <body>
@@ -127,7 +64,7 @@
         <div class="muted">Logged in as <strong>AUTHOR</strong></div>
       </div>
 
-      <nav style="display:flex;gap:12px;margin-bottom:16px">
+      <nav>
         <button id="nav-dashboard" class="btn-ghost">Dashboard</button>
         <button class="btn-ghost" disabled>Make a transfer</button>
       </nav>
@@ -224,7 +161,6 @@
 
     function initStorage(){
       if(!localStorage.getItem(BALANCE_KEY)){
-        // start with zero JPY as your example shows ¥0.00
         localStorage.setItem(BALANCE_KEY, JSON.stringify({ amount: 0.00, currency: 'JPY' }));
       }
       if(!localStorage.getItem(TX_KEY)){
@@ -242,7 +178,6 @@
       document.getElementById('balanceAmount').textContent = formatAmount(b.amount, b.currency);
       document.getElementById('balanceDisplay').textContent = formatAmount(b.amount, b.currency);
       document.getElementById('currencyLabel').textContent = 'Currency: ' + (b.currency || '—');
-      // keep currency select in sync
       const sel = document.getElementById('currency');
       if(sel) sel.value = b.currency || sel.value;
     }
@@ -250,38 +185,30 @@
     function renderHistory(){
       const list = document.getElementById('historyList');
       const side = document.getElementById('sideHistory');
-      list.innerHTML = '';
-      side.innerHTML = '';
-      const txs = getTxs().slice().reverse(); // newest first
-
+      list.innerHTML = ''; side.innerHTML = '';
+      const txs = getTxs().slice().reverse();
       if(!txs.length){
         const none = createTxRow({ title: 'No transactions', meta: 'Your recent debits will appear here', amount: '—', warn: true });
-        list.appendChild(none);
-        side.appendChild(none.cloneNode(true));
-        return;
+        list.appendChild(none); side.appendChild(none.cloneNode(true)); return;
       }
-
       txs.forEach(tx => {
-        // show all debits; keep it simple and show direction/type info
         const row = createTxRow({
           title: tx.description || 'Transfer',
           meta: new Date(tx.timestamp).toLocaleString() + ' · To ' + tx.toAccount + ' · ' + tx.currency,
           amount: (tx.type === 'debit' ? '-' : '') + formatAmount(tx.amount, tx.currency),
           success: tx.success
         });
-        list.appendChild(row);
-        side.appendChild(row.cloneNode(true));
+        list.appendChild(row); side.appendChild(row.cloneNode(true));
       });
     }
 
-    function createTxRow({ title, meta, amount, success=true, warn=false }){
-      const div = document.createElement('div');
-      div.className = 'tx';
-      const left = document.createElement('div'); left.className = 'left';
-      const t = document.createElement('div'); t.className = 'title'; t.textContent = title;
-      const m = document.createElement('div'); m.className = 'meta'; m.textContent = meta;
+    function createTxRow({ title, meta, amount, success=true }){
+      const div = document.createElement('div'); div.className='tx';
+      const left = document.createElement('div'); left.className='left';
+      const t = document.createElement('div'); t.className='title'; t.textContent = title;
+      const m = document.createElement('div'); m.className='meta'; m.textContent = meta;
       left.appendChild(t); left.appendChild(m);
-      const a = document.createElement('div'); a.className = 'amount'; a.textContent = amount;
+      const a = document.createElement('div'); a.className='amount'; a.textContent = amount;
       if(!success) a.style.color = 'var(--danger)';
       div.appendChild(left); div.appendChild(a);
       return div;
@@ -291,49 +218,24 @@
 
     function printReceipt(tx){
       const printWin = window.open('', '_blank', 'noopener,noreferrer');
-      if(!printWin){ alert('Please allow popups to print the receipt.'); return; }
-      const html = `
-        <!doctype html>
-        <html>
-        <head>
-          <meta charset="utf-8">
-          <title>Receipt</title>
-          <style>
-            body{font-family:Arial,Helvetica,sans-serif;color:#111;background:#fff;padding:28px}
-            .wrap{max-width:680px;margin:0 auto;border:1px solid #eee;padding:20px;border-radius:6px}
-            h1{font-size:20px;margin:0 0 8px}
-            .pair{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px dashed #eee}
-            .pair:last-child{border-bottom:0}
-            .amount{font-size:18px;font-weight:800}
-            .small{color:#666;font-size:12px}
-          </style>
-        </head>
-        <body>
-          <div class="wrap">
-            <h1>Transaction Receipt</h1>
-            <div class="small">Transaction ID: ${escapeHtml(tx.id)}</div>
-            <div style="margin-top:12px">
-              <div class="pair"><div><strong>Recipient</strong></div><div>${escapeHtml(tx.recipientName)}</div></div>
-              <div class="pair"><div><strong>To account</strong></div><div>${escapeHtml(tx.toAccount)}</div></div>
-              <div class="pair"><div><strong>Bank code</strong></div><div>${escapeHtml(tx.bankCode || '—')}</div></div>
-              <div class="pair"><div><strong>Amount</strong></div><div class="amount">${formatAmount(tx.amount, tx.currency)}</div></div>
-              <div class="pair"><div><strong>Note</strong></div><div>${escapeHtml(tx.description || '—')}</div></div>
-              <div class="pair"><div><strong>Date</strong></div><div>${new Date(tx.timestamp).toLocaleString()}</div></div>
-              <div class="pair"><div><strong>Status</strong></div><div>${tx.success ? 'Completed' : 'Failed'}</div></div>
-            </div>
-            <p class="small" style="margin-top:12px">Keep this receipt for your records.</p>
-          </div>
-          <script>window.print(); setTimeout(()=>window.close(),700);</script>
-        </body>
-        </html>
-      `;
+      if(!printWin){ alert('Allow popups to print the receipt.'); return; }
+      const html = `<!doctype html><html><head><meta charset="utf-8"><title>Receipt</title>
+        <style>body{font-family:Arial,Helvetica,sans-serif;color:#111;background:#fff;padding:28px}.wrap{max-width:680px;margin:0 auto;border:1px solid #eee;padding:20px;border-radius:6px}h1{font-size:20px;margin:0 0 8px}.pair{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px dashed #eee}.pair:last-child{border-bottom:0}.amount{font-size:18px;font-weight:800}.small{color:#666;font-size:12px}</style>
+        </head><body><div class="wrap"><h1>Transaction Receipt</h1><div class="small">Transaction ID: ${escapeHtml(tx.id)}</div>
+        <div style="margin-top:12px">
+          <div class="pair"><div><strong>Recipient</strong></div><div>${escapeHtml(tx.recipientName)}</div></div>
+          <div class="pair"><div><strong>To account</strong></div><div>${escapeHtml(tx.toAccount)}</div></div>
+          <div class="pair"><div><strong>Bank code</strong></div><div>${escapeHtml(tx.bankCode || '—')}</div></div>
+          <div class="pair"><div><strong>Amount</strong></div><div class="amount">${formatAmount(tx.amount, tx.currency)}</div></div>
+          <div class="pair"><div><strong>Note</strong></div><div>${escapeHtml(tx.description || '—')}</div></div>
+          <div class="pair"><div><strong>Date</strong></div><div>${new Date(tx.timestamp).toLocaleString()}</div></div>
+          <div class="pair"><div><strong>Status</strong></div><div>${tx.success ? 'Completed' : 'Failed'}</div></div>
+        </div><p class="small" style="margin-top:12px">Keep this receipt for your records.</p></div>
+        <script>window.print(); setTimeout(()=>window.close(),700);</script></body></html>`;
       printWin.document.open(); printWin.document.write(html); printWin.document.close();
     }
 
-    function escapeHtml(s){
-      if(s === undefined || s === null) return '';
-      return String(s).replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'})[m]);
-    }
+    function escapeHtml(s){ if(s==null) return ''; return String(s).replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'})[m]); }
 
     function onTransfer(e){
       e && e.preventDefault();
@@ -349,47 +251,24 @@
       if(!amount || isNaN(amount) || amount <= 0){ alert('Enter an amount greater than 0.'); return; }
 
       const balance = getBalance();
-
-      // Simple currency mismatch prompt
       if(currency !== balance.currency){
         if(!confirm('Selected currency differs from your account currency. Proceed?')) return;
       }
+      if(amount > balance.amount){ alert('Insufficient funds. Reduce amount or fund your account.'); return; }
 
-      if(amount > balance.amount){
-        alert('Insufficient funds. Reduce amount or fund your account.');
-        return;
-      }
-
-      // Build transaction
       const tx = {
-        id: makeTxId(),
-        timestamp: Date.now(),
-        recipientName,
-        toAccount,
-        bankCode,
-        amount: Number(amount),
-        currency,
-        description,
-        type: 'debit',
-        success: true
+        id: makeTxId(), timestamp: Date.now(), recipientName, toAccount, bankCode,
+        amount: Number(amount), currency, description, type: 'debit', success: true
       };
 
-      // Deduct balance and persist
+      // Deduct balance and save transaction
       const newBal = { amount: Number((balance.amount - amount).toFixed(2)), currency: balance.currency };
       setBalance(newBal);
+      const txs = getTxs(); txs.push(tx); setTxs(txs);
 
-      const txs = getTxs();
-      txs.push(tx);
-      setTxs(txs);
+      // Update UI and print receipt
+      renderBalance(); renderHistory(); printReceipt(tx);
 
-      // Update UI immediately
-      renderBalance();
-      renderHistory();
-
-      // Print receipt
-      printReceipt(tx);
-
-      // feedback and reset form (preserve currency)
       alert('Transfer successful. A receipt will be printed.');
       document.getElementById('transferForm').reset();
       document.getElementById('currency').value = newBal.currency;
@@ -397,41 +276,26 @@
 
     document.getElementById('transferForm').addEventListener('submit', onTransfer);
     document.getElementById('resetBtn').addEventListener('click', ()=>{ if(confirm('Reset the transfer form?')) document.getElementById('transferForm').reset(); });
-    document.getElementById('clearHistory').addEventListener('click', ()=>{
-      if(!confirm('Clear transaction history? This cannot be undone.')) return;
-      setTxs([]); renderHistory();
-    });
-    document.getElementById('nav-dashboard').addEventListener('click', ()=>{
-      // navigate to dashboard if present
-      window.location.href = 'dashboard.html';
-    });
+    document.getElementById('clearHistory').addEventListener('click', ()=>{ if(!confirm('Clear transaction history? This cannot be undone.')) return; setTxs([]); renderHistory(); });
+    document.getElementById('nav-dashboard').addEventListener('click', ()=>{ window.location.href = 'dashboard.html'; });
 
-    // Observe same-origin storage changes (other tabs) to refresh UI
-    window.addEventListener('storage', (e)=>{
-      if(e.key === BALANCE_KEY) renderBalance();
-      if(e.key === TX_KEY) renderHistory();
-    });
+    window.addEventListener('storage', (e)=>{ if(e.key === BALANCE_KEY) renderBalance(); if(e.key === TX_KEY) renderHistory(); });
 
-    // Initialize
     (function init(){
       initStorage();
       renderBalance();
       renderHistory();
-      // Show example values from user input snippet
+      // Prefill sample fields from your tab
       document.getElementById('recipientName').value = 'Jane Doe';
       document.getElementById('toAccount').value = '1234567890';
       document.getElementById('bankCode').value = '012';
       document.getElementById('amount').value = '0.00';
       document.getElementById('note').value = 'For rent, invoice #123';
-      // ensure currency matches stored balance
-      const b = getBalance();
-      if(b.currency) document.getElementById('currency').value = b.currency;
+      const b = getBalance(); if(b.currency) document.getElementById('currency').value = b.currency;
     })();
 
-    // Small debug helpers (available on window)
-    window._citi = {
-      getBalance, setBalance, getTxs, setTxs
-    };
+    // Debug helpers
+    window._citi = { getBalance, setBalance, getTxs, setTxs };
   </script>
 </body>
 </html>
