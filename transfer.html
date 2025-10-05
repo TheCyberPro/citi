@@ -1,660 +1,542 @@
-
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<title>CITI — Transfer</title>
-<meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Transfer — CITI</title>
 
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;70
+  <!-- Inline CSS matching a luxury/withdraw look (drop-in for withdraw.css) -->
+  <style>
+    :root{
+      --bg:#0f1222;
+      --card:#0f1724;
+      --muted:#97a0b5;
+      --accent:#7c5cff;
+      --glass: rgba(255,255,255,0.04);
+      --success:#18c295;
+      --danger:#ff6b6b;
+      --text:#e6eef8;
+      --shadow: 0 6px 24px rgba(2,6,23,0.6);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
 
-<style>
-:root{
-  --bg:#0b1220; --panel:#07101a; --card:#0f1724;
-  --muted:#98A0AD; --text:#E9F2FF; --accent:#9C7CFF; --accent-2:#00D4FF;
-  --success:#7CFFCC; --danger:#FF7A7A;
-  --radius:12px; --container:1180px; --gap:16px;
-  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neu
-}
-*{box-sizing:border-box}
-html,body{height:100%}
-body{
-  margin:0;
-  background:
-    radial-gradient(600px 380px at 10% 10%, rgba(156,124,255,0.06), transparent 6%
-    radial-gradient(500px 300px at 90% 85%, rgba(0,212,255,0.03), transparent 8%),
-    var(--bg);
-  color:var(--text);
-  -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;
-  line-height:1.45;
-  letter-spacing:-0.01em;
-  padding-bottom:100px;
-}
-.container{max-width:var(--container);margin:0 auto;padding:0 20px}
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      background: linear-gradient(180deg, #071028 0%, #071026 50%, #0b1322 100%);
+      color:var(--text);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      padding:32px;
+      display:flex;
+      align-items:flex-start;
+      justify-content:center;
+    }
 
-/* Header */
-header.site-header{position:sticky;top:0;z-index:1200;padding-top:8px}
-.header-top{display:flex;align-items:center;justify-content:space-between;padding:18,0.45));border-bottom:1px solid rgba(255,255,255,0.02);backdrop-filter:blur(6px)
-.nav-toggle{width:44px;height:44px;border-radius:10px;border:1px solid rgba(255,25or:pointer}
-.nav-toggle span{display:block;width:18px;height:2px;background:var(--muted);borde
-.header-right .logo img{height:36px}
-.header-sub{display:flex;align-items:center;padding:10px 0}
-.secure-line{font-size:0.95rem;color:var(--muted)}
-.member-line{font-size:0.88rem;color:var(--muted)}
+    .container{
+      width:100%;
+      max-width:980px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius:12px;
+      box-shadow: var(--shadow);
+      padding:28px;
+      display:grid;
+      grid-template-columns: 1fr 380px;
+      gap:20px;
+    }
 
-/* Overlay */
-.menu-overlay{display:none;position:fixed;inset:0;z-index:1500}
-.overlay-panel{position:relative;max-width:360px;height:100%;right:0;background:va
+    header.site-header{
+      grid-column:1/-1;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      margin-bottom:6px;
+    }
 
-/* Layout */
-main{padding:26px 0}
-.grid{display:grid;grid-template-columns:1fr 360px;gap:20px;align-items:start}
-.panel{padding:20px;border-radius:12px;background:linear-gradient(180deg, rgba(255x-shadow:0 18px 50px rgba(2,6,23,0.6)}
-h1{margin:0 0 12px 0;font-size:1.35rem}
-.muted{color:var(--muted)}
+    .brand{
+      display:flex;
+      gap:12px;
+      align-items:center;
+    }
+    .logo{
+      width:44px;
+      height:44px;
+      border-radius:10px;
+      background:linear-gradient(135deg,var(--accent),#4ca1ff);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:700;
+      color:white;
+      box-shadow:0 6px 18px rgba(124,92,255,0.18);
+    }
+    h1{font-size:18px;margin:0}
+    p.lead{margin:0;color:var(--muted);font-size:13px}
 
-/* Form */
-.form-group{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
-label{font-weight:600}
-input[type="text"], input[type="number"], select, textarea { padding:10px;border-rnt;color:var(--text); }
-.inline-row{display:flex;gap:12px}
-.btn-primary{background:linear-gradient(90deg,var(--accent),var(--accent-2));border;font-weight:700}
-.btn-ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);padding:
-.preview{margin-top:12px;padding:12px;border-radius:10px;border:1px solid rgba(255), transparent)}
-.preview-row{display:flex;justify-content:space-between;gap:8px;padding:6px 0}
+    /* Left column (form) */
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius:12px;
+      padding:20px;
+      box-shadow: 0 8px 32px rgba(2,8,20,0.6);
+      border:1px solid rgba(255,255,255,0.03);
+    }
 
-/* Right column */
-.side-card{padding:14px;border-radius:12px;background:linear-gradient(180deg, rgba)}
-.quick-list{display:flex;flex-direction:column;gap:8px}
+    label{
+      display:block;
+      font-size:13px;
+      color:var(--muted);
+      margin-bottom:8px;
+    }
 
-/* Modal */
-.modal-backdrop{position:fixed;inset:0;background:rgba(2,6,23,0.6);display:none;al
-.modal{background:var(--card);padding:18px;border-radius:12px;width:520px;max-widt
-.modal.open{display:block}
+    input[type="text"], input[type="number"], select{
+      width:100%;
+      padding:12px 14px;
+      background:var(--glass);
+      border:1px solid rgba(255,255,255,0.04);
+      color:var(--text);
+      border-radius:8px;
+      font-size:14px;
+      margin-bottom:14px;
+    }
 
-/* Responsive */
-@media (max-width:1000px){ .grid{grid-template-columns:1fr} }
-@media (max-width:720px){ .inline-row{flex-direction:column} .btn-primary{width:10
-button:focus, a:focus{outline:2px solid rgba(156,124,255,0.14);outline-offset:2px}
-/* Strong primary button for Withdraw / Transfer */
-.btn-primary-strong {
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  gap:10px;
-  min-height:52px;                 /* large touch target */
-  padding:14px 22px;
-  border-radius:14px;
-  border: none;
-  background: linear-gradient(90deg, #8F6BFF 0%, #00D4FF 100%); /* richer gradient
-  color:#07101a;
-  font-weight:800;
-  font-size:1rem;
-  letter-spacing:0.2px;
-  box-shadow: 0 18px 50px rgba(12,12,40,0.55), 0 6px 18px rgba(0,212,255,0.06);
-  transform: translateZ(0);
-  transition: transform .12s ease, box-shadow .12s ease, opacity .12s;
-  cursor:pointer;
-}
+    .row{
+      display:flex;
+      gap:12px;
+    }
+    .row .col{flex:1}
 
-/* Slightly smaller alternate primary */
-.btn-primary-strong.alt {
-  background: linear-gradient(90deg, #00D4FF 0%, #8F6BFF 100%);
-}
+    .actions{
+      display:flex;
+      gap:12px;
+      margin-top:6px;
+    }
 
-/* Secondary (ghost) action with stronger border and hover */
-.btn-ghost-strong {
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  gap:10px;
-  min-height:48px;
-  padding:12px 18px;
-  border-radius:12px;
-  background:transparent;
-  border:1.5px solid rgba(255,255,255,0.08);
-  color:var(--text);
-  font-weight:700;
-  box-shadow: 0 8px 28px rgba(2,6,23,0.35);
-  transition: background .12s ease, transform .12s ease;
-  cursor:pointer;
-}
-.btn-ghost-strong:hover { background: rgba(255,255,255,0.02); transform: translate
+    .btn{
+      padding:12px 16px;
+      border-radius:10px;
+      border:none;
+      cursor:pointer;
+      font-weight:600;
+      font-size:14px;
+      display:inline-flex;
+      gap:10px;
+      align-items:center;
+    }
+    .btn-primary{
+      background: linear-gradient(90deg,var(--accent),#4ca1ff);
+      color:white;
+      box-shadow: 0 8px 24px rgba(124,92,255,0.18);
+    }
+    .btn-ghost{
+      background:transparent;
+      color:var(--text);
+      border:1px solid rgba(255,255,255,0.04);
+    }
 
-/* Hover / active */
-.btn-primary-strong:hover { transform: translateY(-2px); box-shadow: 0 28px 70px r
-.btn-primary-strong:active { transform: translateY(0); box-shadow: 0 12px 28px rgb
+    /* Right column (summary + history) */
+    .summary{
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+    }
 
-/* Focus ring for accessibility */
-.btn-primary-strong:focus, .btn-ghost-strong:focus {
-  outline: 3px solid rgba(156,124,255,0.18);
-  outline-offset:4px;
-}
+    .balance{
+      padding:18px;
+      border-radius:12px;
+      background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.02));
+      border:1px solid rgba(255,255,255,0.03);
+    }
+    .balance .label{color:var(--muted);font-size:13px}
+    .balance .amount{font-size:28px;font-weight:700;margin-top:6px}
 
-/* Responsive adjustments */
-@media (max-width:720px){
-  .btn-primary-strong { min-height:56px; padding:16px 20px; font-size:1.02rem; bor
-  .btn-ghost-strong { width:100%; }
-}
+    .small{
+      font-size:13px;color:var(--muted)
+    }
 
-/* Icon support */
-.btn-primary-strong .btn-icon, .btn-ghost-strong .btn-icon { width:20px;height:20p
+    .history{
+      max-height:360px;
+      overflow:auto;
+      padding:12px;
+      border-radius:10px;
+      background:rgba(255,255,255,0.01);
+      border:1px solid rgba(255,255,255,0.03);
+    }
 
-</style>
+    .tx{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      padding:12px;
+      border-radius:8px;
+      align-items:center;
+      margin-bottom:8px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.005), transparent);
+      border:1px solid rgba(255,255,255,0.02);
+    }
+    .tx .meta{display:flex;flex-direction:column}
+    .tx .meta .who{font-weight:600}
+    .tx .meta .when{font-size:12px;color:var(--muted)}
+    .tx .amt{font-weight:700}
+    .tx.credit .amt{color:var(--success)}
+    .tx.debit .amt{color:var(--danger)}
+
+    /* Receipt modal */
+    .receipt-modal{
+      position:fixed;
+      inset:0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      background:rgba(2,6,23,0.6);
+      z-index:60;
+    }
+    .receipt-card{
+      width:520px;
+      max-width:95%;
+      background:linear-gradient(180deg,#071020,#0f1324);
+      border-radius:12px;
+      padding:18px;
+      color:var(--text);
+      box-shadow:0 12px 48px rgba(2,6,23,0.6);
+      border:1px solid rgba(255,255,255,0.03);
+    }
+    .receipt-card h3{margin:0 0 8px 0}
+    .receipt-row{display:flex;justify-content:space-between;margin:6px 0;color:var(--muted)}
+    .receipt-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:12px}
+
+    /* Responsive */
+    @media (max-width:980px){
+      .container{grid-template-columns:1fr; padding:18px}
+      header.site-header{flex-direction:column;align-items:flex-start;gap:6px}
+    }
+  </style>
 </head>
 <body>
-  <!-- Header -->
-  <header class="site-header" role="banner">
-    <div class="container header-top">
-      <button id="nav-toggle" class="nav-toggle" aria-label="Open menu"><span aria
-      <div class="header-right"><a class="logo" href="dashboard.html" aria-label="
-    </div>
-
-
-    <!-- overlay -->
-    <div class="menu-overlay" id="menu-overlay" aria-hidden="true">
-      <div id="overlay-backdrop" style="position:absolute;inset:0;background:rgba(
-      <div class="overlay-panel" role="dialog" aria-modal="true">
-        <div style="display:flex;align-items:center;justify-content:space-between;
-          <a href="dashboard.html"><img src="assets/citi_logo.png" alt="CITI Logo"
-          <button id="overlay-close" class="overlay-close" aria-label="Close" styls;</button>
+  <main class="container" role="main">
+    <header class="site-header">
+      <div class="brand">
+        <div class="logo">C</div>
+        <div>
+          <h1>Transfer funds</h1>
+          <p class="lead">Send money instantly to saved recipients or any bank account</p>
         </div>
-        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:
-          <li><a href="dashboard.html#products" style="color:var(--text);text-deco
-          <li><a href="dashboard.html#solutions" style="color:var(--text);text-dec
-          <li><a href="dashboard.html#resources" style="color:var(--text);text-dec
-          <li><a href="dashboard.html#about" style="color:var(--text);text-decorat
-        </ul>
       </div>
-    </div>
-  </header>
 
-  <!-- secure banner -->
-  <main class="container">
-    <div class="grid">
-      <section class="panel" aria-labelledby="transfer-title">
-        <h1 id="transfer-title">Transfer funds</h1>
+      <div style="display:flex;gap:12px;align-items:center">
+        <div class="small">Logged in as <strong>AUTHOR</strong></div>
+        <button class="btn btn-ghost" id="nav-dashboard">Dashboard</button>
+      </div>
+    </header>
 
-        <form id="transfer-form" class="transfer-form" novalidate>
-          <div class="form-group">
-            <label for="from-account">From</label>
-            <select id="from-account" required>
-              <option value="checking">Checking •••• 3364 — $62,345.67</option>
-              <option value="savings">Savings •••• 5678 — $758,910.11</option>
-            </select>
+    <!-- Left: Transfer form -->
+    <section class="card" aria-labelledby="transfer-title">
+      <h2 id="transfer-title" style="margin-top:0">Make a transfer</h2>
+
+      <form id="transferForm" onsubmit="return false" autocomplete="off">
+        <label for="toName">Recipient name</label>
+        <input id="toName" name="toName" type="text" placeholder="Jane Doe" required />
+
+        <div class="row">
+          <div class="col">
+            <label for="toAccount">Account number</label>
+            <input id="toAccount" name="toAccount" type="text" placeholder="1234567890" pattern="[0-9]{6,20}" required />
           </div>
-
-          <div class="form-group">
-            <label for="to-recipient">To</label>
-            <input id="to-recipient" name="recipient" type="search" placeholder="R
-            <div class="muted" style="font-size:0.9rem;margin-top:6px">Tip: use sa
-          </div>
-
-          <div class="inline-row">
-            <div style="flex:1" class="form-group">
-              <label for="amount">Amount</label>
-              <input id="amount" name="amount" type="number" step="0.01" min="0.01
-            </div>
-            <div style="width:220px" class="form-group">
-              <label for="currency">Currency</label>
-              <select id="currency"><option value="USD">USD</option><option value=
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label for="memo">Memo (optional)</label>
-            <input id="memo" type="text" placeholder="Invoice #, note for recipien
-          </div>
-
-          <div class="preview" aria-live="polite">
-            <div class="preview-row"><div class="muted">From</div><div id="preview
-            <div class="preview-row"><div class="muted">To</div><div id="preview-t
-            <div class="preview-row"><div class="muted">Amount</div><div id="previ
-            <div class="preview-row"><div class="muted">Currency</div><div id="pre
-          </div>
-
-          <div style="margin-top:14px;display:flex;gap:10px;align-items:center">
-            <button class="btn-primary" id="transfer-submit" type="submit">Continu
-            <button class="btn-ghost" id="transfer-cancel" type="button">Cancel</b
-          </div>
-        </form>
-      </section>
-
-      <aside>
-        <div class="side-card panel">
-          <h4>Saved recipients</h4>
-          <div class="quick-list" id="saved-list">
-            <button class="btn-ghost" data-recipient="ACME Inc. •••• 8877">$ ACME
-            <button class="btn-ghost" data-recipient="Jane Doe • jane@example.com"
+          <div class="col">
+            <label for="bank">Bank code</label>
+            <input id="bank" name="bank" type="text" placeholder="012" required />
           </div>
         </div>
 
-        <div class="side-card panel" style="margin-top:12px">
-          <h4>Safety tips</h4>
-          <ul style="margin:8px 0 0 16px">
-            <li class="muted">Double-check recipient details before confirming</li
-            <li class="muted">Use saved recipients for frequent transfers</li>
-            <li class="muted">CITI will never ask for your password via email</li>
-          </ul>
+        <label for="amount">Amount</label>
+        <input id="amount" name="amount" type="number" min="1" step="0.01" placeholder="0.00" required />
+
+        <label for="note">Note (optional)</label>
+        <input id="note" name="note" type="text" placeholder="For rent, invoice #123" />
+
+        <div class="actions">
+          <button id="btnTransfer" class="btn btn-primary" type="button">Send transfer</button>
+          <button id="btnReset" class="btn btn-ghost" type="reset">Reset</button>
         </div>
-      </aside>
+
+        <p id="formMessage" class="small" style="margin-top:12px"></p>
+      </form>
+    </section>
+
+    <!-- Right: Balance & history -->
+    <aside class="summary">
+      <div class="balance card">
+        <div class="label">Available balance</div>
+        <div class="amount" id="balanceAmount">¥0.00</div>
+        <div class="small" style="margin-top:8px">This balance updates immediately after each transfer</div>
+      </div>
+
+      <div class="card" style="padding:12px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+          <div><strong>Recent activity</strong><div class="small">Latest transfers and debits</div></div>
+          <button id="clearHistory" class="btn btn-ghost">Clear</button>
+        </div>
+        <div id="history" class="history" aria-live="polite"></div>
+      </div>
+    </aside>
+
+    <!-- Receipt modal / print content -->
+    <div id="receiptModal" class="receipt-modal" role="dialog" aria-modal="true" aria-hidden="true">
+      <div class="receipt-card" role="document">
+        <h3>Transaction receipt</h3>
+        <div id="receiptContent">
+          <div class="receipt-row"><span class="small">Status</span><strong id="rStatus">Success</strong></div>
+          <div class="receipt-row"><span class="small">Date</span><span id="rDate"></span></div>
+          <div class="receipt-row"><span class="small">Amount</span><span id="rAmount"></span></div>
+          <div class="receipt-row"><span class="small">To</span><span id="rTo"></span></div>
+          <div class="receipt-row"><span class="small">Account</span><span id="rAccount"></span></div>
+          <div class="receipt-row"><span class="small">Bank</span><span id="rBank"></span></div>
+          <div class="receipt-row"><span class="small">Note</span><span id="rNote"></span></div>
+          <div class="receipt-row"><span class="small">Balance after</span><span id="rBalanceAfter"></span></div>
+        </div>
+
+        <div class="receipt-actions">
+          <button id="printBtn" class="btn btn-primary">Print</button>
+          <button id="closeReceipt" class="btn btn-ghost">Close</button>
+        </div>
+      </div>
     </div>
   </main>
 
-  <!-- Confirmation modal -->
-  <div class="modal-backdrop" id="confirm-backdrop" role="dialog" aria-hidden="tru
-    <div class="modal" role="document" aria-labelledby="confirm-title">
-      <h3 id="confirm-title">Confirm transfer</h3>
-      <div style="margin-top:10px">
-        <div class="preview-row"><div class="muted">From</div><div id="confirm-fro
-        <div class="preview-row"><div class="muted">To</div><div id="confirm-to">—
-        <div class="preview-row"><div class="muted">Amount</div><div id="confirm-a
-        <div class="preview-row"><div class="muted">Memo</div><div id="confirm-mem
-      </div>
+  <!-- Script: handles transfers, balance, history, receipt & persistence -->
+  <script>
+    /* Data keys for localStorage */
+    const BALANCE_KEY = 'citi_balance_v1';
+    const TX_KEY = 'citi_txs_v1';
 
-      <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:14px">
-        <button class="btn-ghost" id="confirm-cancel" type="button">Cancel</button
-        <button class="btn-primary" id="confirm-send" type="button">Send transfer<
-      </div>
-    </div>
-  </div>
-
-  <!-- Footer (shared style) -->
-  <footer class="site-footer-adv" role="contentinfo" style="margin-top:32px">
-    <div class="footer-inner">
-      <div class="trust-row">
-        <div class="trust-badge" aria-hidden="true">🔷</div>
-        <div class="footer-meta">
-          <div class="footer-brand">© <span id="footer-year">2025</span> CITI</div
-          <div class="footer-sub muted">Bank‑grade TLS 1.3 · Two‑Factor Authentica
-        </div>
-      </div>
-      <nav class="footer-links" aria-label="Footer">
-        <a href="/privacy.html">Privacy</a>
-        <a href="/terms.html" style="margin-left:16px">Terms</a>
-        <a href="/support.html" style="margin-left:16px">Support</a>
-      </nav>
-    </div>
-  </footer>
-
-<script>
-/* Transfer page script — preserves dashboard helpers and patterns */
-
-/* Helper formatters (kept consistent with dashboard) */
-function fmtAmount(val){
-  if (val === 0) return '—';
-  const abs = Math.abs(val).toLocaleString(undefined,{minimumFractionDigits:2});
-  return (val < 0 ? '−' : '+') + abs;
-}
-function formatLoginTimeISO(date){
-  const opts = { month:'short', day:'numeric', year:'numeric', hour:'numeric', min
-  return new Intl.DateTimeFormat('en-US', opts).format(date).replace(',', '').repl
-}
-
-/* Page initialization */
-document.addEventListener('DOMContentLoaded', () => {
-  // footer year
-  const fy = document.getElementById('footer-year');
-  if (fy) fy.textContent = new Date().getFullYear();
-
-  // last-login read & persist (same key behavior as dashboard)
-  (function(){
-    const key = 'lastLogin';
-    const stored = localStorage.getItem(key);
-    const loginEl = document.querySelector('.member-line strong') || document.getE
-    const now = new Date();
-    let dateObj = stored ? new Date(stored) : now;
-    if (isNaN(dateObj.getTime())) dateObj = now;
-    // update member-line timestamp if present
-    const ml = document.querySelector('.member-line');
-    if (ml) {
-      // keep name text intact and append last login if desired elsewhere; in tran
+    /* Utility */
+    function fmt(amount){
+      const n = Number(amount) || 0;
+      return new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' }).format(Math.round(n));
     }
-    try { localStorage.setItem(key, new Date().toISOString()); } catch(e){}
-  })();
-
-  // overlay wiring (same as dashboard)
-  const navBtn = document.getElementById('nav-toggle');
-  const menuOverlay = document.getElementById('menu-overlay');
-  const overlayClose = document.getElementById('overlay-close');
-  const overlayBackdrop = document.getElementById('overlay-backdrop');
-  if (navBtn && menuOverlay) {
-    navBtn.addEventListener('click', () => { menuOverlay.style.display = 'block';
-  }
-  if (overlayClose) overlayClose.addEventListener('click', () => { menuOverlay.sty;
-  if (overlayBackdrop) overlayBackdrop.addEventListener('click', () => { menuOverl'); });
-
-  // form elements
-  const form = document.getElementById('transfer-form');
-  const fromEl = document.getElementById('from-account');
-  const toEl = document.getElementById('to-recipient');
-  const amountEl = document.getElementById('amount');
-  const currencyEl = document.getElementById('currency');
-  const memoEl = document.getElementById('memo');
-
-  // preview nodes
-  const pFrom = document.getElementById('preview-from');
-  const pTo = document.getElementById('preview-to');
-  const pAmount = document.getElementById('preview-amount');
-  const pCurrency = document.getElementById('preview-currency');
-
-  // confirm modal nodes
-  const confirmBackdrop = document.getElementById('confirm-backdrop');
-  const confirmFrom = document.getElementById('confirm-from');
-  const confirmTo = document.getElementById('confirm-to');
-  const confirmAmount = document.getElementById('confirm-amount');
-  const confirmMemo = document.getElementById('confirm-memo');
-  const confirmCancel = document.getElementById('confirm-cancel');
-  const confirmSend = document.getElementById('confirm-send');
-
-  // saved recipients quick-fill
-  document.getElementById('saved-list')?.addEventListener('click', (e) => {
-    const btn = e.target.closest('button[data-recipient]');
-    if (!btn) return;
-    toEl.value = btn.getAttribute('data-recipient') || '';
-    updatePreview();
-  });
-
-  // preview updater
-  function updatePreview(){
-    pFrom.textContent = fromEl.options[fromEl.selectedIndex]?.text || '—';
-    pTo.textContent = toEl.value.trim() || '—';
-    const amt = parseFloat(amountEl.value || '0');
-    pAmount.textContent = amt ? ('$' + amt.toLocaleString(undefined,{minimumFracti
-    pCurrency.textContent = currencyEl.value || 'USD';
-  }
-
-  // simple client-side validation
-  function validate(){
-    const recipient = toEl.value.trim();
-    const amt = parseFloat(amountEl.value || '0');
-    if (!recipient) return { ok:false, msg:'Enter a recipient' };
-    if (!amt || amt <= 0) return { ok:false, msg:'Enter a valid amount' };
-    return { ok:true };
-  }
-
-  // open confirm modal
-  function openConfirm(){
-    confirmFrom.textContent = pFrom.textContent;
-    confirmTo.textContent = pTo.textContent;
-    confirmAmount.textContent = pAmount.textContent + ' ' + pCurrency.textContent;
-    confirmMemo.textContent = memoEl.value.trim() || '—';
-    confirmBackdrop.style.display = 'flex';
-    confirmBackdrop.setAttribute('aria-hidden','false');
-    confirmSend.focus();
-  }
-
-  function closeConfirm(){
-    confirmBackdrop.style.display = 'none';
-    confirmBackdrop.setAttribute('aria-hidden','true');
-  }
-
-  // events
-  [fromEl, toEl, amountEl, currencyEl].forEach(el => el?.addEventListener && el.ad
-  updatePreview();
-
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const ok = validate();
-    if (!ok.ok) {
-      alert(ok.msg);
-      return;
+    function nowIso(){ return new Date().toISOString(); }
+    function humanDate(iso){
+      const d = new Date(iso);
+      return d.toLocaleString();
     }
-    openConfirm();
-  });
 
-  document.getElementById('transfer-cancel')?.addEventListener('click', () => { wi
+    /* Initialize with sensible default if empty */
+    function initStorage(){
+      if(localStorage.getItem(BALANCE_KEY) === null){
+        // set a default starting balance (adjust as desired)
+        localStorage.setItem(BALANCE_KEY, String(250000)); // 250,000 JPY
+      }
+      if(!Array.isArray(JSON.parse(localStorage.getItem(TX_KEY) || 'null'))){
+        localStorage.setItem(TX_KEY, JSON.stringify([]));
+      }
+    }
 
-  confirmCancel?.addEventListener('click', () => { closeConfirm(); });
-  confirmBackdrop?.addEventListener('click', (ev) => { if (ev.target === confirmBa
+    /* Getters & setters */
+    function getBalance(){ return Number(localStorage.getItem(BALANCE_KEY) || 0); }
+    function setBalance(v){ localStorage.setItem(BALANCE_KEY, String(Math.round(v))); renderBalance(); }
+    function getTxs(){ return JSON.parse(localStorage.getItem(TX_KEY) || '[]'); }
+    function pushTx(tx){ const arr = getTxs(); arr.unshift(tx); localStorage.setItem(TX_KEY, JSON.stringify(arr)); renderHistory(); }
 
-  // confirm send: placeholder behavior preserving existing patterns (replace with
-  confirmSend?.addEventListener('click', () => {
-    confirmSend.disabled = true;
-    confirmSend.textContent = 'Sending…';
-    // simulate network
-    setTimeout(() => {
-      confirmSend.disabled = false;
-      confirmSend.textContent = 'Send transfer';
-      closeConfirm();
-      alert('Transfer submitted');
-      window.location.href = 'dashboard.html'; // keep original navigation pattern
-    }, 800);
-  });
+    /* UI elements */
+    const balanceEl = document.getElementById('balanceAmount');
+    const historyEl = document.getElementById('history');
+    const form = document.getElementById('transferForm');
+    const btn = document.getElementById('btnTransfer');
+    const msg = document.getElementById('formMessage');
 
-  // keyboard escape closes modal
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeConfi
+    /* Receipt modal elements */
+    const receiptModal = document.getElementById('receiptModal');
+    const rDate = document.getElementById('rDate');
+    const rAmount = document.getElementById('rAmount');
+    const rTo = document.getElementById('rTo');
+    const rAccount = document.getElementById('rAccount');
+    const rBank = document.getElementById('rBank');
+    const rNote = document.getElementById('rNote');
+    const rBalanceAfter = document.getElementById('rBalanceAfter');
+    const printBtn = document.getElementById('printBtn');
+    const closeReceipt = document.getElementById('closeReceipt');
 
-});
+    /* Render functions */
+    function renderBalance(){
+      balanceEl.textContent = fmt(getBalance());
+    }
 
-document.addEventListener('click', e => {
-  const btn = e.target.closest('.btn-primary-strong, .btn-ghost-strong');
-  if (!btn) return;
-  btn.style.transition = 'transform .08s';
-  btn.style.transform = 'scale(.996)';
-  setTimeout(()=> btn.style.transform = '', 120);
-});
+    function renderHistory(){
+      const txs = getTxs();
+      historyEl.innerHTML = txs.length ? txs.map(txHtml).join('') : '<div class="small">No transactions yet</div>';
+    }
 
+    function txHtml(tx){
+      // single-line per rules
+      const cls = tx.type === 'credit' ? 'tx credit' : 'tx debit';
+      const when = humanDate(tx.date);
+      const who = tx.toName || tx.memo || '—';
+      const amt = (tx.type === 'debit' ? '-' : '+') + new Intl.NumberFormat('ja-JP', {style:'currency',currency:'JPY'}).format(Math.round(tx.amount));
+      return `<div class="${cls}"><div class="meta"><div class="who">${escapeHtml(who)}</div><div class="when">${when}</div></div><div class="amt">${amt}</div></div>`;
+    }
 
+    /* Basic escaping */
+    function escapeHtml(s=''){ return String(s).replace(/[&<>"']/g, (m)=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;" }[m])); }
 
+    /* Transfer logic */
+    function validateForm(data){
+      const amt = Number(data.amount);
+      if(!data.toName || !data.toAccount || isNaN(amt) || amt <= 0) return 'Please complete recipient and amount fields with a value greater than zero.';
+      if(!/^[0-9]{6,20}$/.test(data.toAccount)) return 'Account number must be 6–20 digits.';
+      return null;
+    }
 
+    function onTransfer(){
+      msg.textContent = '';
+      const data = {
+        toName: document.getElementById('toName').value.trim(),
+        toAccount: document.getElementById('toAccount').value.trim(),
+        bank: document.getElementById('bank').value.trim(),
+        amount: Number(document.getElementById('amount').value),
+        note: document.getElementById('note').value.trim(),
+        date: nowIso(),
+      };
 
+      const err = validateForm(data);
+      if(err){ msg.textContent = err; return; }
 
-
-
-
-
-
-
-/* Unified transaction handler for Transfer and Withdraw
-   Paste this once at the end of transfer.html and withdraw.html (before </body>)
-   Requirements (adjust IDs in your HTML or change selectors below):
-   - from-account (select or input)
-   - amount (input type=number)
-   - to-recipient (input) optional for withdraw
-   - confirm-send (button)
-   - dashboard table should include <tbody id="tx-tbody"></tbody> for history rows
-*/
-(function(){
-  const BAL_KEY = 'citi_balances';
-  const TX_KEY  = 'citi_transactions';
-
-  /* ---------- Storage helpers ---------- */
-  function loadBalances(){
-    try { return JSON.parse(localStorage.getItem(BAL_KEY)) || { checking:62345.67, savings:758910.11 }; }
-    catch(e){ return { checking:62345.67, savings:758910.11 }; }
-  }
-  function saveBalances(b){ localStorage.setItem(BAL_KEY, JSON.stringify(b)); }
-  function loadTxs(){ try { return JSON.parse(localStorage.getItem(TX_KEY)) || []; } catch(e){ return []; } }
-  function saveTxs(t){ localStorage.setItem(TX_KEY, JSON.stringify(t)); }
-
-  /* ---------- Format helpers ---------- */
-  function fmtCurrency(n){ return '$' + Number(n).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}); }
-  function prettyDate(d){ return new Date(d).toLocaleString(); }
-
-  /* ---------- DOM update helpers ---------- */
-  function createTxRow(tx){
-    const tr = document.createElement('tr');
-    tr.className = 'tx-row';
-    tr.innerHTML = `
-      <td style="white-space:nowrap">${prettyDate(tx.date)}</td>
-      <td>${tx.desc || tx.to || tx.from}</td>
-      <td style="text-align:right;color:${tx.amount < 0 ? '#c33' : '#0a0'}">${fmtCurrency(tx.amount)}</td>
-      <td style="text-align:right">${fmtCurrency(tx.balance)}</td>
-    `;
-    return tr;
-  }
-
-  function appendTxToDashboard(tx){
-    const tbody = document.querySelector('#tx-tbody') || document.querySelector('table.transactions tbody');
-    if (!tbody) return;
-    const tr = createTxRow(tx);
-    tbody.insertBefore(tr, tbody.firstChild);
-    if (tbody.children.length > 200) tbody.removeChild(tbody.lastChild);
-  }
-
-  function hydrateUI(){
-    // update visible balance elements that use data-balance-for="checking" etc.
-    const balances = loadBalances();
-    document.querySelectorAll('[data-balance-for]').forEach(el => {
-      const key = (el.getAttribute('data-balance-for') || '').toLowerCase();
-      if (balances[key] !== undefined) el.textContent = fmtCurrency(balances[key]);
-    });
-    // populate tx table if present
-    const txs = loadTxs();
-    txs.slice(0,200).forEach(appendTxToDashboard);
-  }
-
-  /* ---------- Receipt printing (popup then fallback) ---------- */
-  function printReceiptResilient(tx){
-    // try popup first
-    try {
-      const w = window.open('', '_blank', 'width=520,height=720,scrollbars=yes');
-      if (w) {
-        const html = `<!doctype html><html><head><meta charset="utf-8"><title>Receipt</title>
-          <style>body{font-family:system-ui,Segoe UI,Roboto,Arial;padding:18px;color:#07101a} .row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #eee} .total{font-weight:800}</style>
-          </head><body>
-          <h2>Transaction Receipt</h2>
-          <div class="row"><div>Date</div><div>${prettyDate(tx.date)}</div></div>
-          <div class="row"><div>From</div><div>${tx.from}</div></div>
-          <div class="row"><div>To</div><div>${tx.to || '—'}</div></div>
-          <div class="row"><div>Amount</div><div class="total">${fmtCurrency(tx.amount)}</div></div>
-          <div class="row"><div>Balance</div><div>${fmtCurrency(tx.balance)}</div></div>
-          <div style="margin-top:12px;color:#666;font-size:12px">Reference: ${tx.id}</div>
-          <script>window.onload=function(){ setTimeout(()=>{ try{ window.print(); }catch(e){}; setTimeout(()=>window.close(),600); },120); };</script>
-          </body></html>`;
-        w.document.open(); w.document.write(html); w.document.close();
+      const current = getBalance();
+      if(data.amount > current){
+        msg.textContent = 'Insufficient balance for this transfer.';
         return;
       }
-    } catch(e) {}
-    // fallback overlay
-    const existing = document.getElementById('citi-print-overlay'); if (existing) existing.remove();
-    const overlay = document.createElement('div');
-    overlay.id = 'citi-print-overlay';
-    overlay.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.55);display:flex;align-items:center;justify-content:center;padding:20px';
-    overlay.innerHTML = `
-      <div style="background:#fff;color:#07101a;border-radius:12px;max-width:520px;width:100%;padding:20px;box-shadow:0 20px 60px rgba(2,6,23,0.6);">
-        <h2 style="margin:0 0 8px">Transaction Receipt</h2>
-        <div style="font-size:13px;color:#555;margin-bottom:12px">${prettyDate(tx.date)}</div>
-        <div style="display:flex;justify-content:space-between;padding:8px 0;border-top:1px solid #eee"><div>From</div><div>${tx.from}</div></div>
-        <div style="display:flex;justify-content:space-between;padding:8px 0;border-top:1px solid #eee"><div>To</div><div>${tx.to || '—'}</div></div>
-        <div style="display:flex;justify-content:space-between;padding:12px 0;border-top:1px solid #eee;font-weight:700"><div>Amount</div><div>${fmtCurrency(tx.amount)}</div></div>
-        <div style="display:flex;justify-content:space-between;padding:8px 0;border-top:1px solid #eee"><div>Balance</div><div>${fmtCurrency(tx.balance)}</div></div>
-        <div style="margin-top:12px;color:#777;font-size:12px">Reference: ${tx.id}</div>
-        <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:14px">
-          <button id="citi-print-close" style="padding:8px 12px;border-radius:8px;border:1px solid #ddd;background:#fff;cursor:pointer">Close</button>
-          <button id="citi-print-now" style="padding:8px 12px;border-radius:8px;border:none;background:linear-gradient(90deg,#8F6BFF,#00D4FF);color:#07101a;cursor:pointer">Print</button>
-        </div>
-      </div>
-    `;
-    document.body.appendChild(overlay);
-    document.getElementById('citi-print-close').addEventListener('click', ()=> overlay.remove());
-    document.getElementById('citi-print-now').addEventListener('click', ()=>{
-      const printW = window.open('','_blank','width=520,height=720');
-      if (!printW) { alert('Allow popups to print'); return; }
-      printW.document.open();
-      printW.document.write('<!doctype html><html><head><meta charset="utf-8"><title>Receipt</title><style>body{font-family:system-ui;padding:20px;color:#07101a}</style></head><body>');
-      printW.document.write(overlay.querySelector('div').outerHTML);
-      printW.document.write('<script>window.onload=function(){ setTimeout(()=>{ window.print(); setTimeout(()=>window.close(),400); },120); }<\/script></body></html>');
-      printW.document.close();
+
+      // Deduct balance immediately
+      const after = current - Math.round(data.amount);
+      setBalance(after);
+
+      // Create transaction record (debit)
+      const tx = {
+        id: 'tx_' + Date.now(),
+        type: 'debit',
+        amount: Math.round(data.amount),
+        toName: data.toName,
+        toAccount: data.toAccount,
+        bank: data.bank,
+        note: data.note,
+        date: data.date,
+      };
+      pushTx(tx);
+
+      // Also create a small credit record on the "recipient" side if desired (not deducted from sender)
+      // pushTx({ ...tx, type: 'credit', id: 'txc_' + Date.now() }); // optional; commented out
+
+      // Show receipt and enable printing
+      showReceipt(tx, after);
+
+      // Reset form but keep recipient for convenience
+      document.getElementById('amount').value = '';
+      document.getElementById('note').value = '';
+      msg.textContent = 'Transfer completed';
+      msg.style.color = 'var(--success)';
+      setTimeout(()=>{ msg.textContent=''; msg.style.color=''; }, 3500);
+    }
+
+    /* Receipt: populate and show */
+    function showReceipt(tx, balanceAfter){
+      rDate.textContent = humanDate(tx.date);
+      rAmount.textContent = fmt(tx.amount);
+      rTo.textContent = escapeHtml(tx.toName);
+      rAccount.textContent = escapeHtml(tx.toAccount);
+      rBank.textContent = escapeHtml(tx.bank || '—');
+      rNote.textContent = escapeHtml(tx.note || '—');
+      rBalanceAfter.textContent = fmt(balanceAfter);
+
+      receiptModal.style.display = 'flex';
+      receiptModal.setAttribute('aria-hidden', 'false');
+      // prepare print content by cloning innerHTML
+      printBtn.onclick = () => printReceipt(tx, balanceAfter);
+    }
+
+    function closeModal(){
+      receiptModal.style.display = 'none';
+      receiptModal.setAttribute('aria-hidden', 'true');
+    }
+
+    /* Print: opens print dialog with a clean receipt markup */
+    function printReceipt(tx, balanceAfter){
+      const printWin = window.open('', '_blank', 'toolbar=no,location=no,menubar=no');
+      if(!printWin) { alert('Popup blocked. Please allow popups to print the receipt.'); return; }
+
+      const html = `
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Receipt</title>
+<style>
+  body{font-family:Arial,Helvetica,sans-serif;color:#0b1220;padding:24px}
+  .wrap{max-width:540px;margin:0 auto}
+  h1{font-size:18px;margin-bottom:8px}
+  .row{display:flex;justify-content:space-between;margin:8px 0}
+  .muted{color:#666;font-size:13px}
+  .amt{font-size:20px;font-weight:700;margin-top:8px}
+  .footer{margin-top:24px;color:#444;font-size:13px}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Transaction receipt</h1>
+    <div class="row"><div class="muted">Date</div><div>${humanDate(tx.date)}</div></div>
+    <div class="row"><div class="muted">Recipient</div><div>${escapeHtml(tx.toName)}</div></div>
+    <div class="row"><div class="muted">Account</div><div>${escapeHtml(tx.toAccount)}</div></div>
+    <div class="row"><div class="muted">Bank</div><div>${escapeHtml(tx.bank || '—')}</div></div>
+    <div class="row"><div class="muted">Note</div><div>${escapeHtml(tx.note || '—')}</div></div>
+    <div class="row"><div class="muted">Amount</div><div class="amt">${fmt(tx.amount)}</div></div>
+    <div class="row"><div class="muted">Balance after</div><div>${fmt(balanceAfter)}</div></div>
+    <div class="footer">Reference: ${tx.id}</div>
+  </div>
+  <script>window.onload = function(){ window.print(); setTimeout(()=>window.close(), 600); };</script>
+</body>
+</html>
+      `;
+      printWin.document.open();
+      printWin.document.write(html);
+      printWin.document.close();
+    }
+
+    /* Dashboard navigation: opens dashboard.html if present; still update localStorage for dashboard to read */
+    document.getElementById('nav-dashboard').addEventListener('click', ()=>{
+      // try to navigate to dashboard if exists; otherwise stay
+      window.location.href = 'dashboard.html';
     });
-  }
 
-  /* ---------- Core commit logic ---------- */
-  function commitTransaction(opts){
-    // opts: { type:'transfer'|'withdraw', from:'checking', to:'recipient', amount:123.45, desc:'' }
-    const balances = loadBalances();
-    const txs = loadTxs();
-    const from = (opts.from || 'checking').toLowerCase();
-    const amount = Number(opts.amount) || 0;
-    if (!amount || amount <= 0) throw new Error('Invalid amount');
-    if (typeof balances[from] !== 'number') balances[from] = Number(balances[from]) || 0;
+    document.getElementById('closeReceipt').addEventListener('click', closeModal);
+    receiptModal.addEventListener('click', (e)=>{ if(e.target === receiptModal) closeModal(); });
 
-    // subtract amount
-    balances[from] = Number((balances[from] - amount).toFixed(2));
-    saveBalances(balances);
+    document.getElementById('clearHistory').addEventListener('click', ()=>{
+      if(!confirm('Clear transaction history? This cannot be undone.')) return;
+      localStorage.setItem(TX_KEY, JSON.stringify([]));
+      renderHistory();
+    });
 
-    // create tx record (debit)
-    const tx = {
-      id: 'tx_' + Date.now(),
-      date: new Date().toISOString(),
-      type: opts.type || 'transfer',
-      from: from,
-      to: opts.to || opts.recipient || '',
-      desc: opts.desc || (opts.type === 'withdraw' ? 'Withdrawal' : 'Transfer'),
-      amount: -Math.abs(amount),
-      balance: balances[from]
+    btn.addEventListener('click', onTransfer);
+
+    /* On load */
+    (function(){
+      initStorage();
+      renderBalance();
+      renderHistory();
+
+      // If this page is opened after an external deposit, the dashboard may have pushed a transaction
+      // Observe storage changes (other tabs) to update UI
+      window.addEventListener('storage', (e)=>{
+        if(e.key === BALANCE_KEY) renderBalance();
+        if(e.key === TX_KEY) renderHistory();
+      });
+    })();
+
+    /* Expose for debug in console if needed */
+    window._citi = {
+      getBalance, setBalance, getTxs, pushTx
     };
-
-    // persist and update UI
-    txs.unshift(tx);
-    saveTxs(txs);
-    window.transactions = txs.slice();
-    appendTxToDashboard(tx);
-
-    // update any visible balance elements
-    document.querySelectorAll('[data-balance-for]').forEach(el => {
-      const key = (el.getAttribute('data-balance-for') || '').toLowerCase();
-      if (key === from && balances[from] !== undefined) el.textContent = fmtCurrency(balances[from]);
-    });
-
-    // print receipt once
-    printReceiptResilient(tx);
-
-    return tx;
-  }
-
-  /* ---------- Single safe binding on confirm button ---------- */
-  function safeBindConfirm(){
-    const btn = document.getElementById('confirm-send');
-    if (!btn) return;
-    if (btn.dataset._citiBound === '1') return;
-    btn.dataset._citiBound = '1';
-
-    btn.addEventListener('click', function(ev){
-      ev.preventDefault();
-      if (btn.dataset._processing === '1') return;
-      btn.dataset._processing = '1';
-
-      try {
-        const fromEl = document.getElementById('from-account');
-        const amountEl = document.getElementById('amount');
-        const toEl = document.getElementById('to-recipient') || document.getElementById('external-account') || document.querySelector('[name="recipient"]');
-        const from = fromEl ? fromEl.value : 'checking';
-        const amount = amountEl ? parseFloat(amountEl.value) : 0;
-        const to = toEl ? toEl.value : '';
-        const type = (location.pathname.indexOf('withdraw') !== -1 || document.body.dataset.page === 'withdraw') ? 'withdraw' : 'transfer';
-
-        if (!amount || amount <= 0) { alert('Enter a valid amount'); btn.dataset._processing = '0'; return; }
-
-        // commit transaction (subtract, append tx, persist, print)
-        commitTransaction({ type, from, to, amount, desc: type === 'withdraw' ? 'Withdrawal' : 'Transfer' });
-
-      } catch(err){
-        console.error(err);
-        alert('Transaction failed: ' + (err && err.message ? err.message : 'unknown'));
-      } finally {
-        setTimeout(()=> { btn.dataset._processing = '0'; }, 700);
-      }
-    }, { passive: false });
-  }
-
-  /* ---------- Initialization ---------- */
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function(){ safeBindConfirm(); hydrateUI(); });
-  } else {
-    safeBindConfirm(); hydrateUI();
-  }
-
-  // expose for debugging or manual calls
-  window.commitTransaction = commitTransaction;
-  window.citiLoadBalances = loadBalances;
-  window.citiLoadTxs = loadTxs;
-
-})();
-</script>
-
+  </script>
 </body>
 </html>
