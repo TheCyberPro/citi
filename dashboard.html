@@ -1413,6 +1413,115 @@ document.addEventListener('DOMContentLoaded', () => {
 
 })();
 </script>
+<script>
+/* Drop-in: commit transaction, update balances, append tx row, print receipt */
+(function(){
+  const BAL_KEY = 'citi_balances_v_final';
+  const TX_KEY  = 'citi_transactions_v_final';
+
+  function loadBalances(){
+    try { return JSON.parse(localStorage.getItem(BAL_KEY)) || { checking:62345.67, savings:758910.11 }; }
+    catch(e){ return { checking:62345.67, savings:758910.11 }; }
+  }
+  function saveBalances(b){ localStorage.setItem(BAL_KEY, JSON.stringify(b)); }
+  function loadTxs(){ try { return JSON.parse(localStorage.getItem(TX_KEY)) || []; } catch(e){ return []; } }
+  function saveTxs(txs){ localStorage.setItem(TX_KEY, JSON.stringify(txs)); }
+
+  function fmtCurrency(n){ return '$' + Number(n).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}); }
+  function prettyDateISO(d){ return new Date(d).toLocaleString(undefined, {month:'short', day:'numeric', year:'numeric', hour:'numeric', minute:'2-digit', hour12:true}); }
+
+  function appendTxToDom(tx){
+    const tbody = document.querySelector('#tx-tbody') || document.querySelector('table.transactions tbody');
+    if (!tbody) return;
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${prettyDateISO(tx.date)}</td><td>${tx.desc || tx.to || tx.from}</td><td class="text-right">${fmtCurrency(tx.amount)}</td><td class="text-right">${fmtCurrency(tx.balance)}</td>`;
+    tbody.insertBefore(tr, tbody.firstChild);
+    if (tbody.children.length > 200) tbody.removeChild(tbody.lastChild);
+  }
+
+  function openReceiptWindow(tx){
+    const html = `<!doctype html><html><head><meta charset="utf-8"><title>Receipt</title>
+      <style>body{font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial;padding:20px;color:#07101a} .rcpt{max-width:520px;margin:0 auto} .row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #eee}.total{font-weight:800}</style>
+      </head><body><div class="rcpt"><h2>Transaction Receipt</h2>
+      <div class="row"><div class="muted">Date</div><div>${prettyDateISO(tx.date)}</div></div>
+      <div class="row"><div>From</div><div>${tx.from}</div></div>
+      <div class="row"><div>To</div><div>${tx.to || '—'}</div></div>
+      <div class="row"><div>Amount</div><div class="total">${fmtCurrency(tx.amount)}</div></div>
+      <div class="row"><div>Balance</div><div>${fmtCurrency(tx.balance)}</div></div>
+      <div style="margin-top:12px;color:#666;font-size:12px">Reference: ${tx.id}</div>
+      </div><script>window.onload=function(){ setTimeout(()=>{ window.print(); setTimeout(()=>window.close(),600); },120); };</script></body></html>`;
+    const w = window.open('','_blank','width=520,height=720,scrollbars=yes');
+    if (!w) { alert('Popup blocked. Allow popups to print receipt.'); return; }
+    w.document.open(); w.document.write(html); w.document.close();
+  }
+
+  function commitTransaction(opts){
+    const balances = loadBalances();
+    const txs = loadTxs();
+    const from = (opts.from || 'checking').toLowerCase();
+    const amount = Number(opts.amount) || 0;
+    if (!amount || amount <= 0) throw new Error('Invalid amount');
+    if (typeof balances[from] !== 'number') balances[from] = Number(balances[from]) || 0;
+    balances[from] = Number((balances[from] - amount).toFixed(2));
+    saveBalances(balances);
+    const tx = {
+      id: 'tx_' + Date.now(),
+      date: new Date().toISOString(),
+      type: opts.type || 'transfer',
+      from: from,
+      to: opts.to || opts.recipient || '',
+      desc: opts.desc || (opts.type === 'withdraw' ? 'Withdrawal' : 'Transfer'),
+      amount: -Math.abs(amount),
+      balance: balances[from]
+    };
+    txs.unshift(tx);
+    saveTxs(txs);
+    window.transactions = txs.slice();
+    appendTxToDom(tx);
+    openReceiptWindow(tx);
+    return tx;
+  }
+
+  function hookConfirmButton(){
+    const btn = document.getElementById('confirm-send') || document.querySelector('[data-action="confirm-send"]') || null;
+    if (!btn) return;
+    if (btn.dataset.citiHook === '1') return;
+    btn.dataset.citiHook = '1';
+    btn.addEventListener('click', function(ev){
+      ev.preventDefault();
+      const fromEl = document.getElementById('from-account');
+      const amountEl = document.getElementById('amount');
+      const toEl = document.getElementById('to-recipient') || document.getElementById('external-account') || document.querySelector('[name="recipient"]');
+      const type = (location.pathname.indexOf('withdraw') !== -1) ? 'withdraw' : 'transfer';
+      const from = fromEl ? fromEl.value : 'checking';
+      const amount = amountEl ? parseFloat(amountEl.value) : 0;
+      const to = toEl ? toEl.value : '';
+      if (!amount || amount <= 0) { alert('Enter a valid amount'); return; }
+      try {
+        btn.disabled = true; btn.textContent = 'Processing…';
+        commitTransaction({ type, from, to, amount, desc: type === 'withdraw' ? 'Withdrawal' : 'Transfer' });
+        setTimeout(()=> {
+          btn.disabled = false; btn.textContent = 'Confirm';
+          const backdrop = document.getElementById('confirm-backdrop');
+          if (backdrop) backdrop.style.display = 'none';
+          try { location.assign('dashboard.html'); } catch(e){}
+        }, 700);
+      } catch(err){
+        alert('Transaction failed: ' + (err.message || err));
+        btn.disabled = false; btn.textContent = 'Confirm';
+      }
+    });
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', hookConfirmButton);
+  else hookConfirmButton();
+
+  // expose for manual calls and debugging
+  window.commitTransaction = commitTransaction;
+  window.citiBalancesLoad = loadBalances;
+  window.citiTxsLoad = loadTxs;
+})();
+</script>
 
 </body>
 </html>
