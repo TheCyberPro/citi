@@ -481,6 +481,135 @@
     // (keeps code that calls initStorage working)
     if (typeof initStorage !== 'function') { var initStorage = initStorageLocal; }
 
+
+
+
+(function(){
+  const ID = 'citi-top-header-scripted';
+  if (document.getElementById(ID)) return; // already installed
+
+  // Create header DOM
+  const header = document.createElement('header');
+  header.id = ID;
+  header.setAttribute('role','banner');
+  header.innerHTML = `
+    <div class="citi-top-inner">
+      <a class="citi-brand" href="dashboard.html" aria-label="CITI Home">
+        <img src="assets/citi_logo.png" alt="CITI" class="citi-logo" />
+      </a>
+      <nav class="citi-nav" aria-label="Primary">
+        <a href="dashboard.html" class="citi-nav-link">Dashboard</a>
+      </nav>
+    </div>
+  `;
+
+  // Scoped CSS
+  const css = document.createElement('style');
+  css.id = ID + '-css';
+  css.textContent = `
+    #${ID} {
+      position: fixed !important;
+      top: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+      z-index: 99999 !important;
+      background: linear-gradient(180deg, rgba(7,16,26,0.98), rgba(7,24,39,0.96));
+      border-bottom: 1px solid rgba(255,255,255,0.03);
+      -webkit-backdrop-filter: blur(6px);
+      backdrop-filter: blur(6px);
+      box-shadow: 0 6px 24px rgba(2,6,23,0.28);
+      height: var(--citi-header-h, 72px);
+      display:block;
+    }
+    #${ID} .citi-top-inner{
+      max-width:980px;
+      margin:0 auto;
+      padding:10px 20px;
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+      align-items:center;
+      box-sizing:border-box;
+      height:100%;
+    }
+    #${ID} .citi-brand{ display:inline-flex; align-items:center; justify-content:center; width:100%; text-decoration:none; }
+    #${ID} .citi-logo{ height:36px; width:auto; display:block; border-radius:8px; box-shadow:0 6px 18px rgba(2,6,23,0.22); }
+    #${ID} .citi-nav{ display:flex; gap:12px; justify-content:center; width:100%; }
+    #${ID} .citi-nav-link{ color:#E8EEF6; text-decoration:none; font-weight:700; padding:8px 12px; border-radius:10px; }
+    #${ID} .citi-nav-link:hover{ background: rgba(255,255,255,0.02); }
+
+    /* Push down main content so it never sits under the fixed header.
+       Targets common top-level containers; if your page uses a different main wrapper, add its selector here. */
+    body > .container,
+    body main,
+    #transfer-root,
+    .container {
+      padding-top: calc(var(--citi-header-h,72px) + 8px) !important;
+    }
+
+    @media (max-width:520px){
+      #${ID} .citi-top-inner{ padding:8px 12px; gap:6px; }
+      #${ID} .citi-logo{ height:28px; }
+      :root{ --citi-header-h: 64px; }
+    }
+    @media (min-width:981px){
+      :root{ --citi-header-h: 76px; }
+      #${ID} .citi-logo{ height:40px; }
+    }
+  `;
+
+  // Insert CSS and header as first child of body to avoid ancestor flex interference
+  document.head.appendChild(css);
+  // If header already exists as sibling, remove it first (safe re-run)
+  const existing = document.querySelector('#' + ID);
+  if (existing) existing.remove();
+  // Insert as first child of body
+  if (document.body.firstChild) document.body.insertBefore(header, document.body.firstChild);
+  else document.body.appendChild(header);
+
+  // Utility: compute real header height and set CSS variable so padding matches
+  function syncHeaderHeight(){
+    const realH = header.getBoundingClientRect().height || 72;
+    document.documentElement.style.setProperty('--citi-header-h', Math.ceil(realH) + 'px');
+  }
+  // Run now and on resize/DOM changes
+  syncHeaderHeight();
+  window.addEventListener('resize', syncHeaderHeight);
+
+  // Observe header for layout changes (fonts, image load)
+  const obs = new MutationObserver(syncHeaderHeight);
+  obs.observe(header, { attributes:true, childList:true, subtree:true });
+
+  // Remove the header via window.removeCitiTopHeader() if needed
+  window.removeCitiTopHeader = function(){
+    try { obs.disconnect(); window.removeEventListener('resize', syncHeaderHeight); const s=document.getElementById(ID+'-css'); if(s) s.remove(); const h=document.getElementById(ID); if(h) h.remove(); delete window.removeCitiTopHeader; } catch(e){}
+  };
+
+  // If logo src is invalid, show a small text fallback
+  const logo = header.querySelector('.citi-logo');
+  logo.addEventListener('error', function(){
+    const brand = header.querySelector('.citi-brand');
+    brand.innerHTML = '<span style="color:#E8EEF6;font-weight:800;font-size:16px">CITI</span>';
+    syncHeaderHeight();
+  });
+
+  // Expose a small API to programmatically set nav items
+  window.citiHeaderSetNav = function(items){
+    // items = [{text:'Dashboard', href:'dashboard.html'}, ...]
+    const nav = header.querySelector('.citi-nav'); if(!nav) return;
+    nav.innerHTML = '';
+    items.forEach(it => {
+      const a = document.createElement('a');
+      a.className = 'citi-nav-link';
+      a.href = it.href || '#';
+      a.textContent = it.text || 'Link';
+      nav.appendChild(a);
+    });
+  };
+
+})();
+
   </script>
 </body>
 </html>
