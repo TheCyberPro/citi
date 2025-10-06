@@ -60,99 +60,6 @@
   </style>
 </head>
 <body>
-<!-- STACKED TOP HEADER: paste immediately after <body> and before .container -->
-<header class="citi-header-stacked" role="banner">
-  <div class="citi-header-inner">
-    <a class="citi-brand" href="dashboard.html" aria-label="CITI Home">
-      <img src="assets/citi_logo.png" alt="CITI" class="citi-logo" />
-    </a>
-    <nav class="citi-nav" aria-label="Primary">
-      <a href="dashboard.html" class="citi-nav-link">Dashboard</a>
-    </nav>
-  </div>
-</header>
-
-<style>
-/* stacked, full-width header that sits above content on all devices */
-.citi-header-stacked {
-  position: sticky;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 9999;
-  background: linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.008));
-  border-bottom: 1px solid rgba(255,255,255,0.02);
-  -webkit-backdrop-filter: blur(6px);
-  backdrop-filter: blur(6px);
-  box-shadow: 0 6px 18px rgba(2,6,23,0.12);
-}
-
-/* content container inside header is stacked (logo above nav) */
-.citi-header-inner {
-  max-width: 980px;
-  margin: 0 auto;
-  padding: 12px 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  align-items: center; /* center-align stacked items */
-  box-sizing: border-box;
-}
-
-/* brand (logo) centered on its own row */
-.citi-brand {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  text-decoration: none;
-}
-
-/* logo sizing */
-.citi-logo {
-  height: 36px;
-  width: auto;
-  display: block;
-  border-radius: 8px;
-  box-shadow: 0 4px 14px rgba(2,6,23,0.22);
-}
-
-/* nav row below logo, centered */
-.citi-nav {
-  display:flex;
-  justify-content:center;
-  gap:12px;
-  width:100%;
-}
-.citi-nav-link {
-  color: rgba(232,238,246,0.95);
-  text-decoration:none;
-  font-weight:700;
-  padding:8px 12px;
-  border-radius:10px;
-  font-size:14px;
-}
-.citi-nav-link:hover { background: rgba(255,255,255,0.02); }
-
-/* ensure page content sits below header and never overlaps */
-.container {
-  margin-top: 12px; /* small gap under header */
-  padding-top: 6px; /* gentle breathing room */
-}
-
-/* mobile tweaks */
-@media (max-width:520px) {
-  .citi-header-inner { padding:10px 12px; gap:6px; }
-  .citi-logo { height:28px; }
-  .citi-nav-link { padding:6px 8px; font-size:13px; }
-}
-
-/* keep stacked layout even on large screens so header never sits side-by-side */
-@media (min-width:981px) {
-  .citi-header-inner { padding:14px 20px; gap:10px; }
-  .citi-logo { height:40px; }
-}
-</style>
 
   <div class="container" role="main">
     <div class="panel" aria-labelledby="panel-title">
@@ -258,7 +165,7 @@
     const TX_KEY = 'transactions';
     const CURRENCY = 'USD';
     // Preserve displayed balance value as seed if none exists
-    const SEED_BALANCE = 883,601.45;
+    const SEED_BALANCE = 883601.45;
 
     /* small helpers */
     function safeParse(key, fallback){
