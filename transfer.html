@@ -484,131 +484,154 @@
 
 
 
-
+</script>
+<script>
 (function(){
-  const ID = 'citi-top-header-scripted';
-  if (document.getElementById(ID)) return; // already installed
+  // id constants
+  const ID = 'citi-fixed-top';
+  const CSS_ID = ID + '-css';
 
-  // Create header DOM
+  // remove any previous header we injected (safe re-run)
+  const prev = document.getElementById(ID);
+  if (prev) prev.remove();
+  const prevCss = document.getElementById(CSS_ID);
+  if (prevCss) prevCss.remove();
+
+  // create header element
   const header = document.createElement('header');
   header.id = ID;
   header.setAttribute('role','banner');
   header.innerHTML = `
-    <div class="citi-top-inner">
+    <div class="citi-fixed-inner">
       <a class="citi-brand" href="dashboard.html" aria-label="CITI Home">
-        <img src="assets/citi-logo.png" alt="CITI" class="citi-logo" />
+        <img class="citi-logo" src="assets/citi_logo.png" alt="CITI" />
       </a>
       <nav class="citi-nav" aria-label="Primary">
-        <a href="dashboard.html" class="citi-nav-link">Dashboard</a>
+        <a class="citi-nav-link" href="dashboard.html">Dashboard</a>
       </nav>
     </div>
   `;
 
-  // Scoped CSS
+  // scoped CSS
   const css = document.createElement('style');
-  css.id = ID + '-css';
+  css.id = CSS_ID;
   css.textContent = `
+    /* fixed stacked header */
     #${ID} {
       position: fixed !important;
-      top: 0;
-      left: 0;
-      right: 0;
+      inset: 0 auto auto 0;
       width: 100%;
-      z-index: 99999 !important;
+      z-index: 999999 !important;
+      display: block;
       background: linear-gradient(180deg, rgba(7,16,26,0.98), rgba(7,24,39,0.96));
       border-bottom: 1px solid rgba(255,255,255,0.03);
       -webkit-backdrop-filter: blur(6px);
       backdrop-filter: blur(6px);
-      box-shadow: 0 6px 24px rgba(2,6,23,0.28);
-      height: var(--citi-header-h, 72px);
-      display:block;
+      box-shadow: 0 8px 28px rgba(2,6,23,0.32);
     }
-    #${ID} .citi-top-inner{
-      max-width:980px;
-      margin:0 auto;
-      padding:10px 20px;
-      display:flex;
-      flex-direction:column;
-      gap:6px;
-      align-items:center;
-      box-sizing:border-box;
-      height:100%;
+    #${ID} .citi-fixed-inner {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 10px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      align-items: center;
+      box-sizing: border-box;
     }
-    #${ID} .citi-brand{ display:inline-flex; align-items:center; justify-content:center; width:100%; text-decoration:none; }
-    #${ID} .citi-logo{ height:36px; width:auto; display:block; border-radius:8px; box-shadow:0 6px 18px rgba(2,6,23,0.22); }
-    #${ID} .citi-nav{ display:flex; gap:12px; justify-content:center; width:100%; }
-    #${ID} .citi-nav-link{ color:#E8EEF6; text-decoration:none; font-weight:700; padding:8px 12px; border-radius:10px; }
-    #${ID} .citi-nav-link:hover{ background: rgba(255,255,255,0.02); }
-
-    /* Push down main content so it never sits under the fixed header.
-       Targets common top-level containers; if your page uses a different main wrapper, add its selector here. */
-    body > .container,
-    body main,
-    #transfer-root,
-    .container {
-      padding-top: calc(var(--citi-header-h,72px) + 8px) !important;
-    }
-
-    @media (max-width:520px){
-      #${ID} .citi-top-inner{ padding:8px 12px; gap:6px; }
-      #${ID} .citi-logo{ height:28px; }
-      :root{ --citi-header-h: 64px; }
-    }
-    @media (min-width:981px){
-      :root{ --citi-header-h: 76px; }
-      #${ID} .citi-logo{ height:40px; }
-    }
+    #${ID} .citi-logo { height:36px; width:auto; display:block; border-radius:8px; box-shadow: 0 6px 18px rgba(2,6,23,0.22); }
+    #${ID} .citi-nav { display:flex; gap:12px; justify-content:center; width:100%; }
+    #${ID} .citi-nav-link { color:#E8EEF6; text-decoration:none; font-weight:700; padding:8px 12px; border-radius:8px; }
+    @media (max-width:520px){ #${ID} .citi-logo { height:28px; } #${ID} .citi-fixed-inner { padding:8px 12px; } }
   `;
-
-  // Insert CSS and header as first child of body to avoid ancestor flex interference
   document.head.appendChild(css);
-  // If header already exists as sibling, remove it first (safe re-run)
-  const existing = document.querySelector('#' + ID);
-  if (existing) existing.remove();
-  // Insert as first child of body
-  if (document.body.firstChild) document.body.insertBefore(header, document.body.firstChild);
-  else document.body.appendChild(header);
 
-  // Utility: compute real header height and set CSS variable so padding matches
-  function syncHeaderHeight(){
-    const realH = header.getBoundingClientRect().height || 72;
-    document.documentElement.style.setProperty('--citi-header-h', Math.ceil(realH) + 'px');
+  // insert header as first child of body
+  document.body.insertBefore(header, document.body.firstChild);
+
+  // utility: find best main container to adjust
+  function findMainWrapper(){
+    const candidates = [
+      document.querySelector('body > .container'),
+      document.querySelector('#transfer-root'),
+      document.querySelector('body main'),
+      document.querySelector('.container'),
+      document.querySelector('#app'),
+      document.querySelector('#root')
+    ];
+    for (const c of candidates) if (c) return c;
+    // fallback: first sizable element after header
+    const children = Array.from(document.body.children).filter(n => n.id !== ID && n.tagName !== 'SCRIPT' && n.tagName !== 'STYLE' && n.tagName !== 'LINK');
+    for (const ch of children) {
+      if (ch.getBoundingClientRect().height > 60) return ch;
+    }
+    return null;
   }
-  // Run now and on resize/DOM changes
-  syncHeaderHeight();
-  window.addEventListener('resize', syncHeaderHeight);
 
-  // Observe header for layout changes (fonts, image load)
-  const obs = new MutationObserver(syncHeaderHeight);
-  obs.observe(header, { attributes:true, childList:true, subtree:true });
+  // apply top padding so content sits under header properly
+  function sync(){
+    const hdr = document.getElementById(ID);
+    if (!hdr) return;
+    const rect = hdr.getBoundingClientRect();
+    const h = Math.ceil(rect.height) || 72;
+    // set CSS var for global usage
+    document.documentElement.style.setProperty('--citi-header-h', h + 'px');
 
-  // Remove the header via window.removeCitiTopHeader() if needed
-  window.removeCitiTopHeader = function(){
-    try { obs.disconnect(); window.removeEventListener('resize', syncHeaderHeight); const s=document.getElementById(ID+'-css'); if(s) s.remove(); const h=document.getElementById(ID); if(h) h.remove(); delete window.removeCitiTopHeader; } catch(e){}
+    // find main wrapper and set padding/margin
+    const main = findMainWrapper();
+    if (main) {
+      // remove margin that might push it away
+      main.style.marginTop = '0';
+      // ensure exact padding so logo appears directly above content
+      main.style.paddingTop = (h + 6) + 'px';
+      main.style.boxSizing = 'border-box';
+      // ensure it is a direct sibling of body
+      if (main.parentElement !== document.body) {
+        document.body.insertBefore(main, document.body.children[1] || null);
+      }
+    } else {
+      // fallback: add padding to body children except header
+      Array.from(document.body.children).forEach((el, idx) => {
+        if (el.id === ID) return;
+        if (idx === 1) { el.style.marginTop = '0'; el.style.paddingTop = (h + 6) + 'px'; }
+      });
+    }
+  }
+
+  // initial sync + watchers
+  sync();
+  window.addEventListener('resize', sync);
+  // watch for DOM changes that affect layout
+  const mo = new MutationObserver(sync);
+  mo.observe(document.body, { childList: true, subtree: true });
+
+  // ensure header is always first child (in case app re-renders)
+  const ensureFirst = setInterval(()=> {
+    const first = document.body.firstElementChild;
+    const hdr = document.getElementById(ID);
+    if (hdr && first !== hdr) {
+      document.body.insertBefore(hdr, document.body.firstChild);
+      sync();
+    }
+  }, 300);
+
+  // helper remove function for debugging
+  window.removeCitiFixedHeader = function(){
+    try {
+      mo.disconnect();
+      clearInterval(ensureFirst);
+      window.removeEventListener('resize', sync);
+      const el = document.getElementById(ID); if (el) el.remove();
+      const s = document.getElementById(CSS_ID); if (s) s.remove();
+      // clear paddings on likely main wrapper candidates
+      const main = findMainWrapper();
+      if (main) { main.style.paddingTop = ''; main.style.marginTop = ''; }
+      delete window.removeCitiFixedHeader;
+    } catch(e){ console.error(e); }
   };
 
-  // If logo src is invalid, show a small text fallback
-  const logo = header.querySelector('.citi-logo');
-  logo.addEventListener('error', function(){
-    const brand = header.querySelector('.citi-brand');
-    brand.innerHTML = '<span style="color:#E8EEF6;font-weight:800;font-size:16px">CITI</span>';
-    syncHeaderHeight();
-  });
-
-  // Expose a small API to programmatically set nav items
-  window.citiHeaderSetNav = function(items){
-    // items = [{text:'Dashboard', href:'dashboard.html'}, ...]
-    const nav = header.querySelector('.citi-nav'); if(!nav) return;
-    nav.innerHTML = '';
-    items.forEach(it => {
-      const a = document.createElement('a');
-      a.className = 'citi-nav-link';
-      a.href = it.href || '#';
-      a.textContent = it.text || 'Link';
-      nav.appendChild(a);
-    });
-  };
-
+  // console feedback
+  console.info('CITI fixed header injected and synced. If logo path invalid, run window.removeCitiFixedHeader() and update src.');
 })();
 
   </script>
