@@ -136,7 +136,7 @@ body main,
 
       <div style="display:flex;gap:10px;margin-top:12px;align-items:center">
         <button id="clearHistory" class="btn-ghost">Clear</button>
-        <button id="topupBtn" class="btn-ghost" title="Add $500 for testing">Top up $500</button>
+        <button id="topupBtn" class="btn-ghost" title="Add $500 for testing">Top up $0.00</button>
       </div>
 
       <div class="history-list" id="historyList" aria-live="polite"></div>
@@ -558,7 +558,7 @@ body main,
 <script>
   function citiSetHeaderGap(px){ document.documentElement.style.setProperty('--citi-header-gap', (Number(px)||0) + 'px'); }
   // Example: set a 40px gap
-  citiSetHeaderGap(40);
+  citiSetHeaderGap(200);
   // Expose for manual use
   window.citiSetHeaderGap = citiSetHeaderGap;
 </script>
