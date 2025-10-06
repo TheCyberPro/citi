@@ -56,6 +56,17 @@
     @media print { body *{visibility:hidden} #receipt-printable, #receipt-printable *{visibility:visible} #receipt-printable{position:fixed;left:0;top:0;width:100%} }
 
 
+<!-- CSS: set the default gap under header -->
+  :root { --citi-header-gap: 16px; } /* adjust this value to increase/decrease gap */
+  /* ensures content sits below header plus the extra gap */
+  body > .container,
+  body main,
+  #transfer-root,
+  .container {
+    padding-top: calc(var(--citi-header-h, 72px) + var(--citi-header-gap)) !important;
+    margin-top: 0 !important;
+    box-sizing: border-box;
+  }
 
   </style>
 </head>
@@ -542,5 +553,23 @@
 })();
 
   </script>
+<!-- Optional JS: update gap at runtime. Paste near end of page (before </body>) -->
+<script>
+  (function(){
+    // Example: increase gap to 28px
+    function setHeaderGap(px){
+      document.documentElement.style.setProperty('--citi-header-gap', (Number(px)||0) + 'px');
+      // re-sync header height variable if your header script exposes it
+      if (typeof window.removeCitiFixedHeader === 'function') {
+        // no-op; header script manages its own height var
+      }
+    }
+    // set desired gap here
+    setHeaderGap(20); // change 20 to any pixel value you want
+    // Expose small API
+    window.citiSetHeaderGap = setHeaderGap;
+  })();
+</script>
+
 </body>
 </html>
