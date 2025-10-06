@@ -358,6 +358,142 @@
     function getTxs(){ return safeParse(TX_KEY, []); }
     function setTxs(txs){ localStorage.setItem(TX_KEY, JSON.stringify(txs)); }
     function initStorage(){ if(!localStorage.getItem(BALANCE_KEY)) localStorage.setItem(BALANCE_KEY, JSON.stringify({ amount:883,601.45, currency: CURRENCY })); if(!localStorage.getItem(TX_KEY)) localStorage.setItem(TX_KEY, JSON.stringify([])); }
+
+
+
+
+    // Helpers
+    function safeParse(key, fallback){ try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch { return fallback; } }
+    function formatCurrency(amount){ try { return new Intl.NumberFormat(undefined, { style:'currency', currency: CURRENCY }).format(amount); } catch { return CURRENCY + ' ' + Number(amount).toFixed(2); } }
+    function uid(){ return 'tx_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2,8); }
+    function escapeHtml(s){ if(s==null) return ''; return String(s).replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'})[m]); }
+
+    // Storage primitives
+    function initStorage(){
+      if(!localStorage.getItem(BALANCE_KEY)){
+        localStorage.setItem(BALANCE_KEY, JSON.stringify({ amount: SEED_BALANCE, currency: CURRENCY }));
+      }
+      if(!localStorage.getItem(TX_KEY)){
+        localStorage.setItem(TX_KEY, JSON.stringify([]));
+      }
+    }
+    function getBalance(){ const b = safeParse(BALANCE_KEY, { amount:0.00, currency: CURRENCY }); return { amount: Number(b.amount) || 0, currency: b.currency || CURRENCY }; }
+    function setBalance(b){ localStorage.setItem(BALANCE_KEY, JSON.stringify({ amount: Number(b.amount) || 0, currency: b.currency || CURRENCY })); }
+    function getTxs(){ return safeParse(TX_KEY, []); }
+    function setTxs(txs){ localStorage.setItem(TX_KEY, JSON.stringify(txs)); }
+
+    // Renderers
+    function renderBalance(){
+      const b = getBalance();
+      document.getElementById('balanceAmount').textContent = formatCurrency(b.amount);
+      document.getElementById('balanceDisplay').textContent = formatCurrency(b.amount);
+      document.getElementById('currencyNote').textContent = 'Currency: ' + CURRENCY;
+    }
+
+    function createTxRow(tx){
+      const row = document.createElement('div'); row.className = 'tx';
+      const left = document.createElement('div'); left.className = 'left';
+      const title = document.createElement('div'); title.className = 'title'; title.textContent = tx.description || (tx.type === 'debit' ? 'Debit' : 'Credit');
+      const meta = document.createElement('div'); meta.className = 'meta'; meta.textContent = new Date(tx.timestamp).toLocaleString() + ' · To ' + (tx.toAccount || tx.to || 'external');
+      left.appendChild(title); left.appendChild(meta);
+      const amt = document.createElement('div'); amt.className = 'amount'; amt.textContent = (tx.type === 'debit' ? '-' : '') + formatCurrency(tx.amount);
+      if(!tx.success) amt.style.color = 'var(--danger)';
+      row.appendChild(left); row.appendChild(amt);
+      return row;
+    }
+
+    function renderHistory(){
+      const list = document.getElementById('historyList'); const side = document.getElementById('sideHistory');
+      list.innerHTML = ''; side.innerHTML = '';
+      const txs = getTxs().slice().reverse();
+      if(!txs.length){
+        const none = document.createElement('div'); none.className='tx';
+        none.innerHTML = '<div><div style="font-weight:600">No transactions</div><div class="meta">Your recent debits will appear here</div></div><div class="muted">—</div>';
+        list.appendChild(none); side.appendChild(none.cloneNode(true)); return;
+      }
+      txs.forEach(tx => { const r = createTxRow(tx); list.appendChild(r); side.appendChild(r.cloneNode(true)); });
+    }
+
+    // Parse amount defensively
+    function parseAmountInput(){
+      const raw = (document.getElementById('amount').value || '').trim();
+      const cleaned = raw.replace(/[^\d.-]/g,'');
+      const v = parseFloat(cleaned);
+      return Number.isFinite(v) ? v : NaN;
+    }
+
+    // Transfer: validate -> deduct -> append tx -> redirect to success page with tx id
+    function onTransfer(e){
+      e && e.preventDefault();
+      const recipientName = document.getElementById('recipientName').value.trim();
+      const toAccount = document.getElementById('toAccount').value.trim();
+      const bankCode = document.getElementById('bankCode').value.trim();
+      const amount = parseAmountInput();
+      const description = (document.getElementById('note').value || '').trim() || 'Transfer';
+
+      if(!recipientName){ alert('Please enter recipient name'); return; }
+      if(!toAccount){ alert('Please enter account number'); return; }
+      if(!Number.isFinite(amount) || amount <= 0){ alert('Enter an amount greater than 0'); return; }
+
+      const balance = getBalance();
+      if(amount > balance.amount + 1e-9){
+        alert('Insufficient funds');
+        return;
+      }
+
+      const tx = { id: uid(), timestamp: Date.now(), recipientName, toAccount, bankCode, amount: Number(amount), currency: CURRENCY, description, type: 'debit', success: true };
+
+      // Persist: deduct and append
+      const newBal = { amount: Number((balance.amount - amount).toFixed(2)), currency: CURRENCY };
+      setBalance(newBal);
+      const txs = getTxs(); txs.push(tx); setTxs(txs);
+
+      // redirect to success page with id
+      // store lastTxId for convenience too
+      localStorage.setItem('lastTxId', tx.id);
+      // success page shows receipt and print option; pass tx id in query
+      const url = 'transfer-success.html?tx=' + encodeURIComponent(tx.id);
+      window.location.href = url;
+    }
+
+    // Top up test helper (credits and logs)
+    function topUpTest(){
+      const topAmount = 500.00;
+      const balance = getBalance();
+      const newBal = { amount: Number((balance.amount + topAmount).toFixed(2)), currency: CURRENCY };
+      setBalance(newBal);
+      const tx = { id: uid(), timestamp: Date.now(), to: 'TopUp', amount: Number(topAmount), currency: CURRENCY, description: 'Top up (test)', type: 'credit', success: true };
+      const txs = getTxs(); txs.push(tx); setTxs(txs);
+      renderBalance(); renderHistory();
+      alert(`Account credited ${formatCurrency(topAmount)} for testing.`);
+    }
+
+    // Wiring
+    document.getElementById('transferForm').addEventListener('submit', onTransfer);
+    document.getElementById('resetBtn').addEventListener('click', ()=>{ if(confirm('Reset the transfer form?')) document.getElementById('transferForm').reset(); });
+    document.getElementById('clearHistory').addEventListener('click', ()=>{ if(!confirm('Clear transaction history? This cannot be undone.')) return; setTxs([]); renderHistory(); });
+    document.getElementById('topupBtn').addEventListener('click', topUpTest);
+    window.addEventListener('storage', (e)=>{ if(e.key === BALANCE_KEY) renderBalance(); if(e.key === TX_KEY) renderHistory(); });
+
+    // Init
+    (function init(){
+      initStorage();
+      renderBalance();
+      renderHistory();
+      document.getElementById('recipientName').value = 'Jane Doe';
+      document.getElementById('toAccount').value = '1234567890';
+      document.getElementById('bankCode').value = '012';
+      document.getElementById('amount').value = '0.00';
+      document.getElementById('note').value = 'For rent, invoice #123';
+      window._citi = { getBalance, getTxs };
+    })();
+
+    // Internal helpers (kept below for readability)
+    function getBalance(){ const b = safeParse(BALANCE_KEY, { amount: 0.00, currency: CURRENCY }); return { amount: Number(b.amount) || 0, currency: b.currency || CURRENCY }; }
+    function setTxs(txs){ localStorage.setItem(TX_KEY, JSON.stringify(txs)); }
+    function getTxs(){ return safeParse(TX_KEY, []); }
+    function setBalance(b){ localStorage.setItem(BALANCE_KEY, JSON.stringify({ amount: Number(b.amount) || 0, currency: b.currency || CURRENCY })); }
+    function initStorage(){ if(!localStorage.getItem(BALANCE_KEY)) localStorage.setItem(BALANCE_KEY, JSON.stringify({ amount: SEED_BALANCE, currency: CURRENCY })); if(!localStorage.getItem(TX_KEY)) localStorage.setItem(TX_KEY, JSON.stringify([])); }
   </script>
 </body>
 </html>
