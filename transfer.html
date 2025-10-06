@@ -16,6 +16,7 @@
     }
     html,body{height:100%;margin:0}
     body{
+      margin:0;
       background:
         radial-gradient(1200px 600px at 10% 10%, rgba(124,92,255,0.12), transparent 8%),
         radial-gradient(900px 400px at 90% 90%, rgba(0,200,190,0.05), transparent 10%),
@@ -28,123 +29,36 @@
       padding:20px;
     }
 
-    .container{
-      width:980px;
-      max-width:100%;
-      display:grid;
-      grid-template-columns:1fr 360px;
-      gap:18px;
-      align-items:start;
-    }
-
-    .panel{
-      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02));
-      border:1px solid rgba(255,255,255,0.04);
-      padding:18px;
-      border-radius:12px;
-      box-shadow: 0 8px 30px rgba(2,6,23,0.6);
-    }
-
+    .container{width:980px;max-width:100%;display:grid;grid-template-columns:1fr 360px;gap:18px;align-items:start}
+    .panel{background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02));border:1px solid rgba(255,255,255,0.04);padding:18px;border-radius:12px;box-shadow: 0 8px 30px rgba(2,6,23,0.6)}
     .brand-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
     .brand{display:flex;gap:12px;align-items:center}
     .logo{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,#fff,#f0f0f0)}
     .title{font-weight:700;font-size:16px;color:#f4f7fb}
     .subtitle{font-size:13px;color:var(--muted)}
+    form .row{display:flex;gap:12px;margin-bottom:12px;align-items:end}
     label{display:block;font-size:13px;color:var(--muted);margin-bottom:8px}
     input[type="text"], input[type="number"], textarea{width:100%;padding:12px;border-radius:10px;background:var(--glass);border:1px solid rgba(255,255,255,0.03);color:#e8f0ff}
-    .row{display:flex;gap:12px;margin-bottom:12px;align-items:end}
     .muted{color:var(--muted);font-size:13px}
+    .helper{font-size:13px;color:var(--muted);margin-top:8px}
     .btn{display:inline-flex;align-items:center;justify-content:center;padding:12px 16px;border-radius:10px;cursor:pointer;border:0;font-weight:700;color:#08101a;background:linear-gradient(90deg,var(--accent),#5ec9ff);box-shadow: 0 8px 30px rgba(124,92,255,0.14)}
     .btn-ghost{background:transparent;color:var(--muted);border:1px solid rgba(255,255,255,0.04);box-shadow:none;padding:10px 12px;border-radius:10px}
+    .balance-card{display:flex;flex-direction:column;padding:16px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.006));border:1px solid rgba(255,255,255,0.03)}
+    .balance-label{font-size:13px;color:var(--muted)}
+    .balance-amount{font-size:28px;font-weight:700;margin-top:6px;color:#fff}
     .history-list{margin-top:12px;display:flex;flex-direction:column;gap:10px;max-height:320px;overflow:auto;padding-right:6px}
     .tx{padding:12px;border-radius:10px;background:rgba(255,255,255,0.02);display:flex;justify-content:space-between;align-items:center;border:1px solid rgba(255,255,255,0.02)}
     .tx .left{display:flex;flex-direction:column}
     .tx .title{font-weight:600;font-size:14px}
     .tx .meta{font-size:12px;color:var(--muted);margin-top:4px}
     .tx .amount{font-weight:800}
-    .balance-card{display:flex;flex-direction:column;padding:16px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.006));border:1px solid rgba(255,255,255,0.03)}
-    .balance-label{font-size:13px;color:var(--muted)}
-    .balance-amount{font-size:28px;font-weight:700;margin-top:6px;color:#fff}
     .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.6);display:none;align-items:center;justify-content:center;z-index:1200}
     .modal{background:#fff;color:#111;border-radius:10px;max-width:720px;width:92%;padding:18px;box-shadow:0 12px 50px rgba(0,0,0,0.6)}
-    @media (max-width:920px){ .container{grid-template-columns:1fr;gap:16px} .row{flex-direction:column} .btn,.btn-ghost{width:100%} }
-
-
-
-
-
-
-/* Header */
-header.site-header{position:sticky;top:0;z-index:1200;padding-top:8px}
-.header-top{display:flex;align-items:center;justify-content:space-between;padding:10px 0;background:linear-gradient(180deg, rgba(6,10,18,0.6), rgba(6,10,18,0.45));border-bottom:1px solid rgba(255,255,255,0.02);backdrop-filter:blur(6px)}
-.nav-toggle{width:44px;height:44px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);display:grid;place-items:center;background:transparent;cursor:pointer}
-.nav-toggle span{display:block;width:18px;height:2px;background:var(--muted);border-radius:2px}
-.header-right .logo img{height:36px}
-.header-sub{display:flex;align-items:center;padding:10px 0}
-.secure-line{font-size:0.95rem;color:var(--muted)}
-.member-line{font-size:0.88rem;color:var(--muted)}
-
-/* Overlay */
-.menu-overlay{display:none;position:fixed;inset:0;z-index:1500}
-.overlay-panel{position:relative;max-width:360px;height:100%;right:0;background:var(--card);padding:18px;border-left:1px solid rgba(255,255,255,0.02)}
-
-/* Secure banner */
-.secure-banner{margin:16px auto;display:flex;align-items:center;gap:12px;padding:10px 20px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);border:1px solid rgba(255,255,255,0.02);color:var(--muted);font-size:0.95rem}
-
-/* Layout */
-main{padding:26px 0}
-.grid{display:grid;grid-template-columns:1fr 360px;gap:20px;align-items:start}
-.panel{padding:20px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);border:1px solid rgba(255,255,255,0.03);box-shadow:0 18px 50px rgba(2,6,23,0.6)}
-h1{margin:0 0 12px 0;font-size:1.35rem}
-.muted{color:var(--muted)}
-
-/* Modal */
-.modal-backdrop{position:fixed;inset:0;background:rgba(2,6,23,0.6);display:none;align-items:center;justify-content:center;z-index:2200}
-.modal{background:var(--card);padding:18px;border-radius:12px;width:520px;max-width:94%;border:1px solid rgba(255,255,255,0.03)}
-.modal.open{display:block}
-
-/* Responsive */
-@media (max-width:1000px){ .grid{grid-template-columns:1fr} }
-@media (max-width:720px){ .inline-row{flex-direction:column} .btn-primary{width:100%} }
-button:focus, a:focus{outline:2px solid rgba(156,124,255,0.14);outline-offset:2px}
-
+    @media (max-width:920px){ .container{grid-template-columns:1fr;gap:12px} form .row{flex-direction:column;align-items:stretch} .btn{width:100%} .btn-ghost{width:100%} }
+    @media print { body *{visibility:hidden} #receipt-printable, #receipt-printable *{visibility:visible} #receipt-printable{position:fixed;left:0;top:0;width:100%} }
   </style>
 </head>
 <body>
-  <!-- Header -->
-  <header class="site-header" role="banner">
-    <div class="container header-top">
-      <button id="nav-toggle" class="nav-toggle" aria-label="Open menu"><span aria-hidden="true"></span></button>
-      <div class="header-right"><a class="logo" href="dashboard.html" aria-label="CITI Home"><img src="assets/citi_logo.png" alt="CITI Logo" /></a></div>
-    </div>
-
-
-    <!-- overlay -->
-    <div class="menu-overlay" id="menu-overlay" aria-hidden="true">
-      <div id="overlay-backdrop" style="position:absolute;inset:0;background:rgba(2,6,23,0.6)"></div>
-      <div class="overlay-panel" role="dialog" aria-modal="true">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
-          <a href="dashboard.html"><img src="assets/citi_logo.png" alt="CITI Logo" style="height:28px"/></a>
-          <button id="overlay-close" class="overlay-close" aria-label="Close" style="background:none;border:none;color:var(--muted);font-size:22px">&times;</button>
-        </div>
-        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:12px">
-          <li><a href="dashboard.html#products" style="color:var(--text);text-decoration:none">Commercial Banking</a></li>
-          <li><a href="dashboard.html#solutions" style="color:var(--text);text-decoration:none">Offshore Banking</a></li>
-          <li><a href="dashboard.html#resources" style="color:var(--text);text-decoration:none">Mortgage Banking</a></li>
-          <li><a href="dashboard.html#about" style="color:var(--text);text-decoration:none">About</a></li>
-        </ul>
-      </div>
-    </div>
-  </header>
-
-  <!-- secure banner -->
-  <div class="secure-banner container" role="status" aria-live="polite">
-    <svg class="lock-icon" viewBox="0 0 24 24" aria-hidden="true" width="18" height="18"><path d="M12 1a5 5 0 0 0-5 5v4H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-1V6a5 5 0 0 0-5-5z" fill="currentColor"/></svg>
-    <span>You’re in a secure session — data is encrypted end-to-end.</span>
-  </div>
-
-
-
   <div class="container" role="main">
     <div class="panel" aria-labelledby="panel-title">
       <div class="brand-row">
@@ -152,7 +66,7 @@ button:focus, a:focus{outline:2px solid rgba(156,124,255,0.14);outline-offset:2p
           <div class="logo" aria-hidden="true"></div>
           <div>
             <div id="panel-title" class="title">Transfer funds</div>
-            <div class="subtitle">Mobile banking — USD</div>
+            <div class="subtitle">Send money — mobile banking (single currency USD)</div>
           </div>
         </div>
         <div class="muted">Logged in as <strong>Hart Gijs</strong></div>
@@ -176,8 +90,8 @@ button:focus, a:focus{outline:2px solid rgba(156,124,255,0.14);outline-offset:2p
             <input id="toAccount" name="toAccount" type="text" inputmode="numeric" placeholder="1234567890" required />
           </div>
           <div style="width:120px">
-            <label>Currency</label>
-            <div class="muted">USD</div>
+            <label for="currencyLabel">Currency</label>
+            <div id="currencyLabel" class="muted">USD</div>
           </div>
         </div>
 
@@ -197,7 +111,7 @@ button:focus, a:focus{outline:2px solid rgba(156,124,255,0.14);outline-offset:2p
           <div style="margin-left:auto" class="muted">Available balance <strong id="balanceDisplay">$883,601.45</strong></div>
         </div>
 
-        <div class="muted helper" style="margin-top:8px">This balance updates immediately after each transfer</div>
+        <div class="helper">This balance updates immediately after each transfer</div>
       </form>
 
       <div style="margin-top:18px;display:flex;justify-content:space-between;align-items:center">
@@ -207,7 +121,6 @@ button:focus, a:focus{outline:2px solid rgba(156,124,255,0.14);outline-offset:2p
 
       <div style="display:flex;gap:10px;margin-top:12px;align-items:center">
         <button id="clearHistory" class="btn-ghost">Clear</button>
-        <!-- Top-up for testing: visible but small; remove in production -->
         <button id="topupBtn" class="btn-ghost" title="Add $500 for testing">Top up $500</button>
       </div>
 
@@ -229,7 +142,7 @@ button:focus, a:focus{outline:2px solid rgba(156,124,255,0.14);outline-offset:2p
     </aside>
   </div>
 
-  <!-- Receipt Modal (in-page; printable via window.print) -->
+  <!-- Receipt Modal (in-page) -->
   <div id="modalBackdrop" class="modal-backdrop" role="dialog" aria-modal="true" aria-hidden="true">
     <div class="modal" id="receiptModal" role="document" aria-labelledby="receiptTitle">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
@@ -244,24 +157,26 @@ button:focus, a:focus{outline:2px solid rgba(156,124,255,0.14);outline-offset:2p
   </div>
 
   <script>
-    /* Keys and config */
+    /* ===== merged, cleaned, robust transfer.html ===== */
+
     const BALANCE_KEY = 'balance';
     const TX_KEY = 'transactions';
     const CURRENCY = 'USD';
-    const SEED_BALANCE = 883,601.45; // seeded balance on first load
+    // Preserve displayed balance value as seed if none exists
+    const SEED_BALANCE = 883601.45;
 
-    /* Utility helpers */
+    /* small helpers */
     function safeParse(key, fallback){
       try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch { return fallback; }
     }
     function formatCurrency(amount){
       try { return new Intl.NumberFormat(undefined, { style:'currency', currency: CURRENCY }).format(amount); }
-      catch { return CURRENCY + ' ' + Number(amount).toFixed(2); }
+      catch { return '$' + Number(amount).toFixed(2); }
     }
     function uid(){ return 'tx_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2,8); }
     function escapeHtml(s){ if(s == null) return ''; return String(s).replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'})[m]); }
 
-    /* Storage primitives (no synthetic storage events) */
+    /* Single set of storage primitives (no duplicates) */
     function initStorage(){
       if(!localStorage.getItem(BALANCE_KEY)){
         localStorage.setItem(BALANCE_KEY, JSON.stringify({ amount: SEED_BALANCE, currency: CURRENCY }));
@@ -270,11 +185,16 @@ button:focus, a:focus{outline:2px solid rgba(156,124,255,0.14);outline-offset:2p
         localStorage.setItem(TX_KEY, JSON.stringify([]));
       }
     }
-    function getBalance(){ 
-      const b = safeParse(BALANCE_KEY, { amount: 0.00, currency: CURRENCY });
+
+    function getBalance(){
+      const b = safeParse(BALANCE_KEY, { amount: SEED_BALANCE, currency: CURRENCY });
       return { amount: Number(b.amount) || 0, currency: b.currency || CURRENCY };
     }
-    function setBalance(b){ localStorage.setItem(BALANCE_KEY, JSON.stringify({ amount: Number(b.amount) || 0, currency: b.currency || CURRENCY })); }
+
+    function setBalanceObj(b){
+      localStorage.setItem(BALANCE_KEY, JSON.stringify({ amount: Number(b.amount) || 0, currency: b.currency || CURRENCY }));
+    }
+
     function getTxs(){ return safeParse(TX_KEY, []); }
     function setTxs(txs){ localStorage.setItem(TX_KEY, JSON.stringify(txs)); }
 
@@ -283,6 +203,7 @@ button:focus, a:focus{outline:2px solid rgba(156,124,255,0.14);outline-offset:2p
       const b = getBalance();
       document.getElementById('balanceAmount').textContent = formatCurrency(b.amount);
       document.getElementById('balanceDisplay').textContent = formatCurrency(b.amount);
+      document.getElementById('currencyLabel').textContent = CURRENCY;
       document.getElementById('currencyNote').textContent = 'Currency: ' + CURRENCY;
     }
 
@@ -305,7 +226,7 @@ button:focus, a:focus{outline:2px solid rgba(156,124,255,0.14);outline-offset:2p
       list.innerHTML = ''; side.innerHTML = '';
       const txs = getTxs().slice().reverse();
       if(!txs.length){
-        const none = document.createElement('div'); none.className = 'tx';
+        const none = document.createElement('div'); none.className='tx';
         none.innerHTML = '<div><div style="font-weight:600">No transactions</div><div class="meta">Your recent debits will appear here</div></div><div class="muted">—</div>';
         list.appendChild(none); side.appendChild(none.cloneNode(true));
         return;
@@ -317,7 +238,7 @@ button:focus, a:focus{outline:2px solid rgba(156,124,255,0.14);outline-offset:2p
       });
     }
 
-    /* Receipt modal */
+    /* Receipt modal helpers */
     const modalBackdrop = document.getElementById('modalBackdrop');
     const receiptContent = document.getElementById('receiptContent');
     const closeModalBtn = document.getElementById('closeModal');
@@ -346,25 +267,21 @@ button:focus, a:focus{outline:2px solid rgba(156,124,255,0.14);outline-offset:2p
       closeModalBtn.focus();
     }
 
-    function closeReceiptModal(){
-      modalBackdrop.style.display = 'none';
-      modalBackdrop.setAttribute('aria-hidden', 'true');
-      receiptContent.innerHTML = '';
-    }
+    function closeReceiptModal(){ modalBackdrop.style.display = 'none'; modalBackdrop.setAttribute('aria-hidden','true'); receiptContent.innerHTML = ''; }
 
     printModalBtn.addEventListener('click', function(){ window.print(); });
     closeModalBtn.addEventListener('click', closeReceiptModal);
     modalBackdrop.addEventListener('click', function(e){ if(e.target === modalBackdrop) closeReceiptModal(); });
 
-    /* Input parsing helper */
+    /* Parse amount defensively */
     function parseAmountInput(){
       const raw = (document.getElementById('amount').value || '').trim();
-      const cleaned = raw.replace(/[^\d.-]/g, '');
+      const cleaned = raw.replace(/[^\d.-]/g,'');
       const v = parseFloat(cleaned);
       return Number.isFinite(v) ? v : NaN;
     }
 
-    /* Transfer handler: validates, deducts or credits, logs tx, opens receipt modal */
+    /* Transfer handler: validate -> deduct -> append tx -> redirect to success page */
     function onTransfer(e){
       e && e.preventDefault();
       const recipientName = document.getElementById('recipientName').value.trim();
@@ -378,10 +295,7 @@ button:focus, a:focus{outline:2px solid rgba(156,124,255,0.14);outline-offset:2p
       if(!Number.isFinite(amount) || amount <= 0){ alert('Enter an amount greater than 0'); return; }
 
       const balance = getBalance();
-      if(amount > balance.amount + 1e-9){
-        alert('Insufficient funds');
-        return;
-      }
+      if(amount > balance.amount + 1e-9){ alert('Insufficient funds'); return; }
 
       const tx = {
         id: uid(),
@@ -398,24 +312,26 @@ button:focus, a:focus{outline:2px solid rgba(156,124,255,0.14);outline-offset:2p
 
       // Persist: deduct and append
       const newBal = { amount: Number((balance.amount - amount).toFixed(2)), currency: CURRENCY };
-      setBalance(newBal);
+      setBalanceObj(newBal);
       const txs = getTxs();
       txs.push(tx);
       setTxs(txs);
 
+      // Update UI
       renderBalance();
       renderHistory();
 
-      openReceiptModal(tx);
-      document.getElementById('transferForm').reset();
+      // Save lastTxId for success page and redirect
+      localStorage.setItem('lastTxId', tx.id);
+      window.location.href = 'transfer-success.html?tx=' + encodeURIComponent(tx.id);
     }
 
-    /* Top up (testing) - credits balance and logs a credit transaction */
+    /* Top up test helper (credits and logs) */
     function topUpTest(){
-      const topAmount = 500.00; // change if needed
+      const topAmount = 500.00;
       const balance = getBalance();
       const newBal = { amount: Number((balance.amount + topAmount).toFixed(2)), currency: CURRENCY };
-      setBalance(newBal);
+      setBalanceObj(newBal);
       const tx = {
         id: uid(),
         timestamp: Date.now(),
@@ -426,24 +342,20 @@ button:focus, a:focus{outline:2px solid rgba(156,124,255,0.14);outline-offset:2p
         type: 'credit',
         success: true
       };
-      const txs = getTxs();
-      txs.push(tx);
-      setTxs(txs);
-      renderBalance();
-      renderHistory();
+      const txs = getTxs(); txs.push(tx); setTxs(txs);
+      renderBalance(); renderHistory();
       alert(`Account credited ${formatCurrency(topAmount)} for testing.`);
     }
 
-    /* Form and control wiring */
+    /* Controls wiring */
     document.getElementById('transferForm').addEventListener('submit', onTransfer);
-    document.getElementById('resetBtn').addEventListener('click', function(){ if(confirm('Reset the transfer form?')) document.getElementById('transferForm').reset(); });
-    document.getElementById('clearHistory').addEventListener('click', function(){
-      if(!confirm('Clear transaction history? This cannot be undone.')) return;
-      setTxs([]); renderHistory();
-    });
+    document.getElementById('resetBtn').addEventListener('click', ()=>{ if(confirm('Reset the transfer form?')) document.getElementById('transferForm').reset(); });
+    document.getElementById('clearHistory').addEventListener('click', ()=>{ if(!confirm('Clear transaction history? This cannot be undone.')) return; setTxs([]); renderHistory(); });
     document.getElementById('topupBtn').addEventListener('click', topUpTest);
+    // optional nav button if present elsewhere
+    document.getElementById('nav-dashboard')?.addEventListener('click', ()=>{ window.location.href = 'dashboard.html'; });
 
-    /* Storage event listener (native cross-tab updates only) */
+    /* React to native storage changes from other tabs */
     window.addEventListener('storage', function(e){
       if(e.key === BALANCE_KEY) renderBalance();
       if(e.key === TX_KEY) renderHistory();
@@ -454,24 +366,26 @@ button:focus, a:focus{outline:2px solid rgba(156,124,255,0.14);outline-offset:2p
       initStorage();
       renderBalance();
       renderHistory();
-      // Prefill convenience values
+      // Prefill sample values (keeps your original convenience values)
       document.getElementById('recipientName').value = 'Jane Doe';
       document.getElementById('toAccount').value = '1234567890';
       document.getElementById('bankCode').value = '012';
       document.getElementById('amount').value = '0.00';
       document.getElementById('note').value = 'For rent, invoice #123';
-      document.getElementById('currencyNote').textContent = 'Currency: ' + CURRENCY;
       window._citi = { getBalance, getTxs }; // debug helpers
     })();
 
-    /* Exposed internal helpers (kept near bottom for clarity) */
-    function getBalance(){ const b = safeParse(BALANCE_KEY, { amount: 0.00, currency: CURRENCY }); return { amount: Number(b.amount) || 0, currency: b.currency || CURRENCY }; }
-    function setBalanceObj(b){ localStorage.setItem(BALANCE_KEY, JSON.stringify({ amount: Number(b.amount) || 0, currency: b.currency || CURRENCY })); }
+    /* Exposed low-level helpers (single canonical implementations) */
     function getTxs(){ return safeParse(TX_KEY, []); }
-    function setTxs(txs){ localStorage.setItem(TX_KEY, JSON.stringify(txs)); }
-    // keep setBalance alias used above
+    function setTxsLocal(txs){ localStorage.setItem(TX_KEY, JSON.stringify(txs)); }
+    function setTxs(txs){ setTxsLocal(txs); }
+    function getBalance(){ const b = safeParse(BALANCE_KEY, { amount: SEED_BALANCE, currency: CURRENCY }); return { amount: Number(b.amount) || 0, currency: b.currency || CURRENCY }; }
     function setBalance(b){ setBalanceObj(b); }
-    function initStorage(){ if(!localStorage.getItem(BALANCE_KEY)) localStorage.setItem(BALANCE_KEY, JSON.stringify({ amount: SEED_BALANCE, currency: CURRENCY })); if(!localStorage.getItem(TX_KEY)) localStorage.setItem(TX_KEY, JSON.stringify([])); }
+    function initStorageLocal(){ if(!localStorage.getItem(BALANCE_KEY)) localStorage.setItem(BALANCE_KEY, JSON.stringify({ amount: SEED_BALANCE, currency: CURRENCY })); if(!localStorage.getItem(TX_KEY)) localStorage.setItem(TX_KEY, JSON.stringify([])); }
+    // ensure initStorage alias points to the canonical function
+    // (keeps code that calls initStorage working)
+    if (typeof initStorage !== 'function') { var initStorage = initStorageLocal; }
+
   </script>
 </body>
 </html>
