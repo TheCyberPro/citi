@@ -73,29 +73,6 @@
 
 
 
-:root{
-  --bg:#0b1220; --panel:#07101a; --card:#0f1724;
-  --muted:#98A0AD; --text:#E9F2FF; --accent:#9C7CFF; --accent-2:#00D4FF;
-  --success:#7CFFCC; --danger:#FF7A7A;
-  --radius:12px; --container:1180px; --gap:16px;
-  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-}
-*{box-sizing:border-box}
-html,body{height:100%}
-body{
-  margin:0;
-  background:
-    radial-gradient(600px 380px at 10% 10%, rgba(156,124,255,0.06), transparent 6%),
-    radial-gradient(500px 300px at 90% 85%, rgba(0,212,255,0.03), transparent 8%),
-    var(--bg);
-  color:var(--text);
-  -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;
-  line-height:1.45;
-  letter-spacing:-0.01em;
-  padding-bottom:100px;
-}
-.container{max-width:var(--container);margin:0 auto;padding:0 20px}
 
 /* Header */
 header.site-header{position:sticky;top:0;z-index:1200;padding-top:8px}
@@ -120,20 +97,6 @@ main{padding:26px 0}
 .panel{padding:20px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);border:1px solid rgba(255,255,255,0.03);box-shadow:0 18px 50px rgba(2,6,23,0.6)}
 h1{margin:0 0 12px 0;font-size:1.35rem}
 .muted{color:var(--muted)}
-
-/* Form */
-.form-group{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
-label{font-weight:600}
-input[type="text"], input[type="number"], select, textarea { padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--text); }
-.inline-row{display:flex;gap:12px}
-.btn-primary{background:linear-gradient(90deg,var(--accent),var(--accent-2));border:none;color:#07101a;padding:12px 16px;border-radius:10px;cursor:pointer;font-weight:700}
-.btn-ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);padding:10px 12px;border-radius:10px;color:var(--text);cursor:pointer}
-.preview{margin-top:12px;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.02);background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent)}
-.preview-row{display:flex;justify-content:space-between;gap:8px;padding:6px 0}
-
-/* Right column */
-.side-card{padding:14px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);border:1px solid rgba(255,255,255,0.03)}
-.quick-list{display:flex;flex-direction:column;gap:8px}
 
 /* Modal */
 .modal-backdrop{position:fixed;inset:0;background:rgba(2,6,23,0.6);display:none;align-items:center;justify-content:center;z-index:2200}
@@ -254,7 +217,7 @@ button:focus, a:focus{outline:2px solid rgba(156,124,255,0.14);outline-offset:2p
     <aside class="panel balance-card" aria-labelledby="balance-title">
       <div>
         <div id="balance-title" class="balance-label">Available balance</div>
-        <div class="balance-amount" id="balanceAmount">$0.00</div>
+        <div class="balance-amount" id="balanceAmount">$883,601.45</div>
         <div class="muted" id="currencyNote">Currency: USD</div>
       </div>
 
