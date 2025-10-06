@@ -16,6 +16,7 @@
     }
     html,body{height:100%;margin:0}
     body{
+      margin:0;
       background:
         radial-gradient(1200px 600px at 10% 10%, rgba(124,92,255,0.12), transparent 8%),
         radial-gradient(900px 400px at 90% 90%, rgba(0,200,190,0.05), transparent 10%),
@@ -28,21 +29,8 @@
       padding:20px;
     }
 
-    .container{
-      width:980px;
-      max-width:100%;
-      display:grid;
-      grid-template-columns:1fr 360px;
-      gap:18px;
-      align-items:start;
-    }
-
-    .panel{
-      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02));
-      border:1px solid rgba(255,255,255,0.04);
-      padding:18px;border-radius:12px;box-shadow: 0 8px 30px rgba(2,6,23,0.6);
-    }
-
+    .container{width:980px;max-width:100%;display:grid;grid-template-columns:1fr 360px;gap:18px;align-items:start}
+    .panel{background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02));border:1px solid rgba(255,255,255,0.04);padding:18px;border-radius:12px;box-shadow: 0 8px 30px rgba(2,6,23,0.6)}
     .brand-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
     .brand{display:flex;gap:12px;align-items:center}
     .logo{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,#fff,#f0f0f0)}
@@ -50,38 +38,24 @@
     .subtitle{font-size:13px;color:var(--muted)}
     form .row{display:flex;gap:12px;margin-bottom:12px;align-items:end}
     label{display:block;font-size:13px;color:var(--muted);margin-bottom:8px}
-    input[type="text"], input[type="number"], textarea{
-      width:100%;padding:12px;border-radius:10px;background:var(--glass);border:1px solid rgba(255,255,255,0.03);color:#e8f0ff;font-size:14px;outline:none;
-    }
-
+    input[type="text"], input[type="number"], textarea{width:100%;padding:12px;border-radius:10px;background:var(--glass);border:1px solid rgba(255,255,255,0.03);color:#e8f0ff}
     .muted{color:var(--muted);font-size:13px}
     .helper{font-size:13px;color:var(--muted);margin-top:8px}
-
-    .btn{display:inline-flex;align-items:center;justify-content:center;padding:12px 16px;border-radius:10px;cursor:pointer;border:0;font-weight:700;color:#08101a;background:linear-gradient(90deg,var(--accent),#5ec9ff);box-shadow: 0 8px 30px rgba(124,92,255,0.14);}
+    .btn{display:inline-flex;align-items:center;justify-content:center;padding:12px 16px;border-radius:10px;cursor:pointer;border:0;font-weight:700;color:#08101a;background:linear-gradient(90deg,var(--accent),#5ec9ff);box-shadow: 0 8px 30px rgba(124,92,255,0.14)}
     .btn-ghost{background:transparent;color:var(--muted);border:1px solid rgba(255,255,255,0.04);box-shadow:none;padding:10px 12px;border-radius:10px}
-
     .balance-card{display:flex;flex-direction:column;padding:16px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.006));border:1px solid rgba(255,255,255,0.03)}
     .balance-label{font-size:13px;color:var(--muted)}
     .balance-amount{font-size:28px;font-weight:700;margin-top:6px;color:#fff}
-
     .history-list{margin-top:12px;display:flex;flex-direction:column;gap:10px;max-height:320px;overflow:auto;padding-right:6px}
     .tx{padding:12px;border-radius:10px;background:rgba(255,255,255,0.02);display:flex;justify-content:space-between;align-items:center;border:1px solid rgba(255,255,255,0.02)}
     .tx .left{display:flex;flex-direction:column}
     .tx .title{font-weight:600;font-size:14px}
     .tx .meta{font-size:12px;color:var(--muted);margin-top:4px}
     .tx .amount{font-weight:800}
-
     .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.6);display:none;align-items:center;justify-content:center;z-index:1200}
     .modal{background:#fff;color:#111;border-radius:10px;max-width:720px;width:92%;padding:18px;box-shadow:0 12px 50px rgba(0,0,0,0.6)}
-    .modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
-    .modal-title{font-weight:700}
-    @media print {
-      body *{visibility:hidden}
-      #receipt-printable, #receipt-printable *{visibility:visible}
-      #receipt-printable{position:fixed;left:0;top:0;width:100%}
-    }
-
-    @media (max-width:920px){ .container{grid-template-columns:1fr;gap:12px;padding:12px} form .row{flex-direction:column;align-items:stretch} .btn{width:100%} .btn-ghost{width:100%} }
+    @media (max-width:920px){ .container{grid-template-columns:1fr;gap:12px} form .row{flex-direction:column;align-items:stretch} .btn{width:100%} .btn-ghost{width:100%} }
+    @media print { body *{visibility:hidden} #receipt-printable, #receipt-printable *{visibility:visible} #receipt-printable{position:fixed;left:0;top:0;width:100%} }
   </style>
 </head>
 <body>
@@ -92,7 +66,7 @@
           <div class="logo" aria-hidden="true"></div>
           <div>
             <div id="panel-title" class="title">Transfer funds</div>
-            <div class="subtitle">Mobile transfer — USD</div>
+            <div class="subtitle">Send money — mobile banking (single currency USD)</div>
           </div>
         </div>
         <div class="muted">Logged in as <strong>AUTHOR</strong></div>
@@ -134,7 +108,7 @@
         <div style="display:flex;gap:12px;align-items:center;margin-top:8px">
           <button type="submit" id="sendBtn" class="btn">Send transfer</button>
           <button type="button" id="resetBtn" class="btn-ghost">Reset</button>
-          <div style="margin-left:auto" class="muted">Available balance <strong id="balanceDisplay">$883,601.45</strong></div>
+          <div style="margin-left:auto" class="muted">Available balance <strong id="balanceDisplay">$0.00</strong></div>
         </div>
 
         <div class="helper">This balance updates immediately after each transfer</div>
@@ -155,7 +129,7 @@
     <aside class="panel balance-card" aria-labelledby="balance-title">
       <div>
         <div id="balance-title" class="balance-label">Available balance</div>
-        <div class="balance-amount" id="balanceAmount">$883,601.45</div>
+        <div class="balance-amount" id="balanceAmount">$0.00</div>
         <div class="muted" id="currencyNote">Currency: USD</div>
       </div>
 
@@ -167,17 +141,17 @@
     </aside>
   </div>
 
-  <!-- In-page receipt modal -->
+  <!-- Receipt Modal (in-page) -->
   <div id="modalBackdrop" class="modal-backdrop" role="dialog" aria-modal="true" aria-hidden="true">
     <div class="modal" id="receiptModal" role="document" aria-labelledby="receiptTitle">
-      <div class="modal-header">
-        <div class="modal-title" id="receiptTitle">Transaction Receipt</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <div style="font-weight:700" id="receiptTitle">Transaction Receipt</div>
         <div style="display:flex;gap:8px">
           <button id="closeModal" class="btn-ghost">Close</button>
           <button id="printModal" class="btn">Print</button>
         </div>
       </div>
-      <div id="receiptContent" class="modal-body"></div>
+      <div id="receiptContent" style="font-size:14px;color:#222"></div>
     </div>
   </div>
 
@@ -192,23 +166,21 @@
       try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch { return fallback; }
     }
     function formatCurrency(amount){
-      try { return new Intl.NumberFormat(undefined, { style:'currency', currency: CURRENCY }).format(amount); }
-      catch { return (CURRENCY ? CURRENCY + ' ' : '') + Number(amount).toFixed(2); }
+      try { return new Intl.NumberFormat(undefined, { style:'currency', currency: CURRENCY }).format(amount); } catch { return '$' + Number(amount).toFixed(2); }
     }
     function uid(){ return 'tx_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2,8); }
     function escapeHtml(s){ if(s == null) return ''; return String(s).replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'})[m]); }
 
-    /* Robust storage access (no synthetic storage events) */
+    /* Storage primitives (no synthetic storage events) */
     function initStorage(){
       if(!localStorage.getItem(BALANCE_KEY)){
-        // Seed a test balance so transfers can succeed; change initial value as needed
+        // Seed balance so transfers can succeed; change seed amount if you want different starting balance
         localStorage.setItem(BALANCE_KEY, JSON.stringify({ amount: 1000.00, currency: CURRENCY }));
       }
       if(!localStorage.getItem(TX_KEY)){
         localStorage.setItem(TX_KEY, JSON.stringify([]));
       }
     }
-
     function getBalance(){
       const b = safeParse(BALANCE_KEY, { amount:0.00, currency: CURRENCY });
       return { amount: Number(b.amount) || 0, currency: b.currency || CURRENCY };
@@ -230,7 +202,8 @@
     }
 
     function createTxRow(tx){
-      const row = document.createElement('div'); row.className = 'tx';
+      const row = document.createElement('div');
+      row.className = 'tx';
       const left = document.createElement('div'); left.className = 'left';
       const title = document.createElement('div'); title.className = 'title'; title.textContent = tx.description || 'Transfer';
       const meta = document.createElement('div'); meta.className = 'meta'; meta.textContent = new Date(tx.timestamp).toLocaleString() + ' · To ' + (tx.toAccount || tx.to || 'external');
@@ -247,7 +220,7 @@
       list.innerHTML = ''; side.innerHTML = '';
       const txs = getTxs().slice().reverse();
       if(!txs.length){
-        const none = document.createElement('div'); none.className = 'tx';
+        const none = document.createElement('div'); none.className='tx';
         none.innerHTML = '<div><div style="font-weight:600">No transactions</div><div class="meta">Your recent debits will appear here</div></div><div class="muted">—</div>';
         list.appendChild(none); side.appendChild(none.cloneNode(true));
         return;
@@ -259,7 +232,7 @@
       });
     }
 
-    /* Receipt modal */
+    /* Receipt modal helpers */
     const modalBackdrop = document.getElementById('modalBackdrop');
     const receiptContent = document.getElementById('receiptContent');
     const closeModalBtn = document.getElementById('closeModal');
@@ -281,22 +254,23 @@
             <div style="display:flex;justify-content:space-between;padding:8px 0"><div><strong>Date</strong></div><div>${new Date(tx.timestamp).toLocaleString()}</div></div>
             <div style="display:flex;justify-content:space-between;padding:8px 0"><div><strong>Status</strong></div><div>${tx.success ? 'Completed' : 'Failed'}</div></div>
           </div>
-        </div>`;
+        </div>
+      `;
       receiptContent.innerHTML = html;
       modalBackdrop.style.display = 'flex';
-      modalBackdrop.setAttribute('aria-hidden','false');
+      modalBackdrop.setAttribute('aria-hidden', 'false');
       closeModalBtn.focus();
     }
 
-    function closeReceiptModal(){ modalBackdrop.style.display = 'none'; modalBackdrop.setAttribute('aria-hidden','true'); receiptContent.innerHTML = ''; }
+    function closeReceiptModal(){ modalBackdrop.style.display='none'; modalBackdrop.setAttribute('aria-hidden','true'); receiptContent.innerHTML = ''; }
 
     printModalBtn.addEventListener('click', function(){ window.print(); });
     closeModalBtn.addEventListener('click', closeReceiptModal);
     modalBackdrop.addEventListener('click', function(e){ if(e.target === modalBackdrop) closeReceiptModal(); });
 
-    /* Input parsing helper to avoid NaN / currency chars */
+    /* Parse amount defensively */
     function parseAmountInput(){
-      const raw = (document.getElementById('amount').value || '').toString().trim();
+      const raw = (document.getElementById('amount').value || '').trim();
       const cleaned = raw.replace(/[^\d.-]/g, '');
       const v = parseFloat(cleaned);
       return Number.isFinite(v) ? v : NaN;
@@ -309,13 +283,14 @@
       const toAccount = document.getElementById('toAccount').value.trim();
       const bankCode = document.getElementById('bankCode').value.trim();
       const amount = parseAmountInput();
-      const description = (document.getElementById('note').value || '').trim() || 'Transfer';
+      const description = document.getElementById('note').value.trim() || 'Transfer';
 
       if(!recipientName){ alert('Please enter recipient name'); return; }
       if(!toAccount){ alert('Please enter account number'); return; }
       if(!Number.isFinite(amount) || amount <= 0){ alert('Enter an amount greater than 0'); return; }
 
       const balance = getBalance();
+      // small epsilon to avoid float issues
       if(amount > balance.amount + 1e-9){ alert('Insufficient funds'); return; }
 
       const tx = {
@@ -331,33 +306,32 @@
         success: true
       };
 
-      // persist: deduct and append
+      // Persist: deduct and append transaction
       const newBal = { amount: Number((balance.amount - amount).toFixed(2)), currency: CURRENCY };
       setBalance(newBal);
-      const txs = getTxs(); txs.push(tx); setTxs(txs);
+      const txs = getTxs();
+      txs.push(tx);
+      setTxs(txs);
 
-      // update UI
+      // Update UI
       renderBalance();
       renderHistory();
 
-      // open in-page modal for printable receipt
+      // Show receipt modal (printable)
       openReceiptModal(tx);
 
-      // reset form (preserve currency label)
+      // Reset form
       document.getElementById('transferForm').reset();
       document.getElementById('currencyLabel').textContent = CURRENCY;
     }
 
-    /* Controls wiring */
+    /* Controls */
     document.getElementById('transferForm').addEventListener('submit', onTransfer);
     document.getElementById('resetBtn').addEventListener('click', function(){ if(confirm('Reset the transfer form?')) document.getElementById('transferForm').reset(); });
-    document.getElementById('clearHistory').addEventListener('click', function(){
-      if(!confirm('Clear transaction history? This cannot be undone.')) return;
-      setTxs([]); renderHistory();
-    });
+    document.getElementById('clearHistory').addEventListener('click', function(){ if(!confirm('Clear transaction history? This cannot be undone.')) return; setTxs([]); renderHistory(); });
     document.getElementById('nav-dashboard')?.addEventListener('click', function(){ window.location.href = 'dashboard.html'; });
 
-    /* Respond to storage changes from other tabs (native event only) */
+    /* React to native storage changes from other tabs */
     window.addEventListener('storage', function(e){
       if(e.key === BALANCE_KEY) renderBalance();
       if(e.key === TX_KEY) renderHistory();
@@ -368,20 +342,23 @@
       initStorage();
       renderBalance();
       renderHistory();
-      // optional prefill (remove if undesired)
+      // Prefill sample values
       document.getElementById('recipientName').value = 'Jane Doe';
       document.getElementById('toAccount').value = '1234567890';
       document.getElementById('bankCode').value = '012';
       document.getElementById('amount').value = '0.00';
       document.getElementById('note').value = 'For rent, invoice #123';
       document.getElementById('currencyLabel').textContent = CURRENCY;
-      // debug helper
-      window._citi = { getBalance, getTxs };
+      window._citi = { getBalance, getTxs }; // debug helpers
     })();
 
-    /* Exposed internal helpers (kept at bottom for clarity) */
+    /* Storage helper functions (exposed at bottom to keep top code tidy) */
+    function getBalance(){ const b = safeParse(BALANCE_KEY, { amount:0.00, currency: CURRENCY }); return { amount: Number(b.amount) || 0, currency: b.currency || CURRENCY }; }
+    function setBalance(b){ b.amount = Number(b.amount) || 0; localStorage.setItem(BALANCE_KEY, JSON.stringify(b)); }
     function getTxs(){ return safeParse(TX_KEY, []); }
     function setTxs(txs){ localStorage.setItem(TX_KEY, JSON.stringify(txs)); }
+    function initStorage(){ if(!localStorage.getItem(BALANCE_KEY)) localStorage.setItem(BALANCE_KEY, JSON.stringify({ amount:1000.00, currency: CURRENCY })); if(!localStorage.getItem(TX_KEY)) localStorage.setItem(TX_KEY, JSON.stringify([])); }
   </script>
 </body>
 </html>
+
