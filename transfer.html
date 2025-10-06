@@ -56,72 +56,100 @@
     @media print { body *{visibility:hidden} #receipt-printable, #receipt-printable *{visibility:visible} #receipt-printable{position:fixed;left:0;top:0;width:100%} }
 
 
-/* Header: left nav + right logo */
-.citi-header {
-  width:100%;
-  position:sticky;
-  top:0;
-  z-index:60;
-  background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));
-  backdrop-filter: blur(6px);
-  border-bottom: 1px solid rgba(255,255,255,0.02);
-}
-.citi-header-inner{
-  max-width:980px;
-  margin:0 auto;
-  padding:10px 20px;
-  display:flex;
-  align-items:center;
-  gap:12px;
-}
-.citi-nav-left { display:flex; align-items:center; gap:12px; }
-.citi-nav-link {
-  color: rgba(232,238,246,0.9);
-  text-decoration:none;
-  font-weight:600;
-  padding:8px 12px;
-  border-radius:10px;
-}
-.citi-nav-link:hover { background: rgba(255,255,255,0.02); }
-
-.citi-header-spacer { flex:1; }
-
-/* right-aligned brand */
-.citi-brand-right { display:flex; align-items:center; justify-content:flex-end; }
-.citi-brand { display:inline-flex; align-items:center; text-decoration:none; }
-.citi-logo {
-  height:36px;
-  width:auto;
-  display:block;
-  border-radius:8px;
-  box-shadow: 0 6px 18px rgba(2,6,23,0.4);
-}
-
-/* small-screen adjustments */
-@media (max-width:540px){
-  .citi-header-inner { padding:10px 12px; }
-  .citi-logo { height:28px; }
-  .citi-nav-link { padding:6px 8px; font-size:14px; }
-}
 
   </style>
 </head>
 <body>
+<!-- START: top-first full-width header -->
 <header class="citi-header">
   <div class="citi-header-inner">
-    <nav class="citi-nav-left" aria-label="Primary">
+    <a class="citi-brand" href="dashboard.html" aria-label="CITI Home">
+      <img src="assets/citi-logo.png" alt="CITI" class="citi-logo" />
+    </a>
+    <nav class="citi-nav" aria-label="Primary">
       <a href="dashboard.html" class="citi-nav-link">Dashboard</a>
     </nav>
-
-    <div class="citi-header-spacer"></div>
-
-    <div class="citi-brand-right">
-      <a href="dashboard.html" class="citi-brand" aria-label="CITI Home">
-        <img src="assets/citi_logo.png" alt="CITI" class="citi-logo" />
-      </a>
-    </div>
   </div>
 </header>
+
+<style>
+/* Top-first stacked header: always on top, full width, responsive */
+.citi-header {
+  width:100%;
+  top:0;
+  left:0;
+  z-index:9999;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.008));
+  border-bottom: 1px solid rgba(255,255,255,0.02);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 6px 18px rgba(2,6,23,0.18);
+  position: sticky;
+}
+
+/* Inner constrains content and makes header stacked on all widths */
+.citi-header-inner {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 12px 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;            /* stacked: logo row above nav row */
+  gap: 8px;
+  align-items: stretch;
+}
+
+/* Brand row always centered horizontally in the top stacked block */
+.citi-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  width: 100%;
+}
+
+/* Logo sizing */
+.citi-logo {
+  height: 36px;
+  width: auto;
+  display: block;
+  border-radius: 8px;
+  box-shadow: 0 4px 14px rgba(2,6,23,0.25);
+}
+
+/* Navigation row sits below brand, centered and compact */
+.citi-nav{
+  display:flex;
+  justify-content:center;
+  gap:12px;
+  width:100%;
+}
+.citi-nav-link{
+  color: rgba(232,238,246,0.95);
+  text-decoration:none;
+  font-weight:700;
+  padding:8px 12px;
+  border-radius:10px;
+  background: transparent;
+  transition: background 160ms ease;
+  font-size:14px;
+}
+.citi-nav-link:hover{ background: rgba(255,255,255,0.02); }
+
+/* Small screens: keep stacked but reduce paddings and logo */
+@media (max-width:520px){
+  .citi-header-inner { padding: 10px 12px; gap:6px; }
+  .citi-logo { height: 28px; }
+  .citi-nav-link { padding:6px 8px; font-size:13px; }
+}
+
+/* Larger screens: keep stacked but tighten layout visually */
+@media (min-width:981px){
+  .citi-header-inner { padding: 14px 20px; gap:10px; }
+  .citi-logo { height:40px; }
+}
+</style>
+<!-- END: top-first full-width header -->
 
   <div class="container" role="main">
     <div class="panel" aria-labelledby="panel-title">
