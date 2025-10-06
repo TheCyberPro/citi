@@ -56,9 +56,32 @@
     .modal{background:#fff;color:#111;border-radius:10px;max-width:720px;width:92%;padding:18px;box-shadow:0 12px 50px rgba(0,0,0,0.6)}
     @media (max-width:920px){ .container{grid-template-columns:1fr;gap:12px} form .row{flex-direction:column;align-items:stretch} .btn{width:100%} .btn-ghost{width:100%} }
     @media print { body *{visibility:hidden} #receipt-printable, #receipt-printable *{visibility:visible} #receipt-printable{position:fixed;left:0;top:0;width:100%} }
+
+
+/* Citi header */
+.citi-header{width:100%;background:transparent;padding:14px 0;position:sticky;top:0;z-index:40}
+.citi-header-inner{max-width:980px;margin:0 auto;padding:0 20px;display:flex;align-items:center;justify-content:space-between}
+.citi-brand{display:flex;align-items:center;text-decoration:none}
+.citi-logo{height:34px;width:auto;display:block;border-radius:6px}
+.citi-nav{display:flex;gap:12px;align-items:center}
+.citi-nav-link{color:rgba(232,238,246,0.9);text-decoration:none;font-weight:600;padding:8px 12px;border-radius:10px}
+.citi-nav-link:hover{background:rgba(255,255,255,0.02)}
+@media (max-width:520px){ .citi-header-inner{padding:0 12px} .citi-logo{height:28px} .citi-nav-link{padding:6px 10px;font-size:14px} }
+
   </style>
 </head>
 <body>
+<header class="citi-header">
+  <div class="citi-header-inner">
+    <a href="dashboard.html" class="citi-brand">
+      <img src="assets/citi-logo.png" alt="CITI" class="citi-logo" />
+    </a>
+    <nav class="citi-nav">
+      <a href="dashboard.html" class="citi-nav-link">Dashboard</a>
+    </nav>
+  </div>
+</header>
+
   <div class="container" role="main">
     <div class="panel" aria-labelledby="panel-title">
       <div class="brand-row">
