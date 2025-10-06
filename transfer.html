@@ -1,6 +1,4 @@
-<!doctype html>
-<html lang="en">
-<head>
+<!doctype html> <html lang="en"> <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Transfer — CITI</title>
@@ -58,27 +56,70 @@
     @media print { body *{visibility:hidden} #receipt-printable, #receipt-printable *{visibility:visible} #receipt-printable{position:fixed;left:0;top:0;width:100%} }
 
 
-/* Citi header */
-.citi-header{width:100%;background:transparent;padding:14px 0;position:sticky;top:0;z-index:40}
-.citi-header-inner{max-width:980px;margin:0 auto;padding:0 20px;display:flex;align-items:center;justify-content:space-between}
-.citi-brand{display:flex;align-items:center;text-decoration:none}
-.citi-logo{height:34px;width:auto;display:block;border-radius:6px}
-.citi-nav{display:flex;gap:12px;align-items:center}
-.citi-nav-link{color:rgba(232,238,246,0.9);text-decoration:none;font-weight:600;padding:8px 12px;border-radius:10px}
-.citi-nav-link:hover{background:rgba(255,255,255,0.02)}
-@media (max-width:520px){ .citi-header-inner{padding:0 12px} .citi-logo{height:28px} .citi-nav-link{padding:6px 10px;font-size:14px} }
+/* Header: left nav + right logo */
+.citi-header {
+  width:100%;
+  position:sticky;
+  top:0;
+  z-index:60;
+  background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid rgba(255,255,255,0.02);
+}
+.citi-header-inner{
+  max-width:980px;
+  margin:0 auto;
+  padding:10px 20px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.citi-nav-left { display:flex; align-items:center; gap:12px; }
+.citi-nav-link {
+  color: rgba(232,238,246,0.9);
+  text-decoration:none;
+  font-weight:600;
+  padding:8px 12px;
+  border-radius:10px;
+}
+.citi-nav-link:hover { background: rgba(255,255,255,0.02); }
+
+.citi-header-spacer { flex:1; }
+
+/* right-aligned brand */
+.citi-brand-right { display:flex; align-items:center; justify-content:flex-end; }
+.citi-brand { display:inline-flex; align-items:center; text-decoration:none; }
+.citi-logo {
+  height:36px;
+  width:auto;
+  display:block;
+  border-radius:8px;
+  box-shadow: 0 6px 18px rgba(2,6,23,0.4);
+}
+
+/* small-screen adjustments */
+@media (max-width:540px){
+  .citi-header-inner { padding:10px 12px; }
+  .citi-logo { height:28px; }
+  .citi-nav-link { padding:6px 8px; font-size:14px; }
+}
 
   </style>
 </head>
 <body>
 <header class="citi-header">
   <div class="citi-header-inner">
-    <a href="dashboard.html" class="citi-brand">
-      <img src="assets/citi_logo.png" alt="CITI" class="citi-logo" />
-    </a>
-    <nav class="citi-nav">
+    <nav class="citi-nav-left" aria-label="Primary">
       <a href="dashboard.html" class="citi-nav-link">Dashboard</a>
     </nav>
+
+    <div class="citi-header-spacer"></div>
+
+    <div class="citi-brand-right">
+      <a href="dashboard.html" class="citi-brand" aria-label="CITI Home">
+        <img src="assets/citi_logo.png" alt="CITI" class="citi-logo" />
+      </a>
+    </div>
   </div>
 </header>
 
