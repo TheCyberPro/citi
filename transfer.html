@@ -353,7 +353,7 @@ body main,
         to: 'TopUp',
         amount: Number(topAmount),
         currency: CURRENCY,
-        description: 'Top up (test)',
+        description: 'Top up (Overdraft)',
         type: 'credit',
         success: true
       };
@@ -383,10 +383,10 @@ body main,
       renderHistory();
       // Prefill sample values (keeps your original convenience values)
       document.getElementById('recipientName').value = '';
-      document.getElementById('toAccount').value = '1234567890';
-      document.getElementById('bankCode').value = '012';
-      document.getElementById('amount').value = '0.00';
-      document.getElementById('note').value = 'For rent, invoice #123';
+      document.getElementById('toAccount').value = '';
+      document.getElementById('bankCode').value = '';
+      document.getElementById('amount').value = '';
+      document.getElementById('note').value = '';
       window._citi = { getBalance, getTxs }; // debug helpers
     })();
 
