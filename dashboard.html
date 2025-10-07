@@ -969,6 +969,8 @@
     // ---- Data (sample or your real data) ----
     // Preserve your transactions array if present; else fall back to this sample
     window.transactions = window.transactions && Array.isArray(window.transactions) ? window.transactions : [
+      { date:'Oct 7, 2025', time:'11:44 PM', desc:'Credit', amount:500.00, balance:62315.67, status:'Successful' },
+      { date:'Oct 4, 2025', time:'09:57 AM', desc:'Dedit', amount:-750.00, balance:62345.67, status:'Successful' },
       { date:'Oct 7, 2025', time:'11:44 PM', desc:'Debit', amount:-500.00, balance:64345.67, status:'Successful' },
       { date:'Oct 4, 2025', time:'09:57 AM', desc:'Credit', amount:2000.00, balance:62345.67, status:'Successful' },
       { date:'Oct 2, 2025', time:'10:12 AM', desc:'Debit', amount:-839.08, balance:61845.67, status:'Successful' },
