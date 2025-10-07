@@ -33,9 +33,28 @@
         <label for="password">Password</label>
         <input id="password" type="password" placeholder="••••••••" required />
 
+
+
+
 <button type="button" id="dashboard-btn" class="btn btn-link" aria-label="Login and go to dashboard">
   Login
 </button>
+
+<script>
+  (function () {
+    const btn = document.getElementById('dashboard-btn');
+    if (!btn) return;
+    btn.addEventListener('click', function (e) {
+      e.preventDefault(); // prevents any enclosing form from submitting
+      // If you need to perform credential validation first, do it here,
+      // then on success navigate to /dashboard.html
+      window.location.href = '/dashboard.html';
+    });
+  })();
+</script>
+
+
+
 
         <p>Don’t have an account? 
           <a href="index.html#get-started" class="link">Open Account</a>
