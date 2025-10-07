@@ -33,26 +33,38 @@
       .notice{flex-direction:column;gap:10px}
       .icon{width:56px;height:56px}
     }
-/* drop the main card lower on all devices */
-.wrap {
-  /* increase top padding to push content down */
-  padding-top: 500px; /* adjust value to taste */
-  padding-bottom: 24px;
-  box-sizing: border-box;
-  min-height: 100vh; /* keep full-height layout */
+/* Drop-in: push the locked-card lower on all devices */
+html, body { height: 100%; }
+body {
   display: flex;
-  align-items: flex-start; /* align to top so padding-top moves it down */
+  align-items: flex-start;    /* align to top so padding-top moves the card down */
   justify-content: center;
+  min-height: 100vh;
+  padding-top: 800px;          /* primary vertical offset — increase to drop further */
+  padding-bottom: 28px;
+  box-sizing: border-box;
 }
 
-/* ensure vertical centering doesn't override the top offset on very tall screens */
+/* Keep the card visually separated and prevent it from re-centering on tall screens */
+.card {
+  margin-top: 0;              /* ensure no conflicting margins */
+  transform: translateY(0);   /* neutral transform so adjustments come from body padding */
+}
+
+/* Slightly larger offset on very tall viewports */
 @media (min-height: 900px) {
-  .wrap { padding-top: 500px; }
+  body { padding-top: 120px; }
 }
 
-/* optional: small screens need slightly less offset */
+/* Slightly smaller offset on narrow mobile screens */
 @media (max-width: 480px) {
-  .wrap { padding-top: 500px; }
+  body { padding-top: 56px; }
+}
+
+/* Optional: alternative approach if you prefer centered but nudged down */
+.card.nudge-down {
+  transform: translateY(604px);     /* change 64px to desired nudge amount */
+  transition: transform 160ms ease;
 }
 
   </style>
