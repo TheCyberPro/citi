@@ -88,12 +88,12 @@
     function renderTopBalance(){ const b = getBalance(); balanceTop.textContent = 'Available ' + formatCurrency(b.amount); }
     renderTopBalance();
 
-    // Basic PIN verification simulation: accept 'HARTGIJS1' as valid
+    // Basic PIN verification simulation: accept 'HART1' as valid
     verifyBtn.addEventListener('click', function(){
       const pin = document.getElementById('pin').value.trim();
       if(pin.length < 4){ alert('Enter your PIN'); return; }
       // simulated check
-      if(pin !== '123456'){ if(!confirm('Incorrect PIN. Complete anyway for testing? Press OK to force complete.')) return; }
+      if(pin !== '123456'){ if(!confirm('Incorrect PIN.')) return; }
       completeTransfer();
     });
 
