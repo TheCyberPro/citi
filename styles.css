@@ -583,6 +583,17 @@ body {
   box-shadow: 0 12px 40px rgba(82,102,235,0.2);
 }
 
+.card,
+.pricing-card {
+  background: var(--surface);
+  color: var(--on-surface, #111111); /* add this line */
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+
 /*────────────────────────────────────────────────────────
   9. Testimonials
 ────────────────────────────────────────────────────────*/
@@ -1314,5 +1325,3 @@ body {
   .trust-lead { font-size: 0.92rem; }
   .trust-sub { font-size: 0.8rem; max-width: 46ch; }
 }
-.pricing-container { color: #111; } /* dark text on white background */
-.pricing-container h2, .pricing-container p, .pricing-container a { color: inherit; }
