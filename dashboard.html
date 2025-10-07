@@ -301,6 +301,58 @@
   border-radius: 0;              /* do not add radius here; container handles it */
 }
 .cg-art { border-radius: 18px; display:block; width:100%; height:100%; object-fit:cover; }
+/* Card container: responsive, centered, and gives a consistent visual frame */
+.cg-card {
+  width: clamp(260px, 46vw, 680px);   /* wider ceiling for large screens if needed */
+  max-width: 92%;
+  aspect-ratio: 840 / 530;            /* preserve original image ratio */
+  border-radius: 18px;
+  overflow: hidden;
+  position: relative;
+  display: block;
+  margin: 0 auto;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border: 1px solid rgba(255,255,255,0.04);
+  box-shadow: 0 20px 50px rgba(2,6,23,0.25), inset 0 1px 0 rgba(255,255,255,0.02);
+  box-sizing: border-box;
+  min-height: 140px;                  /* safety on very small viewports */
+}
+
+/* Wrapper that centers the artwork and lets us control object-fit behavior reliably */
+.cg-art-wrap {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;                /* vertical centering of image inside card */
+  justify-content: center;            /* horizontal centering */
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+/* Artwork: maintain intrinsic ratio, never get cropped awkwardly, remain sharp on retina */
+.cg-art {
+  width: 100%;
+  height: auto;                       /* preserve natural aspect ratio by default */
+  max-height: 100%;
+  object-fit: contain;                /* ensure whole card image is visible and balanced */
+  display: block;
+  -webkit-user-drag: none;
+  user-select: none;
+  image-rendering: auto;
+  pointer-events: none;
+}
+
+/* Optional: when you want the image to fill the frame edge-to-edge without letterbox, switch to cover */
+/* .cg-art { object-fit: cover; width: 100%; height: 100%; } */
+
+/* Mobile tweaks */
+@media (max-width: 540px) {
+  .cg-card { width: clamp(220px, 86vw, 420px); border-radius: 12px; min-height: 120px; }
+  .cg-art { max-height: 100%; }
+}
+
+/* Accessibility focus style if interactive */
+.cg-card:focus { outline: 3px solid rgba(43,81,245,0.12); outline-offset: 6px; }
 
 
   </style>
@@ -485,42 +537,22 @@
                 </div>
               </aside>
             </section>
+
+
+
 <figure id="cg-card" class="cg-card" role="img" aria-label="Credit card preview">
-  <img
-    src="assets/creditcard.png"
-    srcset="assets/creditcard.png 1x, assets/creditcard.png 2x"
-    alt="Credit card artwork"
-    class="cg-art"
-    loading="lazy"
-    width="840" height="530"
-  />
+  <div class="cg-art-wrap">
+    <img
+      src="assets/creditcard.png"
+      srcset="assets/creditcard.png 1x, assets/creditcard.png 2x"
+      alt="Credit card artwork"
+      class="cg-art"
+      loading="lazy"
+      width="840" height="530"
+    />
+  </div>
 </figure>
 
-<style>
-/* Responsive polished card container */
-.cg-card {
-  width: clamp(260px, 46vw, 420px);
-  aspect-ratio: 1.585 / 1;
-  border-radius: 18px;
-  overflow: hidden;
-  position: relative;
-  display: block;
-  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-  border: 1px solid rgba(255,255,255,0.04);
-  box-shadow: 0 20px 50px rgba(2,6,23,0.65), inset 0 1px 0 rgba(255,255,255,0.02);
-  margin: 0 auto;
-}
-
-/* Artwork fills the card */
-.cg-art {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  -webkit-user-drag: none;
-  user-select: none;
-}
-</style>
 
 
 <!-- BEGIN: Advanced Account Settings + Cards + 2FA + Footer (drop-in) -->
