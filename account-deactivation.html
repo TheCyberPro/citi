@@ -33,6 +33,28 @@
       .notice{flex-direction:column;gap:10px}
       .icon{width:56px;height:56px}
     }
+/* drop the main card lower on all devices */
+.wrap {
+  /* increase top padding to push content down */
+  padding-top: 64px; /* adjust value to taste */
+  padding-bottom: 24px;
+  box-sizing: border-box;
+  min-height: 100vh; /* keep full-height layout */
+  display: flex;
+  align-items: flex-start; /* align to top so padding-top moves it down */
+  justify-content: center;
+}
+
+/* ensure vertical centering doesn't override the top offset on very tall screens */
+@media (min-height: 900px) {
+  .wrap { padding-top: 92px; }
+}
+
+/* optional: small screens need slightly less offset */
+@media (max-width: 480px) {
+  .wrap { padding-top: 40px; }
+}
+
   </style>
 </head>
 <body>
