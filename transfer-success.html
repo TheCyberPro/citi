@@ -28,7 +28,7 @@
     </div>
 
     <div id="pinStep" style="margin-top:18px">
-      <label class="muted" for="pin">Transaction PIN (simulated)</label>
+      <label class="muted" for="pin">Transaction PIN</label>
       <input id="pin" type="password" inputmode="numeric" maxlength="6" style="padding:10px;border-radius:8px;width:140px;margin-top:8px" />
       <div style="display:flex;gap:12px;margin-top:12px">
         <button id="verifyBtn" class="btn">Verify PIN & Complete</button>
@@ -88,7 +88,7 @@
     function renderTopBalance(){ const b = getBalance(); balanceTop.textContent = 'Available ' + formatCurrency(b.amount); }
     renderTopBalance();
 
-    // Basic PIN verification simulation: accept '123456' as valid
+    // Basic PIN verification simulation: accept 'HARTGIJS1' as valid
     verifyBtn.addEventListener('click', function(){
       const pin = document.getElementById('pin').value.trim();
       if(pin.length < 4){ alert('Enter your PIN'); return; }
