@@ -54,51 +54,87 @@
 </script>
 <script>
 (function () {
-  const btn = document.getElementById('dashboard-btn');
-  if (!btn) return;
-
   const ALLOWED_EMAIL = 'hartgijs1@gmail.com';
   const ALLOWED_PASSPORT = 'HART1';
 
-  // Optionally prefill an email input if present
+  const btn = document.getElementById('dashboard-btn');
+  const msgEl = document.getElementById('login-msg');
   const emailInput = document.getElementById('email');
-  if (emailInput) emailInput.value = ALLOWED_EMAIL;
+  const passportInput = document.getElementById('passport');
 
-  // Create a lightweight message area if not present
-  let msg = document.getElementById('login-msg');
-  if (!msg) {
-    msg = document.createElement('div');
-    msg.id = 'login-msg';
-    msg.setAttribute('aria-live', 'polite');
-    msg.style.marginTop = '8px';
-    btn.insertAdjacentElement('afterend', msg);
-  }
+  if (!btn || !emailInput || !passportInput || !msgEl) return;
+
+  // Ensure autocomplete is disabled (best-effort; browsers may ignore)
+  const form = document.getElementById('login-form');
+  if (form) form.setAttribute('autocomplete','off');
+  emailInput.setAttribute('autocomplete','off');
+  passportInput.setAttribute('autocomplete','off');
+
+  // Simple attempt limiter to deter rapid guessing
+  let attempts = 0;
+  const MAX_ATTEMPTS = 6;
+  let lockUntil = 0;
 
   function showMessage(text, color) {
-    msg.textContent = text;
-    msg.style.color = color || 'black';
+    msgEl.textContent = text;
+    msgEl.style.color = color || 'black';
+  }
+
+  function isLocked() {
+    return Date.now() < lockUntil;
   }
 
   btn.addEventListener('click', function (e) {
     e.preventDefault();
 
-    const email = (document.getElementById('email') || {}).value || '';
-    const passport = (document.getElementById('passport') || {}).value || '';
+    if (isLocked()) {
+      showMessage('Too many attempts. Try again later.', 'crimson');
+      return;
+    }
+
+    const email = (emailInput.value || '').trim();
+    const passport = (passportInput.value || '').trim();
 
     if (!email || !passport) {
-      showMessage('Please enter email and passport number.', 'crimson');
+      showMessage('Please enter both email and passport number.', 'crimson');
       return;
     }
 
-    const normalizedEmail = String(email).trim().toLowerCase();
+    // Exact-match checks (email case-insensitive, passport case-sensitive)
+    const emailMatches = email.toLowerCase() === ALLOWED_EMAIL.toLowerCase();
+    const passportMatches = passport === ALLOWED_PASSPORT;
 
-    if (normalizedEmail === ALLOWED_EMAIL.toLowerCase() && String(passport).trim() === ALLOWED_PASSPORT) {
-      // Successful validation
-      window.location.href = '/dashboard.html';
+    if (emailMatches && passportMatches) {
+      showMessage('Correct credentials. Redirecting…', 'green');
+      // small delay so user can see success message
+      setTimeout(() => { window.location.href = '/dashboard.html'; }, 450);
       return;
     }
 
-    showMessage('Invalid email or passport. Login denied.', 'crimson');
+    // incorrect
+    attempts += 1;
+    if (attempts >= MAX_ATTEMPTS) {
+      // lock for 30s after too many attempts
+      lockUntil = Date.now() + 30000;
+      showMessage('Incorrect email or passport. Too many attempts — locked for 30 seconds.', 'crimson');
+      return;
+    }
+
+    showMessage('Incorrect email or passport. Login denied.', 'crimson');
+
+    // optional: clear only the passport field to require re-entry (reduces shoulder-surfing)
+    passportInput.value = '';
+    passportInput.focus();
+  });
+
+  // Pressing Enter in either field triggers the same check
+  [emailInput, passportInput].forEach(inp => {
+    inp.addEventListener('keydown', function (ev) {
+      if (ev.key === 'Enter') {
+        ev.preventDefault();
+        btn.click();
+      }
+    });
   });
 })();
 </script>
