@@ -3,321 +3,91 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Account Locked Due to Suspicious Access</title>
+  <title>Account Locked</title>
   <style>
-    :root {
-      --bg: #f6f8fb;
+    :root{
+      --bg: #f5f7fb;
       --card: #ffffff;
-      --muted: #556;
+      --muted: #596074;
       --danger: #b91c1c;
-      --primary: #3658f2;
+      --accent: #2b51f5;
     }
-    html,body { height:100%; margin:0; font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; background:var(--bg); color:#111; }
-    .wrap { min-height:100%; display:flex; align-items:center; justify-content:center; padding:28px; box-sizing:border-box; }
-    .card { width:780px; max-width:98%; background:var(--card); border-radius:12px; box-shadow:0 10px 30px rgba(0,0,0,0.08); padding:28px; }
-    h1 { margin:0 0 8px 0; font-size:1.4rem; }
-    p.lead { margin:6px 0 18px 0; color:var(--muted); }
-    .two-cols { display:flex; gap:20px; align-items:flex-start; flex-wrap:wrap; }
-    .left { flex:1 1 360px; min-width:280px; }
-    .right { flex:0 0 300px; min-width:260px; background:#fbfdff; border-radius:10px; padding:14px; border:1px solid #eef3ff; }
-    .muted { color:var(--muted); font-size:0.95rem; }
-    .device { padding:8px; border-radius:8px; border:1px solid #eef2f8; margin-bottom:8px; display:flex; justify-content:space-between; gap:12px; align-items:center; background:#fff; }
-    .actions { display:flex; gap:10px; margin-top:14px; flex-wrap:wrap; }
-    .btn { padding:10px 12px; border-radius:8px; border:0; cursor:pointer; font-weight:600; }
-    .btn-primary { background:var(--primary); color:#fff; }
-    .btn-muted { background:#eef4ff; color:var(--primary); }
-    .btn-danger { background:var(--danger); color:#fff; }
-    .confirm-input { width:100%; padding:10px; border-radius:8px; border:1px solid #e6e9ef; margin-top:10px; }
-    .status { margin-top:12px; font-weight:600; }
-    .small { font-size:0.9rem; color:var(--muted); }
-    .support { margin-top:12px; font-size:0.95rem; }
-    footer { margin-top:18px; font-size:0.88rem; color:var(--muted); }
+    html,body{height:100%;margin:0;font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;}
+    body{background:var(--bg);display:flex;align-items:center;justify-content:center;padding:24px;color:#111}
+    .card{width:820px;max-width:98%;background:var(--card);border-radius:12px;box-shadow:0 12px 30px rgba(18,33,68,0.06);padding:28px;box-sizing:border-box;}
+    h1{margin:0 0 8px 0;font-size:1.4rem}
+    p.lead{margin:6px 0 18px 0;color:var(--muted);line-height:1.4}
+    .muted{color:var(--muted);font-size:0.95rem}
+    .notice{display:flex;gap:14px;align-items:flex-start}
+    .icon{width:64px;height:64px;border-radius:12px;background:linear-gradient(180deg, rgba(43,81,245,0.12), rgba(43,81,245,0.06));display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--accent);font-size:22px}
+    .content{flex:1}
+    .section{margin-top:18px;padding:14px;background:#fbfdff;border:1px solid #eef4ff;border-radius:10px}
+    .small{font-size:0.92rem;color:var(--muted)}
+    .contact{margin-top:12px;display:flex;gap:10px;align-items:center}
+    .btn{padding:10px 14px;border-radius:8px;border:0;cursor:pointer;font-weight:600}
+    .btn-link{background:transparent;color:var(--accent);text-decoration:underline;padding:0;border-radius:0}
+    .support-phone{background:#eef4ff;color:var(--accent)}
+    .support-email{background:#fff;border:1px solid #e6eefb;color:#0b3a66}
+    footer{margin-top:18px;font-size:0.9rem;color:var(--muted)}
+    @media (max-width:720px){
+      .notice{flex-direction:column;gap:10px}
+      .icon{width:56px;height:56px}
+    }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="card" role="main" aria-labelledby="title">
-      <h1 id="title">Account Locked Due to Suspicious Access</h1>
-      <p class="lead">We detected a sign-in from an unrecognized device or location. For your safety, your account has been temporarily locked. Complete one of the recovery options below to restore access.</p>
+  <main class="card" role="main" aria-labelledby="page-title">
+    <h1 id="page-title">Account Locked</h1>
+    <p class="lead">For your security, this account has been disabled because a sign-in was detected from an unrecognized or unauthorized device. To prevent potential misuse, all account actions are temporarily blocked.</p>
 
-      <div class="two-cols">
-        <div class="left" id="left-pane">
-          <section aria-labelledby="reauth-title">
-            <h2 id="reauth-title" style="font-size:1.05rem; margin:0 0 6px 0;">Secure your account now</h2>
-            <div class="muted small" id="context-note">Validating...</div>
-
-            <div style="margin-top:12px;">
-              <label class="small">Re-authenticate to restore access</label>
-              <input id="password" type="password" class="confirm-input" placeholder="Account password" autocomplete="current-password" />
-              <input id="otp" type="text" class="confirm-input" placeholder="6-digit verification code (OTP)" />
-              <div class="actions" style="margin-top:8px;">
-                <button id="reauth-btn" class="btn btn-primary">Verify and Restore</button>
-                <button id="revoke-sessions-btn" class="btn btn-muted">Revoke All Sessions</button>
-              </div>
-              <div id="reauth-status" class="status" aria-live="polite"></div>
-            </div>
-
-            <div style="margin-top:18px;">
-              <label class="small">Reset transfer PIN</label>
-              <div style="display:flex; gap:8px; margin-top:8px;">
-                <button id="reset-pin-btn" class="btn btn-muted">Request PIN Reset</button>
-                <button id="contact-support-btn" class="btn btn-primary">Contact Support</button>
-              </div>
-              <div id="pin-status" class="status"></div>
-            </div>
-          </section>
-
-          <footer>
-            If you did not attempt this sign-in, do not share any codes with anyone who contacts you about this event. For immediate assistance, use the Contact Support button.
-          </footer>
+    <div class="notice" aria-hidden="false">
+      <div class="icon" aria-hidden="true">!</div>
+      <div class="content">
+        <div class="section" role="status" aria-live="polite">
+          <div class="small"><strong>What this means</strong></div>
+          <ul style="margin:8px 0 0 18px;color:var(--muted);line-height:1.5">
+            <li>All transactions and access are suspended for this account.</li>
+            <li>You cannot log in from other devices while this page is shown.</li>
+            <li>This page will remain until a support agent reviews and resolves the issue.</li>
+          </ul>
         </div>
 
-        <aside class="right" id="right-pane" aria-labelledby="sessions-title">
-          <h3 id="sessions-title" style="margin:0 0 8px 0;">Active sessions and devices</h3>
-          <div id="device-list" class="muted small">
-            Loading sessions...
-          </div>
+        <div style="margin-top:14px" class="small">
+          This page intentionally provides no automatic recovery or local actions to prevent unauthorized restoration. If you believe this is a mistake or this was you, please contact support using the verified channels below.
+        </div>
 
-          <div style="margin-top:12px;">
-            <label class="small">Confirm permanent deactivation</label>
-            <input id="confirm-deactivate" class="confirm-input" placeholder="Type DEACTIVATE to permanently deactivate" />
-            <div style="display:flex; justify-content:flex-end; margin-top:8px;">
-              <button id="perma-deactivate-btn" class="btn btn-danger">Deactivate Account</button>
-            </div>
-            <div id="deact-status" class="status"></div>
-          </div>
-        </aside>
+        <div class="contact" aria-label="Support contact options">
+          <button class="btn support-phone" onclick="openSupportPhone()" aria-label="Call support">Call Support: +1 (800) 000-0000</button>
+          <button class="btn support-email" onclick="openSupportEmail()" aria-label="Email support">Email Support</button>
+          <button class="btn btn-link" onclick="openSupportPage()" aria-label="Open support page">Support Center</button>
+        </div>
       </div>
     </div>
-  </div>
+
+    <footer>
+      Do not share verification codes, PINs, or passwords with anyone who contacts you about this event. A support agent will verify ownership and next steps.
+    </footer>
+  </main>
 
   <script>
-    // Drop-in behavior
-    // Required backend endpoints:
-    // GET  /api/deactivation/validate?token=TOKEN  -> 200 OK { userId, devices: [...masked sessions...], reason, timestamp }
-    // POST /api/deactivation/revoke                 -> body { token } -> revokes sessions
-    // POST /api/deactivation/restore                -> body { token, password, otp } -> restores account and returns success
-    // POST /api/account/reset-pin                   -> body { token } -> triggers PIN reset flow
-    // POST /api/account/deactivate                  -> body { token } -> permanently deactivate
-    // All calls should validate token server-side and require re-auth
+    // Drop-in: intentionally stagnant page
+    // No validation, no token checks, no recovery actions, no automatic redirects.
+    // The support functions below only open the provided channels; replace with your real support links.
 
-    (function () {
-      const params = new URLSearchParams(window.location.search);
-      const token = params.get('deact');
-      const deviceListEl = document.getElementById('device-list');
-      const contextNote = document.getElementById('context-note');
-      const reauthBtn = document.getElementById('reauth-btn');
-      const revokeBtn = document.getElementById('revoke-sessions-btn');
-      const resetPinBtn = document.getElementById('reset-pin-btn');
-      const contactBtn = document.getElementById('contact-support-btn');
-      const permaBtn = document.getElementById('perma-deactivate-btn');
-      const reauthStatus = document.getElementById('reauth-status');
-      const pinStatus = document.getElementById('pin-status');
-      const deactStatus = document.getElementById('deact-status');
+    function openSupportPhone() {
+      // Phone handler: use tel: for mobile devices or show phone in modal on desktops
+      window.location.href = 'tel:+18000000000';
+    }
 
-      if (!token) {
-        // no token, go back to login
-        window.location.href = '/login.html';
-        return;
-      }
+    function openSupportEmail() {
+      // mailto uses a short prefilled subject; do not include sensitive data in URL
+      window.location.href = 'mailto:support@example.com?subject=Account%20Locked%20-%20Assistance%20Required';
+    }
 
-      async function showError(el, msg) {
-        el.textContent = msg;
-        el.style.color = '#b91c1c';
-      }
-      async function showOk(el, msg) {
-        el.textContent = msg;
-        el.style.color = '#0b3a66';
-      }
-
-      async function validateToken() {
-        try {
-          const resp = await fetch(`/api/deactivation/validate?token=${encodeURIComponent(token)}`, {
-            credentials: 'include'
-          });
-          if (!resp.ok) {
-            window.location.href = '/login.html';
-            return;
-          }
-          const body = await resp.json();
-          contextNote.textContent = `Detected: ${body.reason || 'suspicious sign-in'} at ${body.timestamp || ''}`;
-          renderDevices(body.devices || []);
-        } catch (err) {
-          console.error('validate error', err);
-          window.location.href = '/login.html';
-        }
-      }
-
-      function renderDevices(devices) {
-        if (!devices || devices.length === 0) {
-          deviceListEl.innerHTML = '<div class="small">No active sessions found</div>';
-          return;
-        }
-        deviceListEl.innerHTML = '';
-        devices.forEach(d => {
-          const div = document.createElement('div');
-          div.className = 'device';
-          // d fields should be masked: id, deviceType, lastSeen, location (city/country)
-          div.innerHTML = `
-            <div>
-              <div style="font-weight:700">${d.deviceType || 'Device'}</div>
-              <div class="small">${d.location || ''} · ${d.lastSeen || ''}</div>
-            </div>
-            <div style="display:flex; align-items:center; gap:8px;">
-              <button class="btn btn-muted btn-revoke" data-id="${d.id}">Revoke</button>
-            </div>
-          `;
-          deviceListEl.appendChild(div);
-        });
-
-        // attach revoke handlers
-        document.querySelectorAll('.btn-revoke').forEach(b => {
-          b.addEventListener('click', async (ev) => {
-            const id = ev.currentTarget.getAttribute('data-id');
-            ev.currentTarget.disabled = true;
-            try {
-              const r = await fetch('/api/deactivation/revoke', {
-                method: 'POST',
-                credentials: 'include',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ token, sessionId: id })
-              });
-              if (!r.ok) {
-                showError(reauthStatus, 'Unable to revoke session');
-                ev.currentTarget.disabled = false;
-                return;
-              }
-              showOk(reauthStatus, 'Session revoked');
-              // refresh list
-              validateToken();
-            } catch (err) {
-              console.error(err);
-              showError(reauthStatus, 'Network error revoking session');
-              ev.currentTarget.disabled = false;
-            }
-          });
-        });
-      }
-
-      // Re-authenticate and restore
-      reauthBtn.addEventListener('click', async () => {
-        reauthStatus.textContent = 'Processing...';
-        const password = document.getElementById('password').value;
-        const otp = document.getElementById('otp').value;
-        if (!password || !otp) {
-          showError(reauthStatus, 'Enter password and OTP');
-          return;
-        }
-        try {
-          const res = await fetch('/api/deactivation/restore', {
-            method: 'POST',
-            credentials: 'include',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ token, password, otp })
-          });
-          if (!res.ok) {
-            const txt = await res.text();
-            showError(reauthStatus, 'Restore failed: ' + (txt || res.status));
-            return;
-          }
-          showOk(reauthStatus, 'Account restored. Redirecting...');
-          setTimeout(() => window.location.href = '/dashboard.html', 900);
-        } catch (err) {
-          console.error('restore error', err);
-          showError(reauthStatus, 'Network error during restore');
-        }
-      });
-
-      // Revoke all sessions
-      revokeBtn.addEventListener('click', async () => {
-        if (!confirm('Revoke all other sessions now? This will sign out other devices.')) return;
-        revokeBtn.disabled = true;
-        try {
-          const r = await fetch('/api/deactivation/revoke', {
-            method: 'POST',
-            credentials: 'include',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ token, all: true })
-          });
-          if (!r.ok) {
-            showError(reauthStatus, 'Unable to revoke sessions');
-            revokeBtn.disabled = false;
-            return;
-          }
-          showOk(reauthStatus, 'All sessions revoked');
-          validateToken();
-        } catch (err) {
-          console.error(err);
-          showError(reauthStatus, 'Network error revoking all sessions');
-          revokeBtn.disabled = false;
-        }
-      });
-
-      // PIN reset
-      resetPinBtn.addEventListener('click', async () => {
-        resetPinBtn.disabled = true;
-        pinStatus.textContent = 'Requesting PIN reset...';
-        try {
-          const r = await fetch('/api/account/reset-pin', {
-            method: 'POST',
-            credentials: 'include',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ token })
-          });
-          if (!r.ok) {
-            const txt = await r.text();
-            showError(pinStatus, 'PIN reset failed: ' + (txt || r.status));
-            resetPinBtn.disabled = false;
-            return;
-          }
-          showOk(pinStatus, 'PIN reset initiated. Follow instructions sent to your email or phone.');
-        } catch (err) {
-          console.error(err);
-          showError(pinStatus, 'Network error requesting PIN reset');
-          resetPinBtn.disabled = false;
-        }
-      });
-
-      // Contact support
-      contactBtn.addEventListener('click', () => {
-        // fallback: open mailto or support page; replace with your support flow
-        window.location.href = '/support.html';
-      });
-
-      // Permanent deactivation (dangerous)
-      permaBtn.addEventListener('click', async () => {
-        const confirmTxt = document.getElementById('confirm-deactivate').value.trim();
-        if (confirmTxt !== 'DEACTIVATE') {
-          showError(deactStatus, 'Type DEACTIVATE to confirm permanent deactivation');
-          return;
-        }
-        if (!confirm('This will permanently deactivate your account. Continue?')) return;
-        permaBtn.disabled = true;
-        try {
-          const r = await fetch('/api/account/deactivate', {
-            method: 'POST',
-            credentials: 'include',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ token, reason: 'user_requested_from_deactivation_flow' })
-          });
-          if (!r.ok) {
-            const txt = await r.text();
-            showError(deactStatus, 'Deactivation failed: ' + (txt || r.status));
-            permaBtn.disabled = false;
-            return;
-          }
-          showOk(deactStatus, 'Account permanently deactivated. Redirecting...');
-          setTimeout(() => window.location.href = '/goodbye.html', 900);
-        } catch (err) {
-          console.error(err);
-          showError(deactStatus, 'Network error during deactivation');
-          permaBtn.disabled = false;
-        }
-      });
-
-      // initial token validate
-      validateToken();
-    })();
+    function openSupportPage() {
+      // link to support/help center (replace with real path)
+      window.location.href = '/support.html';
+    }
   </script>
 </body>
 </html>
