@@ -1194,5 +1194,68 @@ document.addEventListener('DOMContentLoaded', () => {
   window.updateCardOverlay = syncOverlay;
 });
 </script>
+<script>
+  // testing only — do not commit real tokens to source
+  const accountId = 123;
+  const token = 'REPLACE_WITH_TEST_TOKEN';
+
+  async function debugTransactions() {
+    try {
+      const url = `/api/accounts/${accountId}/transactions?limit=50&sort=desc&_=${Date.now()}`;
+      const res = await fetch(url, {
+        headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' },
+        cache: 'no-store'
+      });
+
+      console.log('DEBUG transactions API status', res.status, 'url', url);
+
+      if (!res.ok) {
+        const errText = await res.text();
+        console.error('DEBUG non-OK response', errText);
+        const errEl = document.createElement('div');
+        errEl.textContent = 'DEBUG API error: ' + res.status + ' - ' + errText;
+        errEl.style.color = 'red';
+        document.body.prepend(errEl);
+        return;
+      }
+
+      const data = await res.json();
+      console.log('DEBUG transactions payload', data);
+
+      const pre = document.createElement('pre');
+      pre.style.whiteSpace = 'pre-wrap';
+      pre.style.maxHeight = '300px';
+      pre.style.overflow = 'auto';
+      pre.style.background = '#f6f8fa';
+      pre.style.padding = '12px';
+      pre.style.border = '1px solid #e1e4e8';
+      pre.textContent = JSON.stringify(data, null, 2);
+      document.body.prepend(pre);
+
+      // quick visible list if transactions array exists
+      if (Array.isArray(data.transactions)) {
+        const list = document.createElement('div');
+        list.style.margin = '12px';
+        data.transactions.slice(0, 20).forEach(t => {
+          const row = document.createElement('div');
+          row.style.padding = '8px';
+          row.style.borderBottom = '1px solid #eee';
+          row.textContent = `${t.id || t.transactionId || ''}  ${t.type || ''}  ${t.amount || ''}  ${t.status || ''}  ${t.created_at || t.createdAt || ''}`;
+          list.appendChild(row);
+        });
+        document.body.prepend(list);
+      }
+    } catch (err) {
+      console.error('DEBUG fetch error', err);
+      const errEl = document.createElement('div');
+      errEl.textContent = 'DEBUG fetch error: ' + err.message;
+      errEl.style.color = 'red';
+      document.body.prepend(errEl);
+    }
+  }
+
+  window.addEventListener('load', debugTransactions);
+</script>
+
 </body>
 </html>
