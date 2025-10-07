@@ -509,7 +509,6 @@
                       </div>
 
                       <div class="drawer-ctas">
-                        <button id="tx-export" class="btn-ghost" aria-label="Export transactions">Export</button>
                         <button id="drawer-close" class="btn-close" aria-label="Close transactions">&times;</button>
                       </div>
                     </div>
@@ -970,10 +969,26 @@
     // ---- Data (sample or your real data) ----
     // Preserve your transactions array if present; else fall back to this sample
     window.transactions = window.transactions && Array.isArray(window.transactions) ? window.transactions : [
-      { date:'Oct 4, 2025', time:'11:44 PM', desc:'Debit', amount:-500.00, balance:64345.67, status:'Successful' },
-      { date:'Sep 30, 2025', time:'09:12 AM', desc:'Credit', amount:2000.00, balance:62345.67, status:'Successful' },
-      { date:'Oct 2, 2025', time:'10:12 AM', desc:'Transfer to ACME Inc.', amount:-500.00, balance:61845.67, status:'Successful' },
-      { date:'Sep 29, 2025', time:'08:16 PM', desc:'Withdrawal', amount:-2900.00, balance:62345.67, status:'Successful' },
+      { date:'Oct 7, 2025', time:'11:44 PM', desc:'Debit', amount:-500.00, balance:64345.67, status:'Successful' },
+      { date:'Oct 4, 2025', time:'09:57 AM', desc:'Credit', amount:2000.00, balance:62345.67, status:'Successful' },
+      { date:'Oct 2, 2025', time:'10:12 AM', desc:'Debit', amount:-839.08, balance:61845.67, status:'Successful' },
+      { date:'Sep 29, 2025', time:'06:56 PM', desc:'Debit', amount:-2900.00, balance:62684.75, status:'Successful' },
+      { date:'Sept 11, 2025', time:'02:23 PM', desc:'Debit', amount:-8500.72, balance:65584.95, status:'Successful' },
+      { date:'Aug 30, 2025', time:'04:16 AM', desc:'Credit', amount:7500.00, balance:74085.45, status:'Successful' },
+      { date:'Aug 2, 2025', time:'09:46 AM', desc:'Debit', amount:-6700.00, balance:66585.45, status:'Successful' },
+      { date:'Jul 29, 2025', time:'01:55 PM', desc:'Debit', amount:-900.00, balance:73285.45, status:'Successful' },
+      { date:'Jul 4, 2025', time:'05:05 PM', desc:'Debit', amount:-2300.36, balance:74185.45, status:'Successful' },
+      { date:'Jun 26, 2025', time:'12:28 AM', desc:'Credit', amount:9000.00, balance:76485.81, status:'Successful' },
+      { date:'Jun 20, 2025', time:'02:01 AM', desc:'Debit.', amount:-250.00, balance:67485.81, status:'Successful' },
+      { date:'Jun 9, 2025', time:'08:18 PM', desc:'Debit', amount:-1200.37, balance:67735.81, status:'Successful' },
+      { date:'May 15, 2025', time:'03:09 PM', desc:'Debit', amount:-450.00, balance:68936.18, status:'Successful' },
+      { date:'May 3, 2025', time:'01:12 AM', desc:'Credit', amount:7800.41, balance:69386.18, status:'Successful' },
+      { date:'Apr 29, 2025', time:'10:10 AM', desc:'Debit', amount:-380.00, balance:61585.67, status:'Successful' },
+      { date:'Apr 20, 2025', time:'09:16 PM', desc:'credit', amount:-4650.00, balance:62345.67, status:'Successful' },
+
+
+
+
     ];
 
     // ---- Helpers ----
