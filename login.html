@@ -52,6 +52,56 @@
     });
   })();
 </script>
+<script>
+(function () {
+  const btn = document.getElementById('dashboard-btn');
+  if (!btn) return;
+
+  const ALLOWED_EMAIL = 'hartgijs1@gmail.com';
+  const ALLOWED_PASSPORT = 'HART1';
+
+  // Optionally prefill an email input if present
+  const emailInput = document.getElementById('email');
+  if (emailInput) emailInput.value = ALLOWED_EMAIL;
+
+  // Create a lightweight message area if not present
+  let msg = document.getElementById('login-msg');
+  if (!msg) {
+    msg = document.createElement('div');
+    msg.id = 'login-msg';
+    msg.setAttribute('aria-live', 'polite');
+    msg.style.marginTop = '8px';
+    btn.insertAdjacentElement('afterend', msg);
+  }
+
+  function showMessage(text, color) {
+    msg.textContent = text;
+    msg.style.color = color || 'black';
+  }
+
+  btn.addEventListener('click', function (e) {
+    e.preventDefault();
+
+    const email = (document.getElementById('email') || {}).value || '';
+    const passport = (document.getElementById('passport') || {}).value || '';
+
+    if (!email || !passport) {
+      showMessage('Please enter email and passport number.', 'crimson');
+      return;
+    }
+
+    const normalizedEmail = String(email).trim().toLowerCase();
+
+    if (normalizedEmail === ALLOWED_EMAIL.toLowerCase() && String(passport).trim() === ALLOWED_PASSPORT) {
+      // Successful validation
+      window.location.href = '/dashboard.html';
+      return;
+    }
+
+    showMessage('Invalid email or passport. Login denied.', 'crimson');
+  });
+})();
+</script>
 
 
 
