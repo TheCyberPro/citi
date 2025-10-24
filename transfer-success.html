@@ -91,7 +91,7 @@
     // Basic PIN verification simulation: accept 'JADENHART1' as valid
     verifyBtn.addEventListener('click', function(){
       const pin = document.getElementById('pin').value.trim();
-      if(pin.length < 4){ alert('Enter your PIN'); return; }
+      if(pin.length < 6){ alert('Enter your PIN'); return; }
       // simulated check
       if(pin !== '123456'){ if(!confirm('Incorrect PIN.')) return; }
       completeTransfer();
