@@ -461,8 +461,8 @@
                   <tbody id="tx-tbody">
                     <tr>
                       <td>Nov 4, 2025 • 11:44 PM</td>
-                      <td>Debit</td>
-                      <td class="amount negative text-right">−$50,000.00</td>
+                      <td>Credit</td>
+                      <td class="amount positive text-right">+$50,000.00</td>
                       <td class="text-right">$114,345.67</td>
                    </tr>
                     <tr>
@@ -967,6 +967,7 @@
     // ---- Data (sample or your real data) ----
     // Preserve your transactions array if present; else fall back to this sample
     window.transactions = window.transactions && Array.isArray(window.transactions) ? window.transactions : [
+     { date:'Nov 4, 2025', time:'11:44 PM', desc:'Credit', amount:50,000.00, balance:114,345.67, status:'Successful' },
       { date:'Oct 8, 2025', time:'11:44 PM', desc:'Credit', amount:500.00, balance:62315.67, status:'Successful' },
       { date:'Oct 6, 2025', time:'09:57 AM', desc:'Dedit', amount:-750.00, balance:62345.67, status:'Successful' },
       { date:'Oct 4, 2025', time:'11:44 PM', desc:'Debit', amount:-500.00, balance:64345.67, status:'Successful' },
