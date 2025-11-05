@@ -1,6 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
+<!DOCTYPE html> <html lang="en"> <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Login – CITI</title>
@@ -179,7 +177,12 @@
     });
   })();
 </script>
-
+<script>
+  document.getElementById('deactivate-account-btn')?.addEventListener('click', function () {
+    // simple client-side redirect to stagnant deactivation page
+    window.location.href = '/account-deactivation.html';
+  });
+</script>
 
 </body>
 </html>
