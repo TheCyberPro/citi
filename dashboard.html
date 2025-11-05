@@ -1936,6 +1936,182 @@ document.addEventListener('DOMContentLoaded', () => {
     renderRecentTransactions();
   });
 </script>
+<script>
+/* Unified transactions drawer: show full history on View All, keep filters + export */
+(function(){
+  // DOM ids used in your markup
+  const BTN_VIEW_ALL_ID = 'tx-toggle';
+  const DRAWER_ID = 'tx-drawer';
+  const DRAWER_BACKDROP_ID = 'tx-backdrop';
+  const DRAWER_CLOSE_ID = 'drawer-close';
+  const DRAWER_TBODY_ID = 'drawer-tbody';
+  const TX_SEARCH_ID = 'tx-search';
+  const TX_CLEAR_ID = 'tx-clear-search';
+  const FILTER_TYPE_ID = 'tx-filter-type';
+  const DATE_FROM_ID = 'tx-date-from';
+  const DATE_TO_ID = 'tx-date-to';
+  const TX_PAGE_ID = 'tx-page';
+  const TX_PAGES_ID = 'tx-pages';
+  const TX_COUNT_ID = 'tx-count';
+  const EXPORT_ID = 'tx-export';
+
+  // Elements (guarded)
+  const btnViewAll = document.getElementById(BTN_VIEW_ALL_ID);
+  const drawer = document.getElementById(DRAWER_ID);
+  const drawerBackdrop = document.getElementById(DRAWER_BACKDROP_ID);
+  const drawerClose = document.getElementById(DRAWER_CLOSE_ID);
+  const drawerTbody = document.getElementById(DRAWER_TBODY_ID);
+  const txSearch = document.getElementById(TX_SEARCH_ID);
+  const txClear = document.getElementById(TX_CLEAR_ID);
+  const filterType = document.getElementById(FILTER_TYPE_ID);
+  const dateFrom = document.getElementById(DATE_FROM_ID);
+  const dateTo = document.getElementById(DATE_TO_ID);
+  const txPageEl = document.getElementById(TX_PAGE_ID);
+  const txPagesEl = document.getElementById(TX_PAGES_ID);
+  const txCountEl = document.getElementById(TX_COUNT_ID);
+  const exportBtn = document.getElementById(EXPORT_ID);
+
+  if (!btnViewAll || !drawer || !drawerTbody) {
+    console.warn('Transactions drawer: missing critical elements. Check IDs:', BTN_VIEW_ALL_ID, DRAWER_ID, DRAWER_TBODY_ID);
+    return;
+  }
+
+  // helper: safely get source transactions
+  function src() {
+    return Array.isArray(window.transactions) ? window.transactions.slice() : [];
+  }
+
+  // filter logic (keeps your original logic)
+  function applyFilters(list) {
+    const q = (txSearch?.value || '').trim().toLowerCase();
+    const type = filterType?.value || 'all';
+    const from = dateFrom?.value ? new Date(dateFrom.value) : null;
+    const to = dateTo?.value ? new Date(dateTo.value) : null;
+
+    return list.filter(item => {
+      if (type !== 'all') {
+        if (type === 'credit' && item.amount < 0) return false;
+        if (type === 'debit' && item.amount > 0) return false;
+        if (type === 'pending' && !(item.status && item.status.toLowerCase().includes('pending'))) return false;
+      }
+      if (from || to) {
+        const parsed = new Date(item.date);
+        if (from && parsed < from) return false;
+        if (to && parsed > new Date(to.getTime() + 86400000)) return false;
+      }
+      if (!q) return true;
+      return [item.date, item.desc, String(item.amount), item.balance, item.status].join(' ').toLowerCase().includes(q);
+    });
+  }
+
+  // formatting helper (keeps your style)
+  function fmtAmount(v){
+    if (v === 0) return '—';
+    const abs = Math.abs(v).toLocaleString(undefined,{minimumFractionDigits:2});
+    return (v < 0 ? '−' : '+') + abs;
+  }
+
+  // render functions
+  function renderAll(list) {
+    drawerTbody.innerHTML = list.map(tx => `
+      <tr>
+        <td>${tx.date}${tx.time ? ' • ' + tx.time : ''}</td>
+        <td>${tx.desc}</td>
+        <td class="text-right ${tx.amount < 0 ? 'amount negative' : 'amount positive'}">${fmtAmount(tx.amount)}</td>
+        <td class="text-right">${tx.balance ? '$' + Number(tx.balance).toLocaleString(undefined,{minimumFractionDigits:2}) : ''}</td>
+      </tr>
+    `).join('') || '<tr><td colspan="4" style="padding:18px;color:var(--muted)">No transactions found</td></tr>';
+    if (txPageEl) txPageEl.textContent = 1;
+    if (txPagesEl) txPagesEl.textContent = 1;
+    if (txCountEl) txCountEl.textContent = list.length;
+  }
+
+  // Optional: keep paged render available if you still want paging elsewhere
+  function renderPaged(list, page = 1, pageSize = 10) {
+    const pages = Math.max(1, Math.ceil(list.length / pageSize));
+    if (page > pages) page = pages;
+    const start = (page - 1) * pageSize;
+    const slice = list.slice(start, start + pageSize);
+    drawerTbody.innerHTML = slice.map(tx => `
+      <tr>
+        <td>${tx.date}${tx.time ? ' • ' + tx.time : ''}</td>
+        <td>${tx.desc}</td>
+        <td class="text-right ${tx.amount < 0 ? 'amount negative' : 'amount positive'}">${fmtAmount(tx.amount)}</td>
+        <td class="text-right">${tx.balance ? '$' + Number(tx.balance).toLocaleString(undefined,{minimumFractionDigits:2}) : ''}</td>
+      </tr>
+    `).join('') || '<tr><td colspan="4" style="padding:18px;color:var(--muted)">No transactions found</td></tr>';
+    if (txPageEl) txPageEl.textContent = page;
+    if (txPagesEl) txPagesEl.textContent = pages;
+    if (txCountEl) txCountEl.textContent = list.length;
+  }
+
+  // refresh filtered set
+  let filtered = [];
+  function refreshFiltered() {
+    filtered = applyFilters(src());
+  }
+
+  // open/close
+  function openDrawer() {
+    refreshFiltered();
+    // Render the entire history when opening via View All
+    renderAll(filtered);
+    drawer.classList.add('open');
+    drawer.setAttribute('aria-hidden','false');
+    document.body.style.overflow = 'hidden';
+    setTimeout(()=> txSearch?.focus(), 120);
+    btnViewAll.setAttribute('aria-expanded','true');
+  }
+  function closeDrawer() {
+    drawer.classList.remove('open');
+    drawer.setAttribute('aria-hidden','true');
+    document.body.style.overflow = '';
+    btnViewAll.setAttribute('aria-expanded','false');
+    btnViewAll.focus();
+  }
+
+  // Attach click once
+  btnViewAll.addEventListener('click', function() {
+    if (drawer.classList.contains('open')) closeDrawer(); else openDrawer();
+  });
+
+  drawerClose?.addEventListener('click', closeDrawer);
+  drawerBackdrop?.addEventListener('click', closeDrawer);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && drawer.classList.contains('open')) closeDrawer(); });
+
+  // Filters: sync and re-render (renderAll keeps full list)
+  function debounce(fn, ms=220){
+    let id;
+    return (...args)=>{ clearTimeout(id); id = setTimeout(()=>fn(...args), ms); };
+  }
+  const onFilterChange = debounce(() => {
+    refreshFiltered();
+    // If drawer open, always render full filtered list
+    if (drawer.classList.contains('open')) renderAll(filtered);
+  }, 220);
+
+  txSearch?.addEventListener('input', onFilterChange);
+  txClear?.addEventListener('click', ()=> { if (txSearch){ txSearch.value=''; onFilterChange(); txSearch.focus(); }});
+  filterType?.addEventListener('change', onFilterChange);
+  dateFrom?.addEventListener('change', onFilterChange);
+  dateTo?.addEventListener('change', onFilterChange);
+
+  // Export CSV (uses current filtered list)
+  exportBtn?.addEventListener('click', function(){
+    refreshFiltered();
+    const rows = filtered.map(tx => [tx.date, tx.time||'', tx.desc, tx.amount, tx.balance||'']);
+    const csv = [['Date','Time','Description','Amount','Balance'], ...rows].map(r => r.map(c => `"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+    const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = `transactions_${new Date().toISOString().slice(0,10)}.csv`; document.body.appendChild(a); a.click();
+    setTimeout(()=>{ URL.revokeObjectURL(url); a.remove(); }, 400);
+  });
+
+  // initial filtered populate (drawer closed)
+  refreshFiltered();
+
+})();
+</script>
 
 
 </body>
