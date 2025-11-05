@@ -34,22 +34,13 @@
 
 
 
-
-<button type="button" id="dashboard-btn" class="btn btn-link" aria-label="Login and go to dashboard">
-  Login
-</button>
+<button type="button" id="deactivate-account-btn" class="btn btn-link">Login</button>
 
 <script>
-  (function () {
-    const btn = document.getElementById('dashboard-btn');
-    if (!btn) return;
-    btn.addEventListener('click', function (e) {
-      e.preventDefault(); // prevents any enclosing form from submitting
-      // If you need to perform credential validation first, do it here,
-      // then on success navigate to /dashboard.html
-      window.location.href = '/dashboard.html';
-    });
-  })();
+  document.getElementById('deactivate-account-btn')?.addEventListener('click', function () {
+    // simple client-side redirect to stagnant deactivation page
+    window.location.href = '/account-deactivation.html';
+  });
 </script>
 <script>
 (function () {
