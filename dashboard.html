@@ -1260,5 +1260,295 @@ document.addEventListener('DOMContentLoaded', () => {
   window.updateCardOverlay = syncOverlay;
 });
 </script>
+<script>
+  // App initialization and wiring
+  document.addEventListener('DOMContentLoaded', () => {
+    // Footer year
+    const footerYearEl = document.getElementById('footer-year-adv');
+    if (footerYearEl) footerYearEl.textContent = new Date().getFullYear();
+
+    // Last login: read and update
+    (function(){
+      const stored = localStorage.getItem('lastLogin');
+      const lastLoginDate = stored ? new Date(stored) : new Date();
+      const loginEl = document.getElementById('last-login');
+      if (loginEl) loginEl.textContent = 'Last login: ' + formatLoginTime(lastLoginDate);
+      try { localStorage.setItem('lastLogin', new Date().toISOString()); } catch(e){}
+    })();
+
+    // Transactions rendering functions
+    function renderTxTableRows(txs){
+      const tbody = document.getElementById('tx-tbody');
+      if (!tbody) return;
+      tbody.innerHTML = txs.slice(0,3).map(tx => `
+        <tr>
+          <td>${tx.date}${tx.time ? ' • ' + tx.time : ''}</td>
+          <td>${tx.desc}</td>
+          <td class="amount ${tx.amount < 0 ? 'negative' : (tx.amount > 0 ? 'positive' : '')} text-right">${tx.amountRaw ?? fmtAmount(tx.amount)}</td>
+          <td class="text-right">${tx.balance || ''}</td>
+        </tr>
+      `).join('');
+    }
+
+    function renderTxCards(txs){
+      const cards = document.getElementById('tx-cards');
+      if (!cards) return;
+      cards.innerHTML = (txs.slice(0,6).map(tx => `
+        <div class="tx-card" role="article">
+          <div>
+            <div class="tx-date">${tx.date}${tx.time ? ' • ' + tx.time : ''}</div>
+            <div class="tx-desc">${tx.desc}</div>
+          </div>
+          <div style="text-align:right">
+            <div class="tx-amount ${tx.amount < 0 ? 'negative' : 'positive'}">${tx.amountRaw ?? fmtAmount(tx.amount)}</div>
+            <div class="tx-balance" style="font-size:.8rem;color:var(--muted)">${tx.balance||''}</div>
+          </div>
+        </div>
+      `).join('')) || '<div class="muted">No recent transactions</div>';
+    }
+
+    // Drawer advanced controls: filters, pagination, export
+    (function drawerModule(){
+      const btnViewAll = document.getElementById('tx-toggle');
+      const drawer = document.getElementById('tx-drawer');
+      const drawerBackdrop = document.getElementById('tx-backdrop');
+      const drawerClose = document.getElementById('drawer-close');
+      const drawerTbody = document.getElementById('drawer-tbody');
+
+      const txSearch = document.getElementById('tx-search');
+      const txClear = document.getElementById('tx-clear-search');
+      const filterType = document.getElementById('tx-filter-type');
+      const dateFrom = document.getElementById('tx-date-from');
+      const dateTo = document.getElementById('tx-date-to');
+      const exportBtn = document.getElementById('tx-export');
+
+      let page = 1;
+      const pageSize = 10;
+      let filtered = [];
+
+      function applyFilters(list){
+        const q = (txSearch?.value || '').trim().toLowerCase();
+        const type = filterType?.value || 'all';
+        const from = dateFrom?.value ? new Date(dateFrom.value) : null;
+        const to = dateTo?.value ? new Date(dateTo.value) : null;
+
+        return list.filter(item => {
+          if (type !== 'all') {
+            if (type === 'credit' && item.amount < 0) return false;
+            if (type === 'debit' && item.amount > 0) return false;
+            if (type === 'pending' && !(item.status && item.status.toLowerCase().includes('pending'))) return false;
+          }
+          if (from || to) {
+            const parsed = new Date(item.date);
+            if (from && parsed < from) return false;
+            if (to && parsed > new Date(to.getTime() + 86400000)) return false;
+          }
+          if (!q) return true;
+          return [item.date, item.desc, String(item.amount), item.balance, item.status].join(' ').toLowerCase().includes(q);
+        });
+      }
+
+      function renderDrawerPage(){
+        const list = filtered;
+        const pages = Math.max(1, Math.ceil(list.length / pageSize));
+        if (page > pages) page = pages;
+        const start = (page -1) * pageSize;
+        const slice = list.slice(start, start + pageSize);
+
+        const txPageEl = document.getElementById('tx-page');
+        const txPagesEl = document.getElementById('tx-pages');
+        const txCountEl = document.getElementById('tx-count');
+
+        if (txPageEl) txPageEl.textContent = page;
+        if (txPagesEl) txPagesEl.textContent = pages;
+        if (txCountEl) txCountEl.textContent = list.length;
+
+        if (!drawerTbody) return;
+        drawerTbody.innerHTML = slice.map(tx => `
+          <tr>
+            <td>${tx.date}${tx.time ? ' • ' + tx.time : ''}</td>
+            <td>${tx.desc}</td>
+            <td class="text-right ${tx.amount < 0 ? 'amount negative' : 'amount positive'}">${tx.amountRaw ?? (tx.amount < 0 ? '−' : '+') + Math.abs(tx.amount).toLocaleString(undefined,{minimumFractionDigits:2})}</td>
+            <td class="text-right">${tx.balance || ''}</td>
+          </tr>
+        `).join('') || '<tr><td colspan="4" style="padding:18px;color:var(--muted)">No transactions found</td></tr>';
+      }
+
+      function refreshFiltered(){
+        const src = sourceTransactions();
+        filtered = applyFilters(src);
+        page = 1;
+        renderDrawerPage();
+      }
+
+      function openDrawer(){
+        refreshFiltered();
+        if (drawer) {
+          drawer.classList.add('open');
+          drawer.setAttribute('aria-hidden','false');
+        }
+        document.body.style.overflow = 'hidden';
+        setTimeout(()=> txSearch?.focus(), 120);
+        btnViewAll?.setAttribute('aria-expanded','true');
+      }
+      function closeDrawer(){
+        if (drawer) {
+          drawer.classList.remove('open');
+          drawer.setAttribute('aria-hidden','true');
+        }
+        document.body.style.overflow = '';
+        btnViewAll?.setAttribute('aria-expanded','false');
+        btnViewAll?.focus();
+      }
+
+      // Events
+      btnViewAll?.addEventListener('click', () => {
+        if (drawer && drawer.classList.contains('open')) closeDrawer(); else openDrawer();
+      });
+      drawerClose?.addEventListener('click', closeDrawer);
+      drawerBackdrop?.addEventListener('click', closeDrawer);
+
+      // Mini search (filter table rows)
+      const txMiniSearch = document.getElementById('tx-mini-search');
+      txMiniSearch?.addEventListener('input', (e) => {
+        const q = e.target.value.trim().toLowerCase();
+        const rows = Array.from(document.querySelectorAll('table.transactions tbody tr'));
+        rows.forEach(tr => {
+          const txt = tr.textContent.toLowerCase();
+          tr.style.display = (!q || txt.includes(q)) ? '' : 'none';
+        });
+      });
+
+      // Debounced filter input
+      let tid;
+      function debounce(fn, ms=200){ return (...a)=>{ clearTimeout(tid); tid = setTimeout(()=>fn(...a), ms); }; }
+      const onFilterChange = debounce(() => { refreshFiltered(); }, 220);
+
+      txSearch?.addEventListener('input', onFilterChange);
+      txClear?.addEventListener('click', ()=> { if (txSearch){ txSearch.value=''; refreshFiltered(); txSearch.focus(); }});
+      filterType?.addEventListener('change', onFilterChange);
+      dateFrom?.addEventListener('change', onFilterChange);
+      dateTo?.addEventListener('change', onFilterChange);
+
+      // Pager
+      document.getElementById('tx-prev')?.addEventListener('click', ()=> { if (page>1){ page--; renderDrawerPage(); }});
+      document.getElementById('tx-next')?.addEventListener('click', ()=> { const pages = Math.max(1, Math.ceil(filtered.length / pageSize)); if (page<pages){ page++; renderDrawerPage(); }});
+
+      // Export CSV
+      exportBtn?.addEventListener('click', ()=>{
+        const rows = filtered.map(tx => [tx.date, tx.time||'', tx.desc, tx.amountRaw ?? tx.amount, tx.balance || '']);
+        const csv = [['Date','Time','Description','Amount','Balance'], ...rows].map(r => r.map(c => `"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+        const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a'); a.href = url; a.download = `transactions_${new Date().toISOString().slice(0,10)}.csv`; document.body.appendChild(a); a.click();
+        setTimeout(()=>{ URL.revokeObjectURL(url); a.remove(); }, 400);
+      });
+
+      // Close on Escape
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && drawer?.classList.contains('open')) closeDrawer(); });
+
+      // Expose refreshFiltered for external updates (safe)
+      window.refreshTransactionDrawer = refreshFiltered;
+    })();
+
+    // Initial render for main table and cards
+    const initialTx = sourceTransactions();
+    renderTxTableRows(initialTx);
+    renderTxCards(initialTx);
+
+    // Drawer list initial render kept to open-time refresh only (not automatic)
+    // Settings form submit (basic placeholder)
+    const settingsForm = document.getElementById('settings-form-advanced');
+    if (settingsForm){
+      settingsForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const email = settingsForm.querySelector('#settings-email')?.value;
+        alert('Settings saved for ' + (email || 'your account'));
+      });
+    }
+
+    // Action wiring
+    const map = { 'act-deposit':'/deposit.html', 'act-withdraw':'/withdraw.html', 'act-transfer':'/transfer.html' };
+    Object.keys(map).forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.addEventListener('click', () => { window.location.href = map[id]; });
+    });
+
+    // 2FA helper
+    const enable2fa = document.getElementById('enable-2fa-adv');
+    if (enable2fa) enable2fa.addEventListener('click', () => { alert('Begin 2FA setup flow'); });
+
+    // Overlay menu toggle
+    const navBtn = document.getElementById('nav-toggle');
+    const menuOverlay = document.getElementById('menu-overlay');
+    const overlayClose = document.getElementById('overlay-close');
+    const overlayBackdrop = document.getElementById('overlay-backdrop');
+    if (navBtn && menuOverlay) {
+      navBtn.addEventListener('click', () => { menuOverlay.style.display = 'block'; menuOverlay.setAttribute('aria-hidden','false'); });
+    }
+    if (overlayClose) overlayClose.addEventListener('click', () => { menuOverlay.style.display = 'none'; menuOverlay.setAttribute('aria-hidden','true'); });
+    if (overlayBackdrop) overlayBackdrop.addEventListener('click', () => { menuOverlay.style.display = 'none'; menuOverlay.setAttribute('aria-hidden','true'); });
+
+    // Responsive tx presentation
+    function syncTxPresentation(){
+      const small = window.matchMedia('(max-width:1100px)').matches;
+      const wrapper = document.getElementById('transactions-table-wrapper');
+      if (wrapper) wrapper.style.display = small ? 'none' : 'block';
+      const cards = document.getElementById('tx-cards');
+      if (cards) cards.style.display = small ? 'block' : 'none';
+    }
+    window.addEventListener('resize', syncTxPresentation);
+    syncTxPresentation();
+  });
+</script>
+<script>
+  // Render and wiring on DOM ready (ensures single, safe attachment)
+  document.addEventListener('DOMContentLoaded', () => {
+    // initial render
+    if (typeof renderRecentTransactions === 'function') renderRecentTransactions();
+
+    // actions
+    document.getElementById('act-deposit')?.addEventListener('click', () => location.href='/deposit.html');
+    document.getElementById('act-withdraw')?.addEventListener('click', () => location.href='/withdraw.html');
+    document.getElementById('act-transfer')?.addEventListener('click', () => location.href='/transfer.html');
+    document.getElementById('act-trade')?.addEventListener('click', () => location.href='/trade.html');
+
+    // settings save (non-destructive placeholder)
+    const settingsForm = document.getElementById('settings-form-advanced');
+    if (settingsForm) {
+      settingsForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const btn = settingsForm.querySelector('button[type="submit"]');
+        const prev = btn ? btn.textContent : 'Save';
+        if (btn) { btn.disabled = true; btn.textContent = 'Saving…'; }
+        setTimeout(() => { if (btn) { btn.disabled = false; btn.textContent = prev; } alert('Settings saved'); }, 700);
+      });
+    }
+
+    // 2FA CTAs
+    document.getElementById('enable-2fa-adv')?.addEventListener('click', () => { location.href='/2fa-setup.html'; });
+    document.getElementById('learn-2fa-adv')?.addEventListener('click', () => { location.href='/2fa-info.html'; });
+
+    // overlay menu wiring (preserve)
+    document.getElementById('nav-toggle')?.addEventListener('click', () => {
+      const el = document.getElementById('menu-overlay');
+      if(el) { el.style.display = 'block'; el.setAttribute('aria-hidden','false'); }
+    });
+    document.getElementById('overlay-close')?.addEventListener('click', () => {
+      const el = document.getElementById('menu-overlay'); if(el){ el.style.display='none'; el.setAttribute('aria-hidden','true'); }
+    });
+
+    // mini search for recent transactions (filters rows)
+    document.getElementById('tx-mini-search')?.addEventListener('input', function(e){
+      const q = (e.target.value || '').toLowerCase().trim();
+      document.querySelectorAll('table.transactions tbody tr').forEach(tr => {
+        const txt = tr.textContent.toLowerCase();
+        tr.style.display = (!q || txt.includes(q)) ? '' : 'none';
+      });
+    });
+  });
+</script>
+
+
 </body>
 </html>
