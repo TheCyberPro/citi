@@ -1548,6 +1548,147 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 </script>
+<script>
+  (function(){
+    let page = 1;
+    let pageSize = 10; // default for normal pagination but we'll override on open
+    let filtered = [];
+
+    const btnViewAll = document.getElementById('tx-toggle');
+    const drawer = document.getElementById('tx-drawer');
+    const drawerBackdrop = document.getElementById('tx-backdrop');
+    const drawerClose = document.getElementById('drawer-close');
+    const drawerTbody = document.getElementById('drawer-tbody');
+
+    const txSearch = document.getElementById('tx-search');
+    const txClear = document.getElementById('tx-clear-search');
+    const filterType = document.getElementById('tx-filter-type');
+    const dateFrom = document.getElementById('tx-date-from');
+    const dateTo = document.getElementById('tx-date-to');
+    const exportBtn = document.getElementById('tx-export');
+
+    function applyFilters(list){
+      const q = (txSearch?.value || '').trim().toLowerCase();
+      const type = filterType?.value || 'all';
+      const from = dateFrom?.value ? new Date(dateFrom.value) : null;
+      const to = dateTo?.value ? new Date(dateTo.value) : null;
+
+      return list.filter(item => {
+        if (type !== 'all') {
+          if (type === 'credit' && item.amount < 0) return false;
+          if (type === 'debit' && item.amount > 0) return false;
+          if (type === 'pending' && !(item.status && item.status.toLowerCase().includes('pending'))) return false;
+        }
+        if (from || to) {
+          const parsed = new Date(item.date);
+          if (from && parsed < from) return false;
+          if (to && parsed > new Date(to.getTime() + 86400000)) return false;
+        }
+        if (!q) return true;
+        return [item.date, item.desc, String(item.amount), item.balance, item.status].join(' ').toLowerCase().includes(q);
+      });
+    }
+
+    function renderDrawerPage(){
+      const list = filtered || [];
+      const pages = Math.max(1, Math.ceil(list.length / pageSize));
+      if (page > pages) page = pages;
+      const start = (page - 1) * pageSize;
+      const slice = list.slice(start, start + pageSize);
+
+      const txPageEl = document.getElementById('tx-page');
+      const txPagesEl = document.getElementById('tx-pages');
+      const txCountEl = document.getElementById('tx-count');
+
+      if (txPageEl) txPageEl.textContent = page;
+      if (txPagesEl) txPagesEl.textContent = pages;
+      if (txCountEl) txCountEl.textContent = list.length;
+
+      if (!drawerTbody) return;
+      drawerTbody.innerHTML = slice.map(tx => `
+        <tr>
+          <td>${tx.date}${tx.time ? ' • ' + tx.time : ''}</td>
+          <td>${tx.desc}</td>
+          <td class="text-right ${tx.amount < 0 ? 'amount negative' : 'amount positive'}">${tx.amount < 0 ? '−' : '+'}${Math.abs(tx.amount).toLocaleString(undefined,{minimumFractionDigits:2})}</td>
+          <td class="text-right">${tx.balance ? '$' + Number(tx.balance).toLocaleString(undefined,{minimumFractionDigits:2}) : ''}</td>
+        </tr>
+      `).join('') || '<tr><td colspan="4" style="padding:18px;color:var(--muted)">No transactions found</td></tr>';
+    }
+
+    function refreshFiltered(){
+      const src = Array.isArray(window.transactions) ? window.transactions.slice() : sourceTransactions();
+      filtered = applyFilters(src);
+      page = 1;
+      renderDrawerPage();
+    }
+
+    function openDrawer(){
+      // ensure filters are applied first
+      refreshFiltered();
+
+      // override pageSize so we show the entire filtered list when opening
+      pageSize = Math.max(1, filtered.length);
+      page = 1;
+      renderDrawerPage();
+
+      if (drawer) {
+        drawer.classList.add('open');
+        drawer.setAttribute('aria-hidden','false');
+      }
+      document.body.style.overflow = 'hidden';
+      setTimeout(()=> txSearch?.focus(), 120);
+      btnViewAll?.setAttribute('aria-expanded','true');
+    }
+
+    function closeDrawer(){
+      if (drawer) {
+        drawer.classList.remove('open');
+        drawer.setAttribute('aria-hidden','true');
+      }
+      // restore default pageSize for next time (optional)
+      pageSize = 10;
+      document.body.style.overflow = '';
+      btnViewAll?.setAttribute('aria-expanded','false');
+      btnViewAll?.focus();
+    }
+
+    // Events
+    btnViewAll?.addEventListener('click', () => {
+      if (drawer && drawer.classList.contains('open')) closeDrawer(); else openDrawer();
+    });
+    drawerClose?.addEventListener('click', closeDrawer);
+    drawerBackdrop?.addEventListener('click', closeDrawer);
+
+    // Debounce helper
+    let tId;
+    function debounce(fn, ms=220){ return (...a)=>{ clearTimeout(tId); tId = setTimeout(()=>fn(...a), ms); }; }
+
+    txSearch?.addEventListener('input', debounce(()=> refreshFiltered()));
+    txClear?.addEventListener('click', ()=>{ if(txSearch){ txSearch.value=''; refreshFiltered(); txSearch.focus(); }});
+    filterType?.addEventListener('change', debounce(()=> refreshFiltered()));
+    dateFrom?.addEventListener('change', debounce(()=> refreshFiltered()));
+    dateTo?.addEventListener('change', debounce(()=> refreshFiltered()));
+
+    document.getElementById('tx-prev')?.addEventListener('click', ()=>{ if(page>1){ page--; renderDrawerPage(); }});
+    document.getElementById('tx-next')?.addEventListener('click', ()=>{ const pages = Math.max(1, Math.ceil((filtered||[]).length/pageSize)); if(page<pages){ page++; renderDrawerPage(); }});
+
+    // Export CSV
+    exportBtn?.addEventListener('click', ()=>{
+      const rows = (filtered || []).map(tx => [tx.date, tx.time||'', tx.desc, tx.amount, tx.balance||'']);
+      const csv = [['Date','Time','Description','Amount','Balance'], ...rows].map(r => r.map(c => `"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+      const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = `transactions_${new Date().toISOString().slice(0,10)}.csv`; document.body.appendChild(a); a.click();
+      setTimeout(()=>{ URL.revokeObjectURL(url); a.remove(); }, 400);
+    });
+
+    // Close on Escape
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && drawer?.classList.contains('open')) closeDrawer(); });
+
+    // expose for external use
+    window.refreshTxDrawer = refreshFiltered;
+  })();
+</script>
 
 
 </body>
