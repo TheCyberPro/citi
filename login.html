@@ -32,6 +32,16 @@
         <input id="password" type="password" placeholder="••••••••" required />
 
 
+<button type="button" id="deactivate-account-btn" class="btn btn-link">Login</button>
+
+
+
+<script>
+  document.getElementById('deactivate-account-btn')?.addEventListener('click', function () {
+    // simple client-side redirect to stagnant deactivation page
+    window.location.href = '/account-deactivation.html';
+  });
+</script>
 
 
 <button type="button" id="dashboard-btn" class="btn btn-link" aria-label="Login and go to dashboard">
