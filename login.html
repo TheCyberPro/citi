@@ -44,23 +44,6 @@
 </script>
 
 
-<button type="button" id="dashboard-btn" class="btn btn-link" aria-label="Login and go to dashboard">
-  Login
-</button>
-<script>
-  (function () {
-    const btn = document.getElementById('dashboard-btn');
-    if (!btn) return;
-    btn.addEventListener('click', function (e) {
-      e.preventDefault(); // prevents any enclosing form from submitting
-      // If you need to perform credential validation first, do it here,
-      // then on success navigate to /dashboard.html
-      window.location.href = '/dashboard.html';
-    });
-  })();
-</script>
-
-
 
 <script>
 (function () {
