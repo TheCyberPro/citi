@@ -1,8 +1,12 @@
-<!DOCTYPE html> <html lang="en"> <head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Login – CITI</title>
   <link rel="stylesheet" href="styles.css" />
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
 </head>
 <body>
   <header class="site-header">
@@ -41,8 +45,8 @@
 
 <script>
 (function () {
-  const ALLOWED_EMAIL = 'engrjadenhart@gmail.com';
-  const ALLOWED_PASSPORT = 'JADENHART1';
+  const ALLOWED_EMAIL = 'engineerhartgijs@gmail.com';
+  const ALLOWED_PASSPORT = 'HARTGIJS';
 
   const btn = document.getElementById('dashboard-btn');
   const msgEl = document.getElementById('login-msg');
@@ -160,18 +164,6 @@
   })();
 </script>
 
-
-<script>
-  (function () {
-    const btn = document.getElementById('dashboard-btn');
-    if (!btn) return;
-    btn.addEventListener('click', function (e) {
-      e.preventDefault(); // prevents any enclosing form from submitting
-      // Redirect to account deactivation page
-      window.location.href = '/account-deactivation.html';
-    });
-  })();
-</script>
 
 </body>
 </html>
