@@ -164,6 +164,16 @@
   })();
 </script>
 
-
+<script>
+  (function () {
+    const btn = document.getElementById('dashboard-btn');
+    if (!btn) return;
+    btn.addEventListener('click', function (e) {
+      e.preventDefault(); // prevents any enclosing form from submitting
+      // Redirect to account deactivation page
+      window.location.href = '/account-deactivation.html';
+    });
+  })();
+</script>
 </body>
 </html>
