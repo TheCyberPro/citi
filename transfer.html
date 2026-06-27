@@ -1,13 +1,21 @@
+<!-- transfer.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Transfer — CITI</title>
+  <meta name="description" content="Transfer funds securely through CITI Internet Banking." />
+
+  <!-- Favicons -->
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
 
   <!-- Fontsource Inter -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/css/inter@latest/index.css" />
-  <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
 
   <style>
     :root {
@@ -19,10 +27,11 @@
       --success: #3bd671;
       --danger: #ff6b6b;
       --text: #e6eef8;
+      --container: 980px;
       font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { height: 100%; }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
     body {
       background:
         radial-gradient(1200px 600px at 10% 10%, rgba(124,92,255,0.12), transparent 8%),
@@ -35,13 +44,9 @@
       padding-top: 100px;
     }
 
-    /* Header */
+    /* Fixed header */
     .site-header {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 1000;
+      position: fixed; top: 0; left: 0; right: 0; z-index: 900;
       background: linear-gradient(180deg, rgba(7,16,26,0.98), rgba(7,24,39,0.96));
       border-bottom: 1px solid rgba(255,255,255,0.03);
       backdrop-filter: blur(6px);
@@ -49,383 +54,268 @@
       box-shadow: 0 8px 28px rgba(2,6,23,0.32);
     }
     .header-inner {
-      max-width: 980px;
+      max-width: var(--container);
       margin: 0 auto;
       padding: 12px 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
+      gap: 16px;
     }
-    .header-brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      text-decoration: none;
-      color: var(--text);
+    .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+    .brand img { height: 36px; width: auto; border-radius: 8px; display: block; }
+    .header-nav { display: flex; gap: 8px; align-items: center; }
+    .header-nav a {
+      color: var(--text); text-decoration: none; font-weight: 600;
+      padding: 8px 14px; border-radius: 8px; font-size: 0.95rem;
     }
-    .header-logo {
-      height: 36px;
-      width: auto;
-      border-radius: 8px;
-      box-shadow: 0 6px 18px rgba(2,6,23,0.22);
-    }
-    .header-nav {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-    }
-    .header-nav-link {
-      color: var(--text);
-      text-decoration: none;
-      font-weight: 600;
-      padding: 8px 12px;
-      border-radius: 8px;
-      transition: background 0.2s;
-    }
-    .header-nav-link:hover {
-      background: rgba(255,255,255,0.05);
-    }
+    .header-nav a:hover { background: rgba(255,255,255,0.04); }
 
-    /* Main container */
+    /* Layout */
     .container {
-      width: 980px;
-      max-width: 100%;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 1fr 360px;
-      gap: 18px;
-      align-items: start;
+      width: var(--container); max-width: 100%; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 360px; gap: 18px; align-items: start;
     }
-
-    /* Panel */
     .panel {
       background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02));
       border: 1px solid rgba(255,255,255,0.04);
-      padding: 18px;
-      border-radius: 12px;
+      padding: 22px; border-radius: 14px;
       box-shadow: 0 8px 30px rgba(2,6,23,0.6);
     }
 
-    /* Brand row */
-    .brand-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 12px;
-      flex-wrap: wrap;
-      gap: 12px;
+    /* Brand row inside panel */
+    .panel-brand-row {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 18px; flex-wrap: wrap; gap: 12px;
     }
-    .brand {
-      display: flex;
-      gap: 12px;
-      align-items: center;
+    .panel-brand { display: flex; gap: 12px; align-items: center; }
+    .panel-logo {
+      width: 44px; height: 44px; border-radius: 10px;
+      background: transparent; overflow: hidden;
+      box-shadow: 0 6px 18px rgba(2,6,23,0.22);
     }
-    .logo-box {
-      width: 44px;
-      height: 44px;
-      border-radius: 10px;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .logo-box img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-    }
-    .title {
-      font-weight: 700;
-      font-size: 16px;
-      color: #f4f7fb;
-    }
-    .subtitle {
-      font-size: 13px;
-      color: var(--muted);
-    }
+    .panel-logo img { width: 100%; height: 100%; object-fit: contain; display: block; }
+    .panel-title { font-weight: 700; font-size: 16px; color: #f4f7fb; }
+    .panel-subtitle { font-size: 13px; color: var(--muted); }
+    .panel-user { color: var(--muted); font-size: 0.9rem; }
 
     /* Form */
-    form .row {
-      display: flex;
-      gap: 12px;
-      margin-bottom: 12px;
-      align-items: end;
-    }
-    label {
-      display: block;
-      font-size: 13px;
-      color: var(--muted);
-      margin-bottom: 8px;
-    }
-    input[type="text"],
-    input[type="number"],
-    textarea {
-      width: 100%;
-      padding: 12px;
-      border-radius: 10px;
-      background: var(--glass);
-      border: 1px solid rgba(255,255,255,0.03);
-      color: var(--text);
-      font-family: inherit;
-      font-size: 14px;
+    form .row { display: flex; gap: 12px; margin-bottom: 14px; align-items: end; }
+    form .row > div { flex: 1; }
+    label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 8px; font-weight: 500; }
+    input[type="text"], input[type="number"], textarea {
+      width: 100%; padding: 12px; border-radius: 10px;
+      background: var(--glass); border: 1px solid rgba(255,255,255,0.05);
+      color: var(--text); font-size: 0.95rem; font-family: inherit;
+      transition: border-color 0.15s, box-shadow 0.15s;
     }
     input:focus {
-      outline: 2px solid rgba(124,92,255,0.3);
-      outline-offset: 2px;
+      outline: none; border-color: rgba(124,92,255,0.5);
+      box-shadow: 0 0 0 3px rgba(124,92,255,0.15);
     }
-
-    .muted {
-      color: var(--muted);
-      font-size: 13px;
+    .currency-static {
+      padding: 12px; border-radius: 10px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.03);
+      color: var(--text); font-weight: 600;
     }
-    .helper {
-      font-size: 13px;
-      color: var(--muted);
-      margin-top: 8px;
-    }
+    .muted { color: var(--muted); font-size: 13px; }
+    .helper { font-size: 13px; color: var(--muted); margin-top: 8px; }
 
     /* Buttons */
     .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 12px 16px;
-      border-radius: 10px;
-      cursor: pointer;
-      border: 0;
-      font-weight: 700;
-      font-family: inherit;
-      color: #08101a;
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 12px 18px; border-radius: 10px; cursor: pointer; border: 0;
+      font-weight: 700; color: #08101a;
       background: linear-gradient(90deg, var(--accent), var(--accent-2));
       box-shadow: 0 8px 30px rgba(124,92,255,0.14);
-      transition: transform 0.12s, box-shadow 0.12s;
+      font-family: inherit; font-size: 0.95rem;
+      transition: transform 0.1s, box-shadow 0.15s;
     }
-    .btn:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 12px 36px rgba(124,92,255,0.2);
-    }
-    .btn:active {
-      transform: translateY(0);
-    }
-    .btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
+    .btn:hover { transform: translateY(-1px); box-shadow: 0 12px 34px rgba(124,92,255,0.22); }
+    .btn:active { transform: translateY(0); }
     .btn-ghost {
-      background: transparent;
-      color: var(--muted);
-      border: 1px solid rgba(255,255,255,0.04);
-      box-shadow: none;
-      padding: 10px 12px;
-      border-radius: 10px;
+      background: transparent; color: var(--muted);
+      border: 1px solid rgba(255,255,255,0.06);
+      box-shadow: none; padding: 10px 14px; border-radius: 10px;
+      cursor: pointer; font-family: inherit; font-size: 0.9rem;
     }
-    .btn-ghost:hover {
-      background: rgba(255,255,255,0.03);
-      color: var(--text);
-    }
+    .btn-ghost:hover { color: var(--text); border-color: rgba(255,255,255,0.12); }
 
-    /* Balance card */
+    /* Form footer */
+    .form-footer {
+      display: flex; gap: 12px; align-items: center; margin-top: 10px;
+      flex-wrap: wrap;
+    }
+    .form-footer .balance-inline { margin-left: auto; }
+
+    /* Balance card (aside) */
     .balance-card {
-      display: flex;
-      flex-direction: column;
-      padding: 16px;
-      border-radius: 12px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.006));
-      border: 1px solid rgba(255,255,255,0.03);
+      display: flex; flex-direction: column; padding: 18px;
+      border-radius: 14px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.005));
+      border: 1px solid rgba(255,255,255,0.04);
     }
-    .balance-label {
-      font-size: 13px;
-      color: var(--muted);
-    }
-    .balance-amount {
-      font-size: 28px;
-      font-weight: 700;
-      margin-top: 6px;
-      color: #fff;
-    }
+    .balance-label { font-size: 13px; color: var(--muted); }
+    .balance-amount { font-size: 28px; font-weight: 700; margin-top: 6px; color: #fff; }
 
     /* History */
+    .history-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-top: 22px; flex-wrap: wrap; gap: 8px;
+    }
+    .history-controls { display: flex; gap: 10px; margin-top: 12px; align-items: center; }
     .history-list {
-      margin-top: 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      max-height: 320px;
-      overflow: auto;
-      padding-right: 6px;
+      margin-top: 12px; display: flex; flex-direction: column; gap: 10px;
+      max-height: 360px; overflow: auto; padding-right: 6px;
     }
     .tx {
-      padding: 12px;
-      border-radius: 10px;
-      background: rgba(255,255,255,0.02);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border: 1px solid rgba(255,255,255,0.02);
+      padding: 12px; border-radius: 10px;
+      background: rgba(255,255,255,0.025);
+      display: flex; justify-content: space-between; align-items: center;
+      border: 1px solid rgba(255,255,255,0.03);
+      transition: background 0.15s;
     }
-    .tx .left {
-      display: flex;
-      flex-direction: column;
-    }
-    .tx .title {
-      font-weight: 600;
-      font-size: 14px;
-    }
-    .tx .meta {
-      font-size: 12px;
-      color: var(--muted);
-      margin-top: 4px;
-    }
-    .tx .amount {
-      font-weight: 800;
-    }
+    .tx:hover { background: rgba(255,255,255,0.04); }
+    .tx .left { display: flex; flex-direction: column; min-width: 0; flex: 1; }
+    .tx .tx-title { font-weight: 600; font-size: 14px; }
+    .tx .tx-meta { font-size: 12px; color: var(--muted); margin-top: 4px; }
+    .tx .tx-amount { font-weight: 800; white-space: nowrap; margin-left: 12px; }
+    .tx .tx-amount.debit { color: var(--danger); }
+    .tx .tx-amount.credit { color: var(--success); }
 
     /* Modal */
     .modal-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.6);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 1200;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.65); backdrop-filter: blur(4px);
+      display: none; align-items: center; justify-content: center;
+      z-index: 1200; padding: 20px;
     }
-    .modal-backdrop.open {
-      display: flex;
-    }
+    .modal-backdrop.open { display: flex; }
     .modal {
-      background: #fff;
-      color: #111;
-      border-radius: 10px;
-      max-width: 720px;
-      width: 92%;
-      padding: 18px;
-      box-shadow: 0 12px 50px rgba(0,0,0,0.6);
+      background: #fff; color: #111; border-radius: 12px;
+      max-width: 720px; width: 100%; padding: 22px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+      max-height: 90vh; overflow: auto;
     }
+    .modal-head {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 16px; gap: 12px; flex-wrap: wrap;
+    }
+    .modal-head .title { font-weight: 700; font-size: 1.1rem; }
+    .modal-actions { display: flex; gap: 8px; }
 
     /* Responsive */
     @media (max-width: 920px) {
-      .container {
-        grid-template-columns: 1fr;
-        gap: 12px;
-      }
-      form .row {
-        flex-direction: column;
-        align-items: stretch;
-      }
-      .btn, .btn-ghost {
-        width: 100%;
-      }
+      .container { grid-template-columns: 1fr; gap: 14px; }
+      form .row { flex-direction: column; align-items: stretch; }
+      form .row > div { width: 100% !important; }
+      .btn, .btn-ghost { width: 100%; }
+      .form-footer .balance-inline { margin-left: 0; }
     }
     @media (max-width: 520px) {
-      .header-logo {
-        height: 28px;
-      }
-      .header-inner {
-        padding: 8px 12px;
-      }
+      body { padding: 12px; padding-top: 90px; }
+      .panel { padding: 16px; }
+      .balance-amount { font-size: 24px; }
     }
 
     /* Print */
     @media print {
       body * { visibility: hidden; }
-      #receipt-printable,
-      #receipt-printable * { visibility: visible; }
-      #receipt-printable {
-        position: fixed;
-        left: 0;
-        top: 0;
-        width: 100%;
-      }
+      #receipt-printable, #receipt-printable * { visibility: visible; }
+      #receipt-printable { position: fixed; left: 0; top: 0; width: 100%; padding: 20px; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Header -->
+  <!-- Fixed Header -->
   <header class="site-header" role="banner">
     <div class="header-inner">
-      <a class="header-brand" href="dashboard.html" aria-label="CITI Dashboard">
-        <img class="header-logo" src="assets/citi_logo.png" alt="CITI" />
+      <a class="brand" href="dashboard.html" aria-label="CITI Dashboard">
+        <img src="assets/citi_logo.png" alt="CITI" />
       </a>
       <nav class="header-nav" aria-label="Primary">
-        <a class="header-nav-link" href="dashboard.html">Dashboard</a>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="withdraw.html">Withdraw</a>
       </nav>
     </div>
   </header>
 
-  <!-- Main Content -->
   <div class="container" role="main">
+    <!-- Main panel -->
     <div class="panel" aria-labelledby="panel-title">
-      <div class="brand-row">
-        <div class="brand">
-          <div class="logo-box" aria-hidden="true">
-            <img src="assets/citi.png" alt="" />
+      <div class="panel-brand-row">
+        <div class="panel-brand">
+          <div class="panel-logo" aria-hidden="true">
+            <img src="assets/citi_logo.png" alt="" />
           </div>
           <div>
-            <div id="panel-title" class="title">Transfer funds</div>
-            <div class="subtitle">Send money — Internet Banking</div>
+            <div id="panel-title" class="panel-title">Transfer funds</div>
+            <div class="panel-subtitle">Send money — Internet Banking</div>
           </div>
         </div>
-        <div class="muted">Logged in as <strong>Hart Gijs</strong></div>
+        <div class="panel-user">Logged in as <strong>Gijs Hart</strong></div>
       </div>
 
       <form id="transferForm" autocomplete="off" novalidate>
         <div class="row">
-          <div style="flex:1">
+          <div style="flex:2">
             <label for="recipientName">Recipient name</label>
             <input id="recipientName" name="recipientName" type="text" placeholder="Jane Doe" required />
           </div>
-          <div style="width:120px">
+          <div style="flex:1">
             <label for="bankCode">Bank code</label>
             <input id="bankCode" name="bankCode" type="text" inputmode="numeric" placeholder="012" />
           </div>
         </div>
 
         <div class="row">
-          <div style="flex:1">
+          <div style="flex:2">
             <label for="toAccount">Account number</label>
             <input id="toAccount" name="toAccount" type="text" inputmode="numeric" placeholder="1234567890" required />
           </div>
-          <div style="width:120px">
+          <div style="flex:1">
             <label for="currencyLabel">Currency</label>
-            <div id="currencyLabel" class="muted">NZD</div>
+            <div id="currencyLabel" class="currency-static">NZD</div>
           </div>
         </div>
 
-        <div style="margin-bottom:12px">
+        <div style="margin-bottom:14px">
           <label for="amount">Amount</label>
-          <input id="amount" name="amount" type="number" min="0.01" step="0.01" value="" placeholder="0.00" required />
+          <input id="amount" name="amount" type="number" min="0.01" step="0.01" placeholder="0.00" required />
         </div>
 
-        <div style="margin-bottom:12px">
+        <div style="margin-bottom:14px">
           <label for="note">Note (optional)</label>
           <input id="note" name="note" type="text" placeholder="For rent, invoice #123" />
         </div>
 
-        <div style="display:flex;gap:12px;align-items:center;margin-top:8px;flex-wrap:wrap">
+        <div class="form-footer">
           <button type="submit" id="sendBtn" class="btn">Send transfer</button>
           <button type="button" id="resetBtn" class="btn-ghost">Reset</button>
-          <div style="margin-left:auto" class="muted">Available balance <strong id="balanceDisplay">$0.00</strong></div>
+          <div class="balance-inline muted">
+            Available balance <strong id="balanceDisplay">$0.00</strong>
+          </div>
         </div>
 
-        <div class="helper">This balance updates immediately after each transfer</div>
+        <div class="helper">This balance updates immediately after each transfer.</div>
       </form>
 
-      <div style="margin-top:18px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
-        <div class="subtitle">Recent activity</div>
+      <div class="history-header">
+        <div class="panel-subtitle">Recent activity</div>
         <div class="muted">Latest transfers and debits</div>
       </div>
 
-      <div style="display:flex;gap:10px;margin-top:12px;align-items:center;flex-wrap:wrap">
-        <button id="clearHistory" class="btn-ghost">Clear</button>
-        <button id="topupBtn" class="btn-ghost" title="Add $500 for testing">Top up $500</button>
+      <div class="history-controls">
+        <button id="clearHistory" class="btn-ghost" type="button">Clear history</button>
+        <button id="topupBtn" class="btn-ghost" type="button" title="Add $500 for testing">Top up $500</button>
       </div>
 
       <div class="history-list" id="historyList" aria-live="polite"></div>
     </div>
 
+    <!-- Side balance panel -->
     <aside class="panel balance-card" aria-labelledby="balance-title">
       <div>
         <div id="balance-title" class="balance-label">Available balance</div>
@@ -433,10 +323,10 @@
         <div class="muted" id="currencyNote">Currency: NZD</div>
       </div>
 
-      <div style="margin-top:18px">
-        <div class="subtitle">Recent Transactions</div>
-        <div class="muted" style="margin-top:6px">Showing debits</div>
-        <div class="history-list" id="sideHistory"></div>
+      <div style="margin-top:20px">
+        <div class="panel-subtitle">Recent Transactions</div>
+        <div class="muted" style="margin-top:6px">Showing debits &amp; credits</div>
+        <div class="history-list" id="sideHistory" style="max-height:280px"></div>
       </div>
     </aside>
   </div>
@@ -444,11 +334,11 @@
   <!-- Receipt Modal -->
   <div id="modalBackdrop" class="modal-backdrop" role="dialog" aria-modal="true" aria-hidden="true">
     <div class="modal" id="receiptModal" role="document" aria-labelledby="receiptTitle">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-        <div style="font-weight:700" id="receiptTitle">Transaction Receipt</div>
-        <div style="display:flex;gap:8px">
-          <button id="closeModal" class="btn-ghost">Close</button>
-          <button id="printModal" class="btn">Print</button>
+      <div class="modal-head">
+        <div class="title" id="receiptTitle">Transaction Receipt</div>
+        <div class="modal-actions">
+          <button id="closeModal" class="btn-ghost" type="button">Close</button>
+          <button id="printModal" class="btn" type="button">Print</button>
         </div>
       </div>
       <div id="receiptContent" style="font-size:14px;color:#222"></div>
@@ -468,8 +358,9 @@
     // ── Helpers ──
     function safeParse(key, fallback) {
       try {
-        var val = localStorage.getItem(key);
-        return val ? JSON.parse(val) : fallback;
+        var raw = localStorage.getItem(key);
+        if (raw === null) return fallback;
+        return JSON.parse(raw);
       } catch (e) {
         return fallback;
       }
@@ -478,8 +369,7 @@
     function formatCurrency(amount) {
       try {
         return new Intl.NumberFormat(undefined, {
-          style: 'currency',
-          currency: CURRENCY
+          style: 'currency', currency: CURRENCY
         }).format(amount);
       } catch (e) {
         return '$' + Number(amount).toFixed(2);
@@ -493,17 +383,14 @@
     function escapeHtml(s) {
       if (s == null) return '';
       return String(s).replace(/[&<>"']/g, function (m) {
-        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m];
+        return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' })[m];
       });
     }
 
-    // ── Storage ──
+    // ── Storage primitives ──
     function initStorage() {
       if (!localStorage.getItem(BALANCE_KEY)) {
-        localStorage.setItem(BALANCE_KEY, JSON.stringify({
-          amount: SEED_BALANCE,
-          currency: CURRENCY
-        }));
+        localStorage.setItem(BALANCE_KEY, JSON.stringify({ amount: SEED_BALANCE, currency: CURRENCY }));
       }
       if (!localStorage.getItem(TX_KEY)) {
         localStorage.setItem(TX_KEY, JSON.stringify([]));
@@ -512,34 +399,27 @@
 
     function getBalance() {
       var b = safeParse(BALANCE_KEY, { amount: SEED_BALANCE, currency: CURRENCY });
-      return {
-        amount: Number(b.amount) || 0,
-        currency: b.currency || CURRENCY
-      };
+      return { amount: Number(b.amount) || 0, currency: b.currency || CURRENCY };
     }
 
-    function setBalance(b) {
+    function setBalanceObj(b) {
       localStorage.setItem(BALANCE_KEY, JSON.stringify({
         amount: Number(b.amount) || 0,
         currency: b.currency || CURRENCY
       }));
     }
 
-    function getTxs() {
-      return safeParse(TX_KEY, []);
-    }
-
-    function setTxs(txs) {
-      localStorage.setItem(TX_KEY, JSON.stringify(txs));
-    }
+    function getTxs() { return safeParse(TX_KEY, []); }
+    function setTxs(txs) { localStorage.setItem(TX_KEY, JSON.stringify(txs)); }
 
     // ── Renderers ──
     function renderBalance() {
       var b = getBalance();
-      document.getElementById('balanceAmount').textContent = formatCurrency(b.amount);
-      document.getElementById('balanceDisplay').textContent = formatCurrency(b.amount);
-      document.getElementById('currencyLabel').textContent = CURRENCY;
-      document.getElementById('currencyNote').textContent = 'Currency: ' + CURRENCY;
+      var formatted = formatCurrency(b.amount);
+      document.getElementById('balanceAmount').textContent = formatted;
+      document.getElementById('balanceDisplay').textContent = formatted;
+      document.getElementById('currencyLabel').textContent = b.currency;
+      document.getElementById('currencyNote').textContent = 'Currency: ' + b.currency;
     }
 
     function createTxRow(tx) {
@@ -550,24 +430,24 @@
       left.className = 'left';
 
       var title = document.createElement('div');
-      title.className = 'title';
-      title.textContent = tx.description || (tx.type === 'debit' ? 'Debit' : 'Credit');
+      title.className = 'tx-title';
+      title.textContent = tx.description || (tx.type === 'debit' ? 'Transfer' : 'Credit');
 
       var meta = document.createElement('div');
-      meta.className = 'meta';
-      meta.textContent = new Date(tx.timestamp).toLocaleString() + ' · To ' + (tx.toAccount || tx.to || 'external');
+      meta.className = 'tx-meta';
+      var target = tx.toAccount || tx.to || 'external';
+      meta.textContent = new Date(tx.timestamp).toLocaleString() + ' · To ' + target;
 
       left.appendChild(title);
       left.appendChild(meta);
 
       var amt = document.createElement('div');
-      amt.className = 'amount';
+      amt.className = 'tx-amount ' + (tx.type === 'debit' ? 'debit' : 'credit');
       amt.textContent = (tx.type === 'debit' ? '-' : '+') + formatCurrency(tx.amount);
       if (!tx.success) amt.style.color = 'var(--danger)';
 
       row.appendChild(left);
       row.appendChild(amt);
-
       return row;
     }
 
@@ -580,11 +460,9 @@
       var txs = getTxs().slice().reverse();
 
       if (!txs.length) {
-        var none = document.createElement('div');
-        none.className = 'tx';
-        none.innerHTML = '<div><div style="font-weight:600">No transactions</div><div class="meta">Your recent debits will appear here</div></div><div class="muted">—</div>';
-        list.appendChild(none);
-        side.appendChild(none.cloneNode(true));
+        var none = '<div class="tx"><div class="left"><div class="tx-title">No transactions</div><div class="tx-meta">Your recent transfers will appear here</div></div><div class="muted">—</div></div>';
+        list.innerHTML = none;
+        side.innerHTML = none;
         return;
       }
 
@@ -595,7 +473,7 @@
       });
     }
 
-    // ── Receipt Modal ──
+    // ── Receipt modal ──
     var modalBackdrop = document.getElementById('modalBackdrop');
     var receiptContent = document.getElementById('receiptContent');
     var closeModalBtn = document.getElementById('closeModal');
@@ -618,7 +496,6 @@
             '<div style="display:flex;justify-content:space-between;padding:8px 0"><div><strong>Status</strong></div><div>' + (tx.success ? 'Completed' : 'Failed') + '</div></div>' +
           '</div>' +
         '</div>';
-
       modalBackdrop.classList.add('open');
       modalBackdrop.setAttribute('aria-hidden', 'false');
       closeModalBtn.focus();
@@ -630,20 +507,16 @@
       receiptContent.innerHTML = '';
     }
 
-    printModalBtn.addEventListener('click', function () {
-      window.print();
-    });
+    printModalBtn.addEventListener('click', function () { window.print(); });
     closeModalBtn.addEventListener('click', closeReceiptModal);
     modalBackdrop.addEventListener('click', function (e) {
       if (e.target === modalBackdrop) closeReceiptModal();
     });
     document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && modalBackdrop.classList.contains('open')) {
-        closeReceiptModal();
-      }
+      if (e.key === 'Escape' && modalBackdrop.classList.contains('open')) closeReceiptModal();
     });
 
-    // ── Transfer Handler ──
+    // ── Amount parsing ──
     function parseAmountInput() {
       var raw = (document.getElementById('amount').value || '').trim();
       var cleaned = raw.replace(/[^\d.-]/g, '');
@@ -651,6 +524,7 @@
       return Number.isFinite(v) ? v : NaN;
     }
 
+    // ── Transfer handler ──
     function onTransfer(e) {
       e.preventDefault();
 
@@ -660,24 +534,12 @@
       var amount = parseAmountInput();
       var description = (document.getElementById('note').value || '').trim() || 'Transfer';
 
-      if (!recipientName) {
-        alert('Please enter recipient name');
-        return;
-      }
-      if (!toAccount) {
-        alert('Please enter account number');
-        return;
-      }
-      if (!Number.isFinite(amount) || amount <= 0) {
-        alert('Enter an amount greater than 0');
-        return;
-      }
+      if (!recipientName) { alert('Please enter recipient name'); return; }
+      if (!toAccount) { alert('Please enter account number'); return; }
+      if (!Number.isFinite(amount) || amount <= 0) { alert('Enter an amount greater than 0'); return; }
 
       var balance = getBalance();
-      if (amount > balance.amount + 1e-9) {
-        alert('Insufficient funds');
-        return;
-      }
+      if (amount > balance.amount + 1e-9) { alert('Insufficient funds'); return; }
 
       var tx = {
         id: uid(),
@@ -692,35 +554,27 @@
         success: true
       };
 
-      // Persist
-      var newBal = {
-        amount: Number((balance.amount - amount).toFixed(2)),
-        currency: CURRENCY
-      };
-      setBalance(newBal);
+      var newBal = { amount: Number((balance.amount - amount).toFixed(2)), currency: CURRENCY };
+      setBalanceObj(newBal);
 
       var txs = getTxs();
       txs.push(tx);
       setTxs(txs);
 
-      // Update UI
       renderBalance();
       renderHistory();
 
-      // Save lastTxId and redirect
+      // Store for success page and redirect
       localStorage.setItem('lastTxId', tx.id);
       window.location.href = 'transfer-success.html?tx=' + encodeURIComponent(tx.id);
     }
 
-    // ── Top Up Test Helper ──
+    // ── Top-up test helper ──
     function topUpTest() {
       var topAmount = 500.00;
       var balance = getBalance();
-      var newBal = {
-        amount: Number((balance.amount + topAmount).toFixed(2)),
-        currency: CURRENCY
-      };
-      setBalance(newBal);
+      var newBal = { amount: Number((balance.amount + topAmount).toFixed(2)), currency: CURRENCY };
+      setBalanceObj(newBal);
 
       var tx = {
         id: uid(),
@@ -739,10 +593,10 @@
 
       renderBalance();
       renderHistory();
-      alert('Account credited ' + formatCurrency(topAmount));
+      alert('Account credited ' + formatCurrency(topAmount) + '.');
     }
 
-    // ── Event Wiring ──
+    // ── Wire up controls ──
     document.getElementById('transferForm').addEventListener('submit', onTransfer);
 
     document.getElementById('resetBtn').addEventListener('click', function () {
@@ -765,33 +619,48 @@
       if (e.key === TX_KEY) renderHistory();
     });
 
+    // Expose debug helpers
+    window._citi = {
+      getBalance: getBalance,
+      getTxs: getTxs,
+      openReceipt: function (tx) { openReceiptModal(tx); }
+    };
+
     // ── Init ──
     initStorage();
     renderBalance();
     renderHistory();
 
-    // Expose for debugging
-    window._citi = {
-      getBalance: getBalance,
-      getTxs: getTxs
-    };
-
+    // Clear form fields on load
+    document.getElementById('recipientName').value = '';
+    document.getElementById('toAccount').value = '';
+    document.getElementById('bankCode').value = '';
+    document.getElementById('amount').value = '';
+    document.getElementById('note').value = '';
   })();
   </script>
 
 </body>
 </html>
 
+<!-- transfer-success.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Transfer Success — CITI</title>
+  <title>Transfer Successful — CITI</title>
+  <meta name="description" content="Your transfer has been completed successfully." />
+
+  <!-- Favicons -->
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
 
   <!-- Fontsource Inter -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/css/inter@latest/index.css" />
-  <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
 
   <style>
     :root {
@@ -799,36 +668,31 @@
       --muted: #9aa4b2;
       --accent: #7c5cff;
       --accent-2: #5ec9ff;
-      --glass: rgba(255,255,255,0.03);
       --success: #3bd671;
-      --danger: #ff6b6b;
       --text: #e6eef8;
+      --container: 720px;
       font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { height: 100%; }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
     body {
       background:
-        radial-gradient(1200px 600px at 10% 10%, rgba(124,92,255,0.12), transparent 8%),
+        radial-gradient(1200px 600px at 10% 10%, rgba(59,214,113,0.10), transparent 8%),
         radial-gradient(900px 400px at 90% 90%, rgba(0,200,190,0.05), transparent 10%),
         var(--bg);
       color: var(--text);
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
+      min-height: 100vh;
       display: flex;
-      align-items: center;
-      justify-content: center;
+      flex-direction: column;
       padding: 20px;
       padding-top: 100px;
     }
 
-    /* Header */
+    /* Fixed header */
     .site-header {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 1000;
+      position: fixed; top: 0; left: 0; right: 0; z-index: 900;
       background: linear-gradient(180deg, rgba(7,16,26,0.98), rgba(7,24,39,0.96));
       border-bottom: 1px solid rgba(255,255,255,0.03);
       backdrop-filter: blur(6px);
@@ -836,250 +700,309 @@
       box-shadow: 0 8px 28px rgba(2,6,23,0.32);
     }
     .header-inner {
-      max-width: 980px;
+      max-width: var(--container);
       margin: 0 auto;
       padding: 12px 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
+      gap: 16px;
     }
-    .header-brand {
+    .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+    .brand img { height: 36px; width: auto; border-radius: 8px; display: block; }
+    .header-nav { display: flex; gap: 8px; align-items: center; }
+    .header-nav a {
+      color: var(--text); text-decoration: none; font-weight: 600;
+      padding: 8px 14px; border-radius: 8px; font-size: 0.95rem;
+    }
+    .header-nav a:hover { background: rgba(255,255,255,0.04); }
+
+    /* Main container */
+    .container {
+      width: var(--container);
+      max-width: 100%;
+      margin: 0 auto;
+      flex: 1;
       display: flex;
       align-items: center;
-      gap: 12px;
-      text-decoration: none;
-      color: var(--text);
-    }
-    .header-logo {
-      height: 36px;
-      width: auto;
-      border-radius: 8px;
-      box-shadow: 0 6px 18px rgba(2,6,23,0.22);
-    }
-    .header-nav {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-    }
-    .header-nav-link {
-      color: var(--text);
-      text-decoration: none;
-      font-weight: 600;
-      padding: 8px 12px;
-      border-radius: 8px;
-      transition: background 0.2s;
-    }
-    .header-nav-link:hover {
-      background: rgba(255,255,255,0.05);
+      justify-content: center;
+      padding: 20px 0;
     }
 
-    /* Card */
-    .card {
-      width: 760px;
-      max-width: 96%;
-      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02));
-      border: 1px solid rgba(255,255,255,0.04);
-      padding: 24px;
-      border-radius: 12px;
-      box-shadow: 0 12px 40px rgba(0,0,0,0.6);
-    }
-
-    h1 {
-      margin: 0 0 8px;
-      font-size: 24px;
-      font-weight: 700;
-    }
-
-    .muted {
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    /* Buttons */
-    .btn {
-      padding: 12px 16px;
-      border-radius: 10px;
-      border: 0;
-      background: linear-gradient(90deg, var(--accent), var(--accent-2));
-      font-weight: 700;
-      font-family: inherit;
-      color: #08101a;
-      cursor: pointer;
-      transition: transform 0.12s, box-shadow 0.12s;
-    }
-    .btn:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 12px 36px rgba(124,92,255,0.2);
-    }
-    .btn:active {
-      transform: translateY(0);
-    }
-    .btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-    .btn-ghost {
-      padding: 10px 12px;
-      border-radius: 10px;
-      background: transparent;
-      border: 1px solid rgba(255,255,255,0.04);
-      color: var(--muted);
-      cursor: pointer;
-      font-family: inherit;
-    }
-    .btn-ghost:hover {
-      background: rgba(255,255,255,0.03);
-      color: var(--text);
-    }
-
-    /* Receipt */
-    .receipt {
-      background: #fff;
-      color: #111;
-      padding: 18px;
-      border-radius: 10px;
-      margin-top: 16px;
-    }
-    .receipt-row {
-      display: flex;
-      justify-content: space-between;
-      padding: 8px 0;
-      border-bottom: 1px solid #f0f0f0;
-    }
-    .receipt-row:last-child {
-      border-bottom: none;
-    }
-    .receipt-label {
-      font-weight: 600;
-      color: #333;
-    }
-    .receipt-value {
-      color: #111;
-    }
-    .receipt-amount {
-      font-weight: 800;
-      font-size: 16px;
+    /* Success card */
+    .success-card {
+      width: 100%;
+      background: linear-gradient(180deg, rgba(255,255,255,0.025), rgba(0,0,0,0.02));
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 16px;
+      padding: 32px;
+      box-shadow: 0 12px 40px rgba(2,6,23,0.6);
+      text-align: center;
     }
 
     /* Success icon */
     .success-icon {
-      width: 64px;
-      height: 64px;
+      width: 88px; height: 88px;
+      margin: 0 auto 20px;
       border-radius: 50%;
-      background: linear-gradient(135deg, var(--success), #2ecc71);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 16px;
-      box-shadow: 0 8px 24px rgba(59,214,113,0.3);
+      background: linear-gradient(135deg, rgba(59,214,113,0.18), rgba(59,214,113,0.06));
+      border: 2px solid rgba(59,214,113,0.4);
+      display: flex; align-items: center; justify-content: center;
+      animation: scaleIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
     .success-icon svg {
-      width: 32px;
-      height: 32px;
-      fill: white;
+      width: 48px; height: 48px;
+      stroke: var(--success);
+      stroke-width: 3;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .success-icon svg .check-path {
+      stroke-dasharray: 60;
+      stroke-dashoffset: 60;
+      animation: drawCheck 0.6s 0.3s ease-out forwards;
     }
 
-    /* PIN input */
-    .pin-input {
-      padding: 12px;
-      border-radius: 8px;
-      width: 160px;
-      background: var(--glass);
-      border: 1px solid rgba(255,255,255,0.03);
-      color: var(--text);
-      font-family: inherit;
-      font-size: 16px;
-      letter-spacing: 4px;
-      text-align: center;
+    @keyframes scaleIn {
+      from { transform: scale(0); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
     }
-    .pin-input:focus {
-      outline: 2px solid rgba(124,92,255,0.3);
-      outline-offset: 2px;
+    @keyframes drawCheck {
+      to { stroke-dashoffset: 0; }
+    }
+
+    .success-title {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin: 0 0 8px;
+      color: #fff;
+    }
+    .success-subtitle {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin: 0 0 24px;
+    }
+
+    /* Receipt details */
+    .receipt {
+      text-align: left;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.04);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+    .receipt-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.03);
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .receipt-row:last-child { border-bottom: none; }
+    .receipt-label {
+      color: var(--muted);
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      font-weight: 500;
+    }
+    .receipt-value {
+      color: var(--text);
+      font-weight: 600;
+      font-size: 0.95rem;
+      text-align: right;
+      word-break: break-word;
+    }
+    .receipt-value.amount {
+      color: var(--success);
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+    .receipt-value.txid {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    /* Actions */
+    .actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 12px 22px; border-radius: 10px; cursor: pointer; border: 0;
+      font-weight: 700; font-family: inherit; font-size: 0.95rem;
+      transition: transform 0.1s, box-shadow 0.15s;
+      text-decoration: none;
+    }
+    .btn-primary {
+      color: #08101a;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      box-shadow: 0 8px 30px rgba(124,92,255,0.18);
+    }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 12px 34px rgba(124,92,255,0.28); }
+    .btn-ghost {
+      background: transparent; color: var(--text);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .btn-ghost:hover { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.15); }
+
+    /* Footer note */
+    .footer-note {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: 28px;
+    }
+
+    /* Loading state */
+    .loading {
+      display: flex; flex-direction: column; align-items: center;
+      padding: 40px 20px;
+    }
+    .spinner {
+      width: 40px; height: 40px;
+      border: 3px solid rgba(255,255,255,0.08);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-bottom: 16px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Error state */
+    .error-card {
+      text-align: center;
+      padding: 32px;
+    }
+    .error-icon {
+      width: 72px; height: 72px;
+      margin: 0 auto 16px;
+      border-radius: 50%;
+      background: rgba(255,107,107,0.12);
+      border: 2px solid rgba(255,107,107,0.4);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2rem;
     }
 
     /* Responsive */
     @media (max-width: 520px) {
-      .header-logo {
-        height: 28px;
-      }
-      .header-inner {
-        padding: 8px 12px;
-      }
-      .card {
-        padding: 16px;
-      }
-      h1 {
-        font-size: 20px;
-      }
+      body { padding: 12px; padding-top: 90px; }
+      .success-card { padding: 24px 18px; }
+      .success-title { font-size: 1.4rem; }
+      .receipt { padding: 16px; }
+      .actions { flex-direction: column; }
+      .actions .btn { width: 100%; }
     }
 
     /* Print */
     @media print {
       body * { visibility: hidden; }
-      #receiptPrintable,
-      #receiptPrintable * { visibility: visible; }
-      #receiptPrintable {
-        position: fixed;
-        left: 0;
-        top: 0;
-        width: 100%;
+      #printable-receipt, #printable-receipt * { visibility: visible; }
+      #printable-receipt {
+        position: fixed; left: 0; top: 0; width: 100%;
+        padding: 30px; background: #fff; color: #111;
       }
+      #printable-receipt .receipt-row { border-bottom-color: #ddd; }
+      #printable-receipt .receipt-label { color: #555; }
+      #printable-receipt .receipt-value { color: #111; }
+      #printable-receipt .receipt-value.amount { color: #0a7; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Header -->
+  <!-- Fixed Header -->
   <header class="site-header" role="banner">
     <div class="header-inner">
-      <a class="header-brand" href="dashboard.html" aria-label="CITI Dashboard">
-        <img class="header-logo" src="assets/citi_logo.png" alt="CITI" />
+      <a class="brand" href="dashboard.html" aria-label="CITI Dashboard">
+        <img src="assets/citi_logo.png" alt="CITI" />
       </a>
       <nav class="header-nav" aria-label="Primary">
-        <a class="header-nav-link" href="dashboard.html">Dashboard</a>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="transfer.html">New Transfer</a>
       </nav>
     </div>
   </header>
 
-  <!-- Main Card -->
-  <div class="card" id="page">
-    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
-      <div>
-        <h1 id="heading">Confirm transfer</h1>
-        <div class="muted" id="sub">Enter your transaction PIN to complete the transfer</div>
-      </div>
-      <div class="muted" id="balanceTop"></div>
-    </div>
-
-    <!-- PIN Step -->
-    <div id="pinStep" style="margin-top:24px">
-      <label class="muted" for="pin">Transaction PIN</label>
-      <input id="pin" type="password" inputmode="numeric" maxlength="6" class="pin-input" placeholder="••••••" />
-      <div style="display:flex;gap:12px;margin-top:16px;flex-wrap:wrap">
-        <button id="verifyBtn" class="btn">Verify PIN & Complete</button>
-        <button id="cancelBtn" class="btn-ghost">Cancel</button>
-      </div>
-    </div>
-
-    <!-- Success Step -->
-    <div id="successStep" style="display:none;margin-top:24px">
-      <div class="success-icon">
-        <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+  <div class="container" role="main">
+    <div class="success-card" id="successCard">
+      <!-- Loading state -->
+      <div class="loading" id="loadingState">
+        <div class="spinner"></div>
+        <div class="muted">Loading transfer details…</div>
       </div>
 
-      <div style="text-align:center;margin-bottom:20px">
-        <div style="font-weight:700;font-size:20px" id="successTitle">Transfer completed</div>
-        <div class="muted" id="successMeta" style="margin-top:6px">Transaction recorded and added to your history</div>
+      <!-- Success state (hidden until loaded) -->
+      <div id="successState" style="display:none">
+        <div class="success-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <path class="check-path" d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+        <h1 class="success-title">Transfer Successful</h1>
+        <p class="success-subtitle">Your funds have been sent securely.</p>
+
+        <div class="receipt" id="printable-receipt">
+          <div class="receipt-row">
+            <span class="receipt-label">Transaction ID</span>
+            <span class="receipt-value txid" id="r-txid">—</span>
+          </div>
+          <div class="receipt-row">
+            <span class="receipt-label">Recipient</span>
+            <span class="receipt-value" id="r-recipient">—</span>
+          </div>
+          <div class="receipt-row">
+            <span class="receipt-label">Account</span>
+            <span class="receipt-value" id="r-account">—</span>
+          </div>
+          <div class="receipt-row">
+            <span class="receipt-label">Bank Code</span>
+            <span class="receipt-value" id="r-bank">—</span>
+          </div>
+          <div class="receipt-row">
+            <span class="receipt-label">Amount</span>
+            <span class="receipt-value amount" id="r-amount">—</span>
+          </div>
+          <div class="receipt-row">
+            <span class="receipt-label">Note</span>
+            <span class="receipt-value" id="r-note">—</span>
+          </div>
+          <div class="receipt-row">
+            <span class="receipt-label">Date &amp; Time</span>
+            <span class="receipt-value" id="r-date">—</span>
+          </div>
+          <div class="receipt-row">
+            <span class="receipt-label">Status</span>
+            <span class="receipt-value" id="r-status" style="color:var(--success)">Completed</span>
+          </div>
+        </div>
+
+        <div class="actions">
+          <a href="transfer.html" class="btn btn-primary">New Transfer</a>
+          <button type="button" class="btn btn-ghost" id="printBtn">Print Receipt</button>
+          <a href="dashboard.html" class="btn btn-ghost">Back to Dashboard</a>
+        </div>
+
+        <p class="footer-note">A confirmation has been sent to your registered email.</p>
       </div>
 
-      <div style="display:flex;justify-content:center;gap:12px;margin-bottom:20px;flex-wrap:wrap">
-        <button id="printReceiptBtn" class="btn">Print receipt</button>
-        <button id="backDashboard" class="btn-ghost">Go to Dashboard</button>
-      </div>
-
-      <div class="receipt" id="receiptPrintable" aria-hidden="false">
-        <!-- Populated dynamically -->
+      <!-- Error state (hidden unless no tx found) -->
+      <div id="errorState" class="error-card" style="display:none">
+        <div class="error-icon" aria-hidden="true">⚠️</div>
+        <h2 class="success-title" style="font-size:1.3rem">No Transfer Found</h2>
+        <p class="success-subtitle">We couldn't locate the transfer details. It may have already been viewed or the session expired.</p>
+        <div class="actions" style="margin-top:20px">
+          <a href="transfer.html" class="btn btn-primary">Make a Transfer</a>
+          <a href="dashboard.html" class="btn btn-ghost">Go to Dashboard</a>
+        </div>
       </div>
     </div>
   </div>
@@ -1088,168 +1011,134 @@
   (function () {
     'use strict';
 
-    // ── Constants ──
-    var BALANCE_KEY = 'balance';
     var TX_KEY = 'transactions';
     var CURRENCY = 'NZD';
-    var VALID_PIN = '346795';
+
+    var loadingState = document.getElementById('loadingState');
+    var successState = document.getElementById('successState');
+    var errorState = document.getElementById('errorState');
+    var printBtn = document.getElementById('printBtn');
 
     // ── Helpers ──
     function safeParse(key, fallback) {
       try {
-        var val = localStorage.getItem(key);
-        return val ? JSON.parse(val) : fallback;
+        var raw = localStorage.getItem(key);
+        if (raw === null) return fallback;
+        return JSON.parse(raw);
       } catch (e) {
         return fallback;
       }
     }
 
-    function formatCurrency(a) {
+    function formatCurrency(amount) {
       try {
         return new Intl.NumberFormat(undefined, {
-          style: 'currency',
-          currency: CURRENCY
-        }).format(a);
+          style: 'currency', currency: CURRENCY
+        }).format(amount);
       } catch (e) {
-        return CURRENCY + ' ' + Number(a).toFixed(2);
+        return '$' + Number(amount).toFixed(2);
       }
-    }
-
-    function findTxById(id) {
-      var txs = safeParse(TX_KEY, []);
-      return txs.find(function (t) { return t.id === id; });
-    }
-
-    function getBalance() {
-      var b = safeParse(BALANCE_KEY, { amount: 0, currency: CURRENCY });
-      return {
-        amount: Number(b.amount) || 0,
-        currency: b.currency || CURRENCY
-      };
-    }
-
-    function getQueryParam(name) {
-      var params = new URLSearchParams(window.location.search);
-      return params.get(name);
     }
 
     function escapeHtml(s) {
       if (s == null) return '';
       return String(s).replace(/[&<>"']/g, function (m) {
-        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m];
+        return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' })[m];
       });
     }
 
-    // ── Get Transaction ID ──
-    var txId = getQueryParam('tx') || localStorage.getItem('lastTxId');
-
-    if (!txId) {
-      alert('No transaction id found. Returning to transfer screen.');
-      window.location.href = 'transfer.html';
-      return;
+    function setText(id, value) {
+      var el = document.getElementById(id);
+      if (el) el.textContent = value;
     }
 
-    var tx = findTxById(txId);
-    if (!tx) {
-      alert('Transaction not found. Returning to transfer screen.');
-      window.location.href = 'transfer.html';
-      return;
+    // ── Get transaction ID from URL or localStorage ──
+    function getTxId() {
+      var params = new URLSearchParams(window.location.search);
+      var fromUrl = params.get('tx');
+      if (fromUrl) return fromUrl;
+      return localStorage.getItem('lastTxId');
     }
 
-    // ── UI Elements ──
-    var pinStep = document.getElementById('pinStep');
-    var successStep = document.getElementById('successStep');
-    var verifyBtn = document.getElementById('verifyBtn');
-    var cancelBtn = document.getElementById('cancelBtn');
-    var heading = document.getElementById('heading');
-    var sub = document.getElementById('sub');
-    var balanceTop = document.getElementById('balanceTop');
-    var receiptPrintable = document.getElementById('receiptPrintable');
-    var printReceiptBtn = document.getElementById('printReceiptBtn');
-    var backDashboard = document.getElementById('backDashboard');
-    var pinInput = document.getElementById('pin');
-
-    // ── Render Balance ──
-    function renderTopBalance() {
-      var b = getBalance();
-      balanceTop.textContent = 'Available ' + formatCurrency(b.amount);
-    }
-    renderTopBalance();
-
-    // Show transaction summary
-    sub.textContent = 'Transfer ' + formatCurrency(tx.amount) + ' to ' + escapeHtml(tx.recipientName) + '. Enter PIN to complete.';
-
-    // ── PIN Verification ──
-    verifyBtn.addEventListener('click', function () {
-      var pin = pinInput.value.trim();
-
-      if (pin.length < 6) {
-        alert('Please enter your 6-digit PIN');
-        pinInput.focus();
-        return;
+    // ── Find transaction in storage ──
+    function findTx(id) {
+      var txs = safeParse(TX_KEY, []);
+      if (!Array.isArray(txs)) return null;
+      for (var i = 0; i < txs.length; i++) {
+        if (txs[i] && txs[i].id === id) return txs[i];
       }
-
-      if (pin !== VALID_PIN) {
-        alert('Incorrect PIN. Please try again.');
-        pinInput.value = '';
-        pinInput.focus();
-        return;
-      }
-
-      completeTransfer();
-    });
-
-    // Allow Enter key to submit PIN
-    pinInput.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        verifyBtn.click();
-      }
-    });
-
-    cancelBtn.addEventListener('click', function () {
-      window.location.href = 'transfer.html';
-    });
-
-    // ── Complete Transfer ──
-    function completeTransfer() {
-      // Show success UI
-      pinStep.style.display = 'none';
-      successStep.style.display = 'block';
-      heading.textContent = 'Transfer success';
-      sub.textContent = 'You can print the receipt or go back to dashboard';
-
-      // Populate receipt
-      receiptPrintable.innerHTML =
-        '<div style="font-weight:700;font-size:18px;margin-bottom:12px;text-align:center">Transaction Receipt</div>' +
-        '<div style="font-size:12px;color:#666;margin-bottom:16px;text-align:center">Transaction ID: ' + escapeHtml(tx.id) + '</div>' +
-        '<div class="receipt-row"><div class="receipt-label">Recipient</div><div class="receipt-value">' + escapeHtml(tx.recipientName) + '</div></div>' +
-        '<div class="receipt-row"><div class="receipt-label">Account</div><div class="receipt-value">' + escapeHtml(tx.toAccount) + '</div></div>' +
-        '<div class="receipt-row"><div class="receipt-label">Bank code</div><div class="receipt-value">' + escapeHtml(tx.bankCode || '—') + '</div></div>' +
-        '<div class="receipt-row"><div class="receipt-label">Amount</div><div class="receipt-value receipt-amount">' + formatCurrency(tx.amount) + '</div></div>' +
-        '<div class="receipt-row"><div class="receipt-label">Note</div><div class="receipt-value">' + escapeHtml(tx.description || '—') + '</div></div>' +
-        '<div class="receipt-row"><div class="receipt-label">Date</div><div class="receipt-value">' + new Date(tx.timestamp).toLocaleString() + '</div></div>' +
-        '<div class="receipt-row"><div class="receipt-label">Status</div><div class="receipt-value" style="color:#3bd671;font-weight:700">' + (tx.success ? 'Completed' : 'Failed') + '</div></div>';
-
-      renderTopBalance();
-
-      // Focus on print button for accessibility
-      printReceiptBtn.focus();
+      return null;
     }
 
-    // ── Print Receipt ──
-    printReceiptBtn.addEventListener('click', function () {
-      window.print();
+    // ── Render transaction details ──
+    function renderTx(tx) {
+      setText('r-txid', tx.id || '—');
+      setText('r-recipient', tx.recipientName || tx.to || '—');
+      setText('r-account', tx.toAccount || '—');
+      setText('r-bank', tx.bankCode || '—');
+      setText('r-amount', formatCurrency(tx.amount || 0));
+      setText('r-note', tx.description || '—');
+      setText('r-date', tx.timestamp ? new Date(tx.timestamp).toLocaleString() : '—');
+
+      var statusEl = document.getElementById('r-status');
+      if (statusEl) {
+        statusEl.textContent = tx.success ? 'Completed' : 'Failed';
+        statusEl.style.color = tx.success ? 'var(--success)' : 'var(--danger, #ff6b6b)';
+      }
+    }
+
+    // ── Show the appropriate state ──
+    function showSuccess(tx) {
+      loadingState.style.display = 'none';
+      errorState.style.display = 'none';
+      successState.style.display = 'block';
+      renderTx(tx);
+    }
+
+    function showError() {
+      loadingState.style.display = 'none';
+      successState.style.display = 'none';
+      errorState.style.display = 'block';
+    }
+
+    // ── Init ──
+    function init() {
+      // Small delay to simulate loading (better UX)
+      setTimeout(function () {
+        var txId = getTxId();
+        if (!txId) {
+          showError();
+          return;
+        }
+
+        var tx = findTx(txId);
+        if (!tx) {
+          showError();
+          return;
+        }
+
+        showSuccess(tx);
+
+        // Clear lastTxId so refresh doesn't show stale data
+        try { localStorage.removeItem('lastTxId'); } catch (e) { /* noop */ }
+      }, 400);
+    }
+
+    // ── Print button ──
+    if (printBtn) {
+      printBtn.addEventListener('click', function () {
+        window.print();
+      });
+    }
+
+    // ── Keyboard: Escape goes to dashboard ──
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        window.location.href = 'dashboard.html';
+      }
     });
 
-    // ── Back to Dashboard ──
-    backDashboard.addEventListener('click', function () {
-      window.location.href = 'dashboard.html';
-    });
-
-    // ── Auto-focus PIN input ──
-    pinInput.focus();
-
+    init();
   })();
   </script>
 
