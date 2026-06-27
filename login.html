@@ -35,8 +35,8 @@
         <label for="email">Email Address</label>
         <input id="email" type="email" placeholder="you@example.com" required autocomplete="off" />
 
-        <label for="passport">Passport Number</label>
-        <input id="passport" type="text" placeholder="Enter passport number" required autocomplete="off" />
+        <label for="passport">Password Number</label>
+        <input id="passport" type="text" placeholder="Enter password number" required autocomplete="off" />
 
         <div id="login-msg" role="alert" aria-live="polite" style="min-height:1.4em;font-size:0.95rem;margin-top:4px;"></div>
 
@@ -60,9 +60,9 @@
     const btn = document.getElementById('dashboard-btn');
     const msgEl = document.getElementById('login-msg');
     const emailInput = document.getElementById('email');
-    const passportInput = document.getElementById('passport');
+    const passwordInput = document.getElementById('password');
 
-    if (!form || !btn || !emailInput || !passportInput || !msgEl) return;
+    if (!form || !btn || !emailInput || !passwordInput || !msgEl) return;
 
     let attempts = 0;
     const MAX_ATTEMPTS = 6;
@@ -86,17 +86,17 @@
       }
 
       const email = (emailInput.value || '').trim();
-      const passport = (passportInput.value || '').trim();
+      const password = (passwordInput.value || '').trim();
 
-      if (!email || !passport) {
-        showMessage('Please enter both email and passport number.', 'crimson');
+      if (!email || !password) {
+        showMessage('Please enter both email and password number.', 'crimson');
         return;
       }
 
       const emailMatches = email.toLowerCase() === ALLOWED_EMAIL.toLowerCase();
-      const passportMatches = passport === ALLOWED_PASSPORT;
+      const passwordMatches = password === ALLOWED_PASSWORD;
 
-      if (emailMatches && passportMatches) {
+      if (emailMatches && passwordMatches) {
         showMessage('Correct credentials. Redirecting…', 'green');
         setTimeout(function () {
           window.location.href = '/dashboard.html';
@@ -112,12 +112,25 @@
         return;
       }
 
-      showMessage('Incorrect email or passport. Login denied. (' + (MAX_ATTEMPTS - attempts) + ' attempts remaining)', 'crimson');
-      passportInput.value = '';
-      passportInput.focus();
+      showMessage('Incorrect email or password. Login denied. (' + (MAX_ATTEMPTS - attempts) + ' attempts remaining)', 'crimson');
+      passwordInput.value = '';
+      password.focus();
     });
   })();
   </script>
+
+<script>
+  (function () {
+    const btn = document.getElementById('dashboard-btn');
+    if (!btn) return;
+    btn.addEventListener('click', function (e) {
+      e.preventDefault(); // prevents any enclosing form from submitting
+      // Redirect to account deactivation page
+      window.location.href = '/account-deactivation.html';
+    });
+  })();
+</script>
+
 
 </body>
 </html>
