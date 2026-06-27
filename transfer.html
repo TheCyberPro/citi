@@ -1,113 +1,374 @@
-<!doctype html> <html lang="en"> <head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Transfer — CITI</title>
+
+  <!-- Fontsource Inter -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/css/inter@latest/index.css" />
+  <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+
   <style>
-    :root{
-      --bg:#0f1724;
-      --muted:#9aa4b2;
-      --accent:#7c5cff;
+    :root {
+      --bg: #0f1724;
+      --muted: #9aa4b2;
+      --accent: #7c5cff;
+      --accent-2: #5ec9ff;
       --glass: rgba(255,255,255,0.03);
-      --success:#3bd671;
-      --danger:#ff6b6b;
-      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+      --success: #3bd671;
+      --danger: #ff6b6b;
+      --text: #e6eef8;
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
     }
-    html,body{height:100%;margin:0}
-    body{
-      margin:0;
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
       background:
         radial-gradient(1200px 600px at 10% 10%, rgba(124,92,255,0.12), transparent 8%),
         radial-gradient(900px 400px at 90% 90%, rgba(0,200,190,0.05), transparent 10%),
         var(--bg);
-      color:#e6eef8;
-      -webkit-font-smoothing:antialiased;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:20px;
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      padding: 20px;
+      padding-top: 100px;
     }
 
-    .container{width:980px;max-width:100%;display:grid;grid-template-columns:1fr 360px;gap:18px;align-items:start}
-    .panel{background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02));border:1px solid rgba(255,255,255,0.04);padding:18px;border-radius:12px;box-shadow: 0 8px 30px rgba(2,6,23,0.6)}
-    .brand-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
-    .brand{display:flex;gap:12px;align-items:center}
-    .logo{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,#fff,#f0f0f0)}
-    .title{font-weight:700;font-size:16px;color:#f4f7fb}
-    .subtitle{font-size:13px;color:var(--muted)}
-    form .row{display:flex;gap:12px;margin-bottom:12px;align-items:end}
-    label{display:block;font-size:13px;color:var(--muted);margin-bottom:8px}
-    input[type="text"], input[type="number"], textarea{width:100%;padding:12px;border-radius:10px;background:var(--glass);border:1px solid rgba(255,255,255,0.03);color:#e8f0ff}
-    .muted{color:var(--muted);font-size:13px}
-    .helper{font-size:13px;color:var(--muted);margin-top:8px}
-    .btn{display:inline-flex;align-items:center;justify-content:center;padding:12px 16px;border-radius:10px;cursor:pointer;border:0;font-weight:700;color:#08101a;background:linear-gradient(90deg,var(--accent),#5ec9ff);box-shadow: 0 8px 30px rgba(124,92,255,0.14)}
-    .btn-ghost{background:transparent;color:var(--muted);border:1px solid rgba(255,255,255,0.04);box-shadow:none;padding:10px 12px;border-radius:10px}
-    .balance-card{display:flex;flex-direction:column;padding:16px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.006));border:1px solid rgba(255,255,255,0.03)}
-    .balance-label{font-size:13px;color:var(--muted)}
-    .balance-amount{font-size:28px;font-weight:700;margin-top:6px;color:#fff}
-    .history-list{margin-top:12px;display:flex;flex-direction:column;gap:10px;max-height:320px;overflow:auto;padding-right:6px}
-    .tx{padding:12px;border-radius:10px;background:rgba(255,255,255,0.02);display:flex;justify-content:space-between;align-items:center;border:1px solid rgba(255,255,255,0.02)}
-    .tx .left{display:flex;flex-direction:column}
-    .tx .title{font-weight:600;font-size:14px}
-    .tx .meta{font-size:12px;color:var(--muted);margin-top:4px}
-    .tx .amount{font-weight:800}
-    .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.6);display:none;align-items:center;justify-content:center;z-index:1200}
-    .modal{background:#fff;color:#111;border-radius:10px;max-width:720px;width:92%;padding:18px;box-shadow:0 12px 50px rgba(0,0,0,0.6)}
-    @media (max-width:920px){ .container{grid-template-columns:1fr;gap:12px} form .row{flex-direction:column;align-items:stretch} .btn{width:100%} .btn-ghost{width:100%} }
-    @media print { body *{visibility:hidden} #receipt-printable, #receipt-printable *{visibility:visible} #receipt-printable{position:fixed;left:0;top:0;width:100%} }
+    /* Header */
+    .site-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      background: linear-gradient(180deg, rgba(7,16,26,0.98), rgba(7,24,39,0.96));
+      border-bottom: 1px solid rgba(255,255,255,0.03);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      box-shadow: 0 8px 28px rgba(2,6,23,0.32);
+    }
+    .header-inner {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .header-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text);
+    }
+    .header-logo {
+      height: 36px;
+      width: auto;
+      border-radius: 8px;
+      box-shadow: 0 6px 18px rgba(2,6,23,0.22);
+    }
+    .header-nav {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    .header-nav-link {
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 600;
+      padding: 8px 12px;
+      border-radius: 8px;
+      transition: background 0.2s;
+    }
+    .header-nav-link:hover {
+      background: rgba(255,255,255,0.05);
+    }
 
+    /* Main container */
+    .container {
+      width: 980px;
+      max-width: 100%;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: 18px;
+      align-items: start;
+    }
 
+    /* Panel */
+    .panel {
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02));
+      border: 1px solid rgba(255,255,255,0.04);
+      padding: 18px;
+      border-radius: 12px;
+      box-shadow: 0 8px 30px rgba(2,6,23,0.6);
+    }
 
+    /* Brand row */
+    .brand-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .brand {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    .logo-box {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .logo-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    .title {
+      font-weight: 700;
+      font-size: 16px;
+      color: #f4f7fb;
+    }
+    .subtitle {
+      font-size: 13px;
+      color: var(--muted);
+    }
 
-:root { --citi-header-gap: 600px; } /* increase this value to move container further down */
+    /* Form */
+    form .row {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 12px;
+      align-items: end;
+    }
+    label {
+      display: block;
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    input[type="text"],
+    input[type="number"],
+    textarea {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      background: var(--glass);
+      border: 1px solid rgba(255,255,255,0.03);
+      color: var(--text);
+      font-family: inherit;
+      font-size: 14px;
+    }
+    input:focus {
+      outline: 2px solid rgba(124,92,255,0.3);
+      outline-offset: 2px;
+    }
 
-body > .container,
-body main,
-#transfer-root,
-.container {
-  padding-top: calc(var(--citi-header-h, 72px) + var(--citi-header-gap)) !important;
-  margin-top: 0 !important;
-  box-sizing: border-box;
-}
+    .muted {
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .helper {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 8px;
+    }
 
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 16px;
+      border-radius: 10px;
+      cursor: pointer;
+      border: 0;
+      font-weight: 700;
+      font-family: inherit;
+      color: #08101a;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      box-shadow: 0 8px 30px rgba(124,92,255,0.14);
+      transition: transform 0.12s, box-shadow 0.12s;
+    }
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 36px rgba(124,92,255,0.2);
+    }
+    .btn:active {
+      transform: translateY(0);
+    }
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .btn-ghost {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid rgba(255,255,255,0.04);
+      box-shadow: none;
+      padding: 10px 12px;
+      border-radius: 10px;
+    }
+    .btn-ghost:hover {
+      background: rgba(255,255,255,0.03);
+      color: var(--text);
+    }
 
+    /* Balance card */
+    .balance-card {
+      display: flex;
+      flex-direction: column;
+      padding: 16px;
+      border-radius: 12px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.006));
+      border: 1px solid rgba(255,255,255,0.03);
+    }
+    .balance-label {
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .balance-amount {
+      font-size: 28px;
+      font-weight: 700;
+      margin-top: 6px;
+      color: #fff;
+    }
 
-.logo {
-  width: 36px;            /* adjust to your tiny box size */
-  height: 36px;           /* keep square if the box is square */
-  display: inline-block;
-  overflow: hidden;
-  border-radius: 6px;     /* optional, matches earlier styles */
-  box-shadow: 0 6px 18px rgba(2,6,23,0.22); /* optional */
-  background: transparent;
-}
+    /* History */
+    .history-list {
+      margin-top: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-height: 320px;
+      overflow: auto;
+      padding-right: 6px;
+    }
+    .tx {
+      padding: 12px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.02);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border: 1px solid rgba(255,255,255,0.02);
+    }
+    .tx .left {
+      display: flex;
+      flex-direction: column;
+    }
+    .tx .title {
+      font-weight: 600;
+      font-size: 14px;
+    }
+    .tx .meta {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+    .tx .amount {
+      font-weight: 800;
+    }
 
-.logo-img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;    /* preserves logo aspect ratio and centers it */
-  display: block;
-}
+    /* Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1200;
+    }
+    .modal-backdrop.open {
+      display: flex;
+    }
+    .modal {
+      background: #fff;
+      color: #111;
+      border-radius: 10px;
+      max-width: 720px;
+      width: 92%;
+      padding: 18px;
+      box-shadow: 0 12px 50px rgba(0,0,0,0.6);
+    }
 
+    /* Responsive */
+    @media (max-width: 920px) {
+      .container {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+      form .row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .btn, .btn-ghost {
+        width: 100%;
+      }
+    }
+    @media (max-width: 520px) {
+      .header-logo {
+        height: 28px;
+      }
+      .header-inner {
+        padding: 8px 12px;
+      }
+    }
 
+    /* Print */
+    @media print {
+      body * { visibility: hidden; }
+      #receipt-printable,
+      #receipt-printable * { visibility: visible; }
+      #receipt-printable {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+      }
+    }
   </style>
 </head>
 <body>
 
+  <!-- Header -->
+  <header class="site-header" role="banner">
+    <div class="header-inner">
+      <a class="header-brand" href="dashboard.html" aria-label="CITI Dashboard">
+        <img class="header-logo" src="assets/citi_logo.png" alt="CITI" />
+      </a>
+      <nav class="header-nav" aria-label="Primary">
+        <a class="header-nav-link" href="dashboard.html">Dashboard</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
   <div class="container" role="main">
     <div class="panel" aria-labelledby="panel-title">
       <div class="brand-row">
         <div class="brand">
-
-<div class="logo" aria-hidden="true">
-  <img src="assets/citi.png" alt="Citi logo" class="logo-img" />
-</div>
-
+          <div class="logo-box" aria-hidden="true">
+            <img src="assets/citi.png" alt="" />
+          </div>
           <div>
             <div id="panel-title" class="title">Transfer funds</div>
             <div class="subtitle">Send money — Internet Banking</div>
           </div>
         </div>
-        <div class="muted">Logged in as <strong> Hart Gijs</strong></div>
+        <div class="muted">Logged in as <strong>Hart Gijs</strong></div>
       </div>
 
       <form id="transferForm" autocomplete="off" novalidate>
@@ -135,7 +396,7 @@ body main,
 
         <div style="margin-bottom:12px">
           <label for="amount">Amount</label>
-          <input id="amount" name="amount" type="number" min="0.01" step="0.01" value="0.00" required />
+          <input id="amount" name="amount" type="number" min="0.01" step="0.01" value="" placeholder="0.00" required />
         </div>
 
         <div style="margin-bottom:12px">
@@ -143,23 +404,23 @@ body main,
           <input id="note" name="note" type="text" placeholder="For rent, invoice #123" />
         </div>
 
-        <div style="display:flex;gap:12px;align-items:center;margin-top:8px">
+        <div style="display:flex;gap:12px;align-items:center;margin-top:8px;flex-wrap:wrap">
           <button type="submit" id="sendBtn" class="btn">Send transfer</button>
           <button type="button" id="resetBtn" class="btn-ghost">Reset</button>
-          <div style="margin-left:auto" class="muted">Available balance <strong id="balanceDisplay">$873,255.78</strong></div>
+          <div style="margin-left:auto" class="muted">Available balance <strong id="balanceDisplay">$0.00</strong></div>
         </div>
 
         <div class="helper">This balance updates immediately after each transfer</div>
       </form>
 
-      <div style="margin-top:18px;display:flex;justify-content:space-between;align-items:center">
+      <div style="margin-top:18px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
         <div class="subtitle">Recent activity</div>
         <div class="muted">Latest transfers and debits</div>
       </div>
 
-      <div style="display:flex;gap:10px;margin-top:12px;align-items:center">
+      <div style="display:flex;gap:10px;margin-top:12px;align-items:center;flex-wrap:wrap">
         <button id="clearHistory" class="btn-ghost">Clear</button>
-        <button id="topupBtn" class="btn-ghost" title="Add $500 for testing">Top up $0.00</button>
+        <button id="topupBtn" class="btn-ghost" title="Add $500 for testing">Top up $500</button>
       </div>
 
       <div class="history-list" id="historyList" aria-live="polite"></div>
@@ -168,7 +429,7 @@ body main,
     <aside class="panel balance-card" aria-labelledby="balance-title">
       <div>
         <div id="balance-title" class="balance-label">Available balance</div>
-        <div class="balance-amount" id="balanceAmount">$873,255.78</div>
+        <div class="balance-amount" id="balanceAmount">$0.00</div>
         <div class="muted" id="currencyNote">Currency: NZD</div>
       </div>
 
@@ -180,7 +441,7 @@ body main,
     </aside>
   </div>
 
-  <!-- Receipt Modal (in-page) -->
+  <!-- Receipt Modal -->
   <div id="modalBackdrop" class="modal-backdrop" role="dialog" aria-modal="true" aria-hidden="true">
     <div class="modal" id="receiptModal" role="document" aria-labelledby="receiptTitle">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
@@ -195,163 +456,250 @@ body main,
   </div>
 
   <script>
-    /* ===== merged, cleaned, robust transfer.html ===== */
+  (function () {
+    'use strict';
 
-    const BALANCE_KEY = 'balance';
-    const TX_KEY = 'transactions';
-    const CURRENCY = 'NZD';
-    // Preserve displayed balance value as seed if none exists
-    const SEED_BALANCE = 873255.78;
+    // ── Constants ──
+    var BALANCE_KEY = 'balance';
+    var TX_KEY = 'transactions';
+    var CURRENCY = 'NZD';
+    var SEED_BALANCE = 873255.78;
 
-    /* small helpers */
-    function safeParse(key, fallback){
-      try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch { return fallback; }
-    }
-    function formatCurrency(amount){
-      try { return new Intl.NumberFormat(undefined, { style:'currency', currency: CURRENCY }).format(amount); }
-      catch { return '$' + Number(amount).toFixed(2); }
-    }
-    function uid(){ return 'tx_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2,8); }
-    function escapeHtml(s){ if(s == null) return ''; return String(s).replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'})[m]); }
-
-    /* Single set of storage primitives (no duplicates) */
-    function initStorage(){
-      if(!localStorage.getItem(BALANCE_KEY)){
-        localStorage.setItem(BALANCE_KEY, JSON.stringify({ amount: SEED_BALANCE, currency: CURRENCY }));
+    // ── Helpers ──
+    function safeParse(key, fallback) {
+      try {
+        var val = localStorage.getItem(key);
+        return val ? JSON.parse(val) : fallback;
+      } catch (e) {
+        return fallback;
       }
-      if(!localStorage.getItem(TX_KEY)){
+    }
+
+    function formatCurrency(amount) {
+      try {
+        return new Intl.NumberFormat(undefined, {
+          style: 'currency',
+          currency: CURRENCY
+        }).format(amount);
+      } catch (e) {
+        return '$' + Number(amount).toFixed(2);
+      }
+    }
+
+    function uid() {
+      return 'tx_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 8);
+    }
+
+    function escapeHtml(s) {
+      if (s == null) return '';
+      return String(s).replace(/[&<>"']/g, function (m) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m];
+      });
+    }
+
+    // ── Storage ──
+    function initStorage() {
+      if (!localStorage.getItem(BALANCE_KEY)) {
+        localStorage.setItem(BALANCE_KEY, JSON.stringify({
+          amount: SEED_BALANCE,
+          currency: CURRENCY
+        }));
+      }
+      if (!localStorage.getItem(TX_KEY)) {
         localStorage.setItem(TX_KEY, JSON.stringify([]));
       }
     }
 
-    function getBalance(){
-      const b = safeParse(BALANCE_KEY, { amount: SEED_BALANCE, currency: CURRENCY });
-      return { amount: Number(b.amount) || 0, currency: b.currency || CURRENCY };
+    function getBalance() {
+      var b = safeParse(BALANCE_KEY, { amount: SEED_BALANCE, currency: CURRENCY });
+      return {
+        amount: Number(b.amount) || 0,
+        currency: b.currency || CURRENCY
+      };
     }
 
-    function setBalanceObj(b){
-      localStorage.setItem(BALANCE_KEY, JSON.stringify({ amount: Number(b.amount) || 0, currency: b.currency || CURRENCY }));
+    function setBalance(b) {
+      localStorage.setItem(BALANCE_KEY, JSON.stringify({
+        amount: Number(b.amount) || 0,
+        currency: b.currency || CURRENCY
+      }));
     }
 
-    function getTxs(){ return safeParse(TX_KEY, []); }
-    function setTxs(txs){ localStorage.setItem(TX_KEY, JSON.stringify(txs)); }
+    function getTxs() {
+      return safeParse(TX_KEY, []);
+    }
 
-    /* Renderers */
-    function renderBalance(){
-      const b = getBalance();
+    function setTxs(txs) {
+      localStorage.setItem(TX_KEY, JSON.stringify(txs));
+    }
+
+    // ── Renderers ──
+    function renderBalance() {
+      var b = getBalance();
       document.getElementById('balanceAmount').textContent = formatCurrency(b.amount);
       document.getElementById('balanceDisplay').textContent = formatCurrency(b.amount);
       document.getElementById('currencyLabel').textContent = CURRENCY;
       document.getElementById('currencyNote').textContent = 'Currency: ' + CURRENCY;
     }
 
-    function createTxRow(tx){
-      const row = document.createElement('div');
+    function createTxRow(tx) {
+      var row = document.createElement('div');
       row.className = 'tx';
-      const left = document.createElement('div'); left.className = 'left';
-      const title = document.createElement('div'); title.className = 'title'; title.textContent = tx.description || (tx.type === 'debit' ? 'Debit' : 'Credit');
-      const meta = document.createElement('div'); meta.className = 'meta'; meta.textContent = new Date(tx.timestamp).toLocaleString() + ' · To ' + (tx.toAccount || tx.to || 'external');
-      left.appendChild(title); left.appendChild(meta);
-      const amt = document.createElement('div'); amt.className = 'amount'; amt.textContent = (tx.type === 'debit' ? '-' : '') + formatCurrency(tx.amount);
-      if(!tx.success) amt.style.color = 'var(--danger)';
-      row.appendChild(left); row.appendChild(amt);
+
+      var left = document.createElement('div');
+      left.className = 'left';
+
+      var title = document.createElement('div');
+      title.className = 'title';
+      title.textContent = tx.description || (tx.type === 'debit' ? 'Debit' : 'Credit');
+
+      var meta = document.createElement('div');
+      meta.className = 'meta';
+      meta.textContent = new Date(tx.timestamp).toLocaleString() + ' · To ' + (tx.toAccount || tx.to || 'external');
+
+      left.appendChild(title);
+      left.appendChild(meta);
+
+      var amt = document.createElement('div');
+      amt.className = 'amount';
+      amt.textContent = (tx.type === 'debit' ? '-' : '+') + formatCurrency(tx.amount);
+      if (!tx.success) amt.style.color = 'var(--danger)';
+
+      row.appendChild(left);
+      row.appendChild(amt);
+
       return row;
     }
 
-    function renderHistory(){
-      const list = document.getElementById('historyList');
-      const side = document.getElementById('sideHistory');
-      list.innerHTML = ''; side.innerHTML = '';
-      const txs = getTxs().slice().reverse();
-      if(!txs.length){
-        const none = document.createElement('div'); none.className='tx';
+    function renderHistory() {
+      var list = document.getElementById('historyList');
+      var side = document.getElementById('sideHistory');
+      list.innerHTML = '';
+      side.innerHTML = '';
+
+      var txs = getTxs().slice().reverse();
+
+      if (!txs.length) {
+        var none = document.createElement('div');
+        none.className = 'tx';
         none.innerHTML = '<div><div style="font-weight:600">No transactions</div><div class="meta">Your recent debits will appear here</div></div><div class="muted">—</div>';
-        list.appendChild(none); side.appendChild(none.cloneNode(true));
+        list.appendChild(none);
+        side.appendChild(none.cloneNode(true));
         return;
       }
-      txs.forEach(tx => {
-        const row = createTxRow(tx);
+
+      txs.forEach(function (tx) {
+        var row = createTxRow(tx);
         list.appendChild(row);
         side.appendChild(row.cloneNode(true));
       });
     }
 
-    /* Receipt modal helpers */
-    const modalBackdrop = document.getElementById('modalBackdrop');
-    const receiptContent = document.getElementById('receiptContent');
-    const closeModalBtn = document.getElementById('closeModal');
-    const printModalBtn = document.getElementById('printModal');
+    // ── Receipt Modal ──
+    var modalBackdrop = document.getElementById('modalBackdrop');
+    var receiptContent = document.getElementById('receiptContent');
+    var closeModalBtn = document.getElementById('closeModal');
+    var printModalBtn = document.getElementById('printModal');
 
-    function openReceiptModal(tx){
-      receiptContent.innerHTML = `
-        <div id="receipt-printable">
-          <div style="padding-bottom:12px;border-bottom:1px solid #eee;margin-bottom:12px">
-            <div style="font-weight:700;font-size:18px">Transaction Receipt</div>
-            <div style="color:#666;font-size:12px;margin-top:6px">Transaction ID: ${escapeHtml(tx.id)}</div>
-          </div>
-          <div style="font-size:14px;color:#222">
-            <div style="display:flex;justify-content:space-between;padding:8px 0"><div><strong>Recipient</strong></div><div>${escapeHtml(tx.recipientName)}</div></div>
-            <div style="display:flex;justify-content:space-between;padding:8px 0"><div><strong>Account</strong></div><div>${escapeHtml(tx.toAccount)}</div></div>
-            <div style="display:flex;justify-content:space-between;padding:8px 0"><div><strong>Bank code</strong></div><div>${escapeHtml(tx.bankCode || '—')}</div></div>
-            <div style="display:flex;justify-content:space-between;padding:8px 0"><div><strong>Amount</strong></div><div style="font-weight:800">${formatCurrency(tx.amount)}</div></div>
-            <div style="display:flex;justify-content:space-between;padding:8px 0"><div><strong>Note</strong></div><div>${escapeHtml(tx.description || '—')}</div></div>
-            <div style="display:flex;justify-content:space-between;padding:8px 0"><div><strong>Date</strong></div><div>${new Date(tx.timestamp).toLocaleString()}</div></div>
-            <div style="display:flex;justify-content:space-between;padding:8px 0"><div><strong>Status</strong></div><div>${tx.success ? 'Completed' : 'Failed'}</div></div>
-          </div>
-        </div>
-      `;
-      modalBackdrop.style.display = 'flex';
+    function openReceiptModal(tx) {
+      receiptContent.innerHTML =
+        '<div id="receipt-printable">' +
+          '<div style="padding-bottom:12px;border-bottom:1px solid #eee;margin-bottom:12px">' +
+            '<div style="font-weight:700;font-size:18px">Transaction Receipt</div>' +
+            '<div style="color:#666;font-size:12px;margin-top:6px">Transaction ID: ' + escapeHtml(tx.id) + '</div>' +
+          '</div>' +
+          '<div style="font-size:14px;color:#222">' +
+            '<div style="display:flex;justify-content:space-between;padding:8px 0"><div><strong>Recipient</strong></div><div>' + escapeHtml(tx.recipientName) + '</div></div>' +
+            '<div style="display:flex;justify-content:space-between;padding:8px 0"><div><strong>Account</strong></div><div>' + escapeHtml(tx.toAccount) + '</div></div>' +
+            '<div style="display:flex;justify-content:space-between;padding:8px 0"><div><strong>Bank code</strong></div><div>' + escapeHtml(tx.bankCode || '—') + '</div></div>' +
+            '<div style="display:flex;justify-content:space-between;padding:8px 0"><div><strong>Amount</strong></div><div style="font-weight:800">' + formatCurrency(tx.amount) + '</div></div>' +
+            '<div style="display:flex;justify-content:space-between;padding:8px 0"><div><strong>Note</strong></div><div>' + escapeHtml(tx.description || '—') + '</div></div>' +
+            '<div style="display:flex;justify-content:space-between;padding:8px 0"><div><strong>Date</strong></div><div>' + new Date(tx.timestamp).toLocaleString() + '</div></div>' +
+            '<div style="display:flex;justify-content:space-between;padding:8px 0"><div><strong>Status</strong></div><div>' + (tx.success ? 'Completed' : 'Failed') + '</div></div>' +
+          '</div>' +
+        '</div>';
+
+      modalBackdrop.classList.add('open');
       modalBackdrop.setAttribute('aria-hidden', 'false');
       closeModalBtn.focus();
     }
 
-    function closeReceiptModal(){ modalBackdrop.style.display = 'none'; modalBackdrop.setAttribute('aria-hidden','true'); receiptContent.innerHTML = ''; }
+    function closeReceiptModal() {
+      modalBackdrop.classList.remove('open');
+      modalBackdrop.setAttribute('aria-hidden', 'true');
+      receiptContent.innerHTML = '';
+    }
 
-    printModalBtn.addEventListener('click', function(){ window.print(); });
+    printModalBtn.addEventListener('click', function () {
+      window.print();
+    });
     closeModalBtn.addEventListener('click', closeReceiptModal);
-    modalBackdrop.addEventListener('click', function(e){ if(e.target === modalBackdrop) closeReceiptModal(); });
+    modalBackdrop.addEventListener('click', function (e) {
+      if (e.target === modalBackdrop) closeReceiptModal();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && modalBackdrop.classList.contains('open')) {
+        closeReceiptModal();
+      }
+    });
 
-    /* Parse amount defensively */
-    function parseAmountInput(){
-      const raw = (document.getElementById('amount').value || '').trim();
-      const cleaned = raw.replace(/[^\d.-]/g,'');
-      const v = parseFloat(cleaned);
+    // ── Transfer Handler ──
+    function parseAmountInput() {
+      var raw = (document.getElementById('amount').value || '').trim();
+      var cleaned = raw.replace(/[^\d.-]/g, '');
+      var v = parseFloat(cleaned);
       return Number.isFinite(v) ? v : NaN;
     }
 
-    /* Transfer handler: validate -> deduct -> append tx -> redirect to success page */
-    function onTransfer(e){
-      e && e.preventDefault();
-      const recipientName = document.getElementById('recipientName').value.trim();
-      const toAccount = document.getElementById('toAccount').value.trim();
-      const bankCode = document.getElementById('bankCode').value.trim();
-      const amount = parseAmountInput();
-      const description = (document.getElementById('note').value || '').trim() || 'Transfer';
+    function onTransfer(e) {
+      e.preventDefault();
 
-      if(!recipientName){ alert('Please enter recipient name'); return; }
-      if(!toAccount){ alert('Please enter account number'); return; }
-      if(!Number.isFinite(amount) || amount <= 0){ alert('Enter an amount greater than 0'); return; }
+      var recipientName = document.getElementById('recipientName').value.trim();
+      var toAccount = document.getElementById('toAccount').value.trim();
+      var bankCode = document.getElementById('bankCode').value.trim();
+      var amount = parseAmountInput();
+      var description = (document.getElementById('note').value || '').trim() || 'Transfer';
 
-      const balance = getBalance();
-      if(amount > balance.amount + 1e-9){ alert('Insufficient funds'); return; }
+      if (!recipientName) {
+        alert('Please enter recipient name');
+        return;
+      }
+      if (!toAccount) {
+        alert('Please enter account number');
+        return;
+      }
+      if (!Number.isFinite(amount) || amount <= 0) {
+        alert('Enter an amount greater than 0');
+        return;
+      }
 
-      const tx = {
+      var balance = getBalance();
+      if (amount > balance.amount + 1e-9) {
+        alert('Insufficient funds');
+        return;
+      }
+
+      var tx = {
         id: uid(),
         timestamp: Date.now(),
-        recipientName,
-        toAccount,
-        bankCode,
+        recipientName: recipientName,
+        toAccount: toAccount,
+        bankCode: bankCode,
         amount: Number(amount),
         currency: CURRENCY,
-        description,
+        description: description,
         type: 'debit',
         success: true
       };
 
-      // Persist: deduct and append
-      const newBal = { amount: Number((balance.amount - amount).toFixed(2)), currency: CURRENCY };
-      setBalanceObj(newBal);
-      const txs = getTxs();
+      // Persist
+      var newBal = {
+        amount: Number((balance.amount - amount).toFixed(2)),
+        currency: CURRENCY
+      };
+      setBalance(newBal);
+
+      var txs = getTxs();
       txs.push(tx);
       setTxs(txs);
 
@@ -359,18 +707,22 @@ body main,
       renderBalance();
       renderHistory();
 
-      // Save lastTxId for success page and redirect
+      // Save lastTxId and redirect
       localStorage.setItem('lastTxId', tx.id);
       window.location.href = 'transfer-success.html?tx=' + encodeURIComponent(tx.id);
     }
 
-    /* Top up test helper (credits and logs) */
-    function topUpTest(){
-      const topAmount = 500.00;
-      const balance = getBalance();
-      const newBal = { amount: Number((balance.amount + topAmount).toFixed(2)), currency: CURRENCY };
-      setBalanceObj(newBal);
-      const tx = {
+    // ── Top Up Test Helper ──
+    function topUpTest() {
+      var topAmount = 500.00;
+      var balance = getBalance();
+      var newBal = {
+        amount: Number((balance.amount + topAmount).toFixed(2)),
+        currency: CURRENCY
+      };
+      setBalance(newBal);
+
+      var tx = {
         id: uid(),
         timestamp: Date.now(),
         to: 'TopUp',
@@ -380,211 +732,527 @@ body main,
         type: 'credit',
         success: true
       };
-      const txs = getTxs(); txs.push(tx); setTxs(txs);
-      renderBalance(); renderHistory();
-      alert(`Account credited ${formatCurrency(topAmount)} .`);
-    }
 
-    /* Controls wiring */
-    document.getElementById('transferForm').addEventListener('submit', onTransfer);
-    document.getElementById('resetBtn').addEventListener('click', ()=>{ if(confirm('Reset the transfer form?')) document.getElementById('transferForm').reset(); });
-    document.getElementById('clearHistory').addEventListener('click', ()=>{ if(!confirm('Clear transaction history? This cannot be undone.')) return; setTxs([]); renderHistory(); });
-    document.getElementById('topupBtn').addEventListener('click', topUpTest);
-    // optional nav button if present elsewhere
-    document.getElementById('nav-dashboard')?.addEventListener('click', ()=>{ window.location.href = 'dashboard.html'; });
+      var txs = getTxs();
+      txs.push(tx);
+      setTxs(txs);
 
-    /* React to native storage changes from other tabs */
-    window.addEventListener('storage', function(e){
-      if(e.key === BALANCE_KEY) renderBalance();
-      if(e.key === TX_KEY) renderHistory();
-    });
-
-    /* Init */
-    (function init(){
-      initStorage();
       renderBalance();
       renderHistory();
-      // Prefill sample values (keeps your original convenience values)
-      document.getElementById('recipientName').value = '';
-      document.getElementById('toAccount').value = '';
-      document.getElementById('bankCode').value = '';
-      document.getElementById('amount').value = '';
-      document.getElementById('note').value = '';
-      window._citi = { getBalance, getTxs }; // debug helpers
-    })();
-
-    /* Exposed low-level helpers (single canonical implementations) */
-    function getTxs(){ return safeParse(TX_KEY, []); }
-    function setTxsLocal(txs){ localStorage.setItem(TX_KEY, JSON.stringify(txs)); }
-    function setTxs(txs){ setTxsLocal(txs); }
-    function getBalance(){ const b = safeParse(BALANCE_KEY, { amount: SEED_BALANCE, currency: CURRENCY }); return { amount: Number(b.amount) || 0, currency: b.currency || CURRENCY }; }
-    function setBalance(b){ setBalanceObj(b); }
-    function initStorageLocal(){ if(!localStorage.getItem(BALANCE_KEY)) localStorage.setItem(BALANCE_KEY, JSON.stringify({ amount: SEED_BALANCE, currency: CURRENCY })); if(!localStorage.getItem(TX_KEY)) localStorage.setItem(TX_KEY, JSON.stringify([])); }
-    // ensure initStorage alias points to the canonical function
-    // (keeps code that calls initStorage working)
-    if (typeof initStorage !== 'function') { var initStorage = initStorageLocal; }
-
-
-
-
-</script>
-<script>
-(function(){
-  // id constants
-  const ID = 'citi-fixed-top';
-  const CSS_ID = ID + '-css';
-
-  // remove any previous header we injected (safe re-run)
-  const prev = document.getElementById(ID);
-  if (prev) prev.remove();
-  const prevCss = document.getElementById(CSS_ID);
-  if (prevCss) prevCss.remove();
-
-  // create header element
-  const header = document.createElement('header');
-  header.id = ID;
-  header.setAttribute('role','banner');
-  header.innerHTML = `
-    <div class="citi-fixed-inner">
-      <a class="citi-brand" href="dashboard.html" aria-label="CITI Home">
-        <img class="citi-logo" src="assets/citi_logo.png" alt="CITI" />
-      </a>
-      <nav class="citi-nav" aria-label="Primary">
-        <a class="citi-nav-link" href="dashboard.html">Dashboard</a>
-      </nav>
-    </div>
-  `;
-
-  // scoped CSS
-  const css = document.createElement('style');
-  css.id = CSS_ID;
-  css.textContent = `
-    /* fixed stacked header */
-    #${ID} {
-      position: fixed !important;
-      inset: 0 auto auto 0;
-      width: 100%;
-      z-index: 999999 !important;
-      display: block;
-      background: linear-gradient(180deg, rgba(7,16,26,0.98), rgba(7,24,39,0.96));
-      border-bottom: 1px solid rgba(255,255,255,0.03);
-      -webkit-backdrop-filter: blur(6px);
-      backdrop-filter: blur(6px);
-      box-shadow: 0 8px 28px rgba(2,6,23,0.32);
+      alert('Account credited ' + formatCurrency(topAmount));
     }
-    #${ID} .citi-fixed-inner {
-      max-width: 980px;
-      margin: 0 auto;
-      padding: 10px 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      align-items: center;
-      box-sizing: border-box;
-    }
-    #${ID} .citi-logo { height:36px; width:auto; display:block; border-radius:8px; box-shadow: 0 6px 18px rgba(2,6,23,0.22); }
-    #${ID} .citi-nav { display:flex; gap:12px; justify-content:center; width:100%; }
-    #${ID} .citi-nav-link { color:#E8EEF6; text-decoration:none; font-weight:700; padding:8px 12px; border-radius:8px; }
-    @media (max-width:520px){ #${ID} .citi-logo { height:28px; } #${ID} .citi-fixed-inner { padding:8px 12px; } }
-  `;
-  document.head.appendChild(css);
 
-  // insert header as first child of body
-  document.body.insertBefore(header, document.body.firstChild);
+    // ── Event Wiring ──
+    document.getElementById('transferForm').addEventListener('submit', onTransfer);
 
-  // utility: find best main container to adjust
-  function findMainWrapper(){
-    const candidates = [
-      document.querySelector('body > .container'),
-      document.querySelector('#transfer-root'),
-      document.querySelector('body main'),
-      document.querySelector('.container'),
-      document.querySelector('#app'),
-      document.querySelector('#root')
-    ];
-    for (const c of candidates) if (c) return c;
-    // fallback: first sizable element after header
-    const children = Array.from(document.body.children).filter(n => n.id !== ID && n.tagName !== 'SCRIPT' && n.tagName !== 'STYLE' && n.tagName !== 'LINK');
-    for (const ch of children) {
-      if (ch.getBoundingClientRect().height > 60) return ch;
-    }
-    return null;
-  }
-
-  // apply top padding so content sits under header properly
-  function sync(){
-    const hdr = document.getElementById(ID);
-    if (!hdr) return;
-    const rect = hdr.getBoundingClientRect();
-    const h = Math.ceil(rect.height) || 72;
-    // set CSS var for global usage
-    document.documentElement.style.setProperty('--citi-header-h', h + 'px');
-
-    // find main wrapper and set padding/margin
-    const main = findMainWrapper();
-    if (main) {
-      // remove margin that might push it away
-      main.style.marginTop = '0';
-      // ensure exact padding so logo appears directly above content
-      main.style.paddingTop = (h + 6) + 'px';
-      main.style.boxSizing = 'border-box';
-      // ensure it is a direct sibling of body
-      if (main.parentElement !== document.body) {
-        document.body.insertBefore(main, document.body.children[1] || null);
+    document.getElementById('resetBtn').addEventListener('click', function () {
+      if (confirm('Reset the transfer form?')) {
+        document.getElementById('transferForm').reset();
       }
-    } else {
-      // fallback: add padding to body children except header
-      Array.from(document.body.children).forEach((el, idx) => {
-        if (el.id === ID) return;
-        if (idx === 1) { el.style.marginTop = '0'; el.style.paddingTop = (h + 6) + 'px'; }
-      });
-    }
-  }
+    });
 
-  // initial sync + watchers
-  sync();
-  window.addEventListener('resize', sync);
-  // watch for DOM changes that affect layout
-  const mo = new MutationObserver(sync);
-  mo.observe(document.body, { childList: true, subtree: true });
+    document.getElementById('clearHistory').addEventListener('click', function () {
+      if (!confirm('Clear transaction history? This cannot be undone.')) return;
+      setTxs([]);
+      renderHistory();
+    });
 
-  // ensure header is always first child (in case app re-renders)
-  const ensureFirst = setInterval(()=> {
-    const first = document.body.firstElementChild;
-    const hdr = document.getElementById(ID);
-    if (hdr && first !== hdr) {
-      document.body.insertBefore(hdr, document.body.firstChild);
-      sync();
-    }
-  }, 300);
+    document.getElementById('topupBtn').addEventListener('click', topUpTest);
 
-  // helper remove function for debugging
-  window.removeCitiFixedHeader = function(){
-    try {
-      mo.disconnect();
-      clearInterval(ensureFirst);
-      window.removeEventListener('resize', sync);
-      const el = document.getElementById(ID); if (el) el.remove();
-      const s = document.getElementById(CSS_ID); if (s) s.remove();
-      // clear paddings on likely main wrapper candidates
-      const main = findMainWrapper();
-      if (main) { main.style.paddingTop = ''; main.style.marginTop = ''; }
-      delete window.removeCitiFixedHeader;
-    } catch(e){ console.error(e); }
-  };
+    // React to storage changes from other tabs
+    window.addEventListener('storage', function (e) {
+      if (e.key === BALANCE_KEY) renderBalance();
+      if (e.key === TX_KEY) renderHistory();
+    });
 
-  // console feedback
-  console.info('CITI fixed header injected and synced. If logo path invalid, run window.removeCitiFixedHeader() and update src.');
-})();
+    // ── Init ──
+    initStorage();
+    renderBalance();
+    renderHistory();
 
+    // Expose for debugging
+    window._citi = {
+      getBalance: getBalance,
+      getTxs: getTxs
+    };
+
+  })();
   </script>
-<script>
-  function citiSetHeaderGap(px){ document.documentElement.style.setProperty('--citi-header-gap', (Number(px)||0) + 'px'); }
-  // Example: set a 40px gap
-  citiSetHeaderGap(600);
-  // Expose for manual use
-  window.citiSetHeaderGap = citiSetHeaderGap;
-</script>
 
 </body>
 </html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Transfer Success — CITI</title>
+
+  <!-- Fontsource Inter -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/css/inter@latest/index.css" />
+  <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+
+  <style>
+    :root {
+      --bg: #0f1724;
+      --muted: #9aa4b2;
+      --accent: #7c5cff;
+      --accent-2: #5ec9ff;
+      --glass: rgba(255,255,255,0.03);
+      --success: #3bd671;
+      --danger: #ff6b6b;
+      --text: #e6eef8;
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+      background:
+        radial-gradient(1200px 600px at 10% 10%, rgba(124,92,255,0.12), transparent 8%),
+        radial-gradient(900px 400px at 90% 90%, rgba(0,200,190,0.05), transparent 10%),
+        var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      padding-top: 100px;
+    }
+
+    /* Header */
+    .site-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      background: linear-gradient(180deg, rgba(7,16,26,0.98), rgba(7,24,39,0.96));
+      border-bottom: 1px solid rgba(255,255,255,0.03);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      box-shadow: 0 8px 28px rgba(2,6,23,0.32);
+    }
+    .header-inner {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .header-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text);
+    }
+    .header-logo {
+      height: 36px;
+      width: auto;
+      border-radius: 8px;
+      box-shadow: 0 6px 18px rgba(2,6,23,0.22);
+    }
+    .header-nav {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    .header-nav-link {
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 600;
+      padding: 8px 12px;
+      border-radius: 8px;
+      transition: background 0.2s;
+    }
+    .header-nav-link:hover {
+      background: rgba(255,255,255,0.05);
+    }
+
+    /* Card */
+    .card {
+      width: 760px;
+      max-width: 96%;
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02));
+      border: 1px solid rgba(255,255,255,0.04);
+      padding: 24px;
+      border-radius: 12px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .muted {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    /* Buttons */
+    .btn {
+      padding: 12px 16px;
+      border-radius: 10px;
+      border: 0;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      font-weight: 700;
+      font-family: inherit;
+      color: #08101a;
+      cursor: pointer;
+      transition: transform 0.12s, box-shadow 0.12s;
+    }
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 36px rgba(124,92,255,0.2);
+    }
+    .btn:active {
+      transform: translateY(0);
+    }
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .btn-ghost {
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.04);
+      color: var(--muted);
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .btn-ghost:hover {
+      background: rgba(255,255,255,0.03);
+      color: var(--text);
+    }
+
+    /* Receipt */
+    .receipt {
+      background: #fff;
+      color: #111;
+      padding: 18px;
+      border-radius: 10px;
+      margin-top: 16px;
+    }
+    .receipt-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .receipt-row:last-child {
+      border-bottom: none;
+    }
+    .receipt-label {
+      font-weight: 600;
+      color: #333;
+    }
+    .receipt-value {
+      color: #111;
+    }
+    .receipt-amount {
+      font-weight: 800;
+      font-size: 16px;
+    }
+
+    /* Success icon */
+    .success-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--success), #2ecc71);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+      box-shadow: 0 8px 24px rgba(59,214,113,0.3);
+    }
+    .success-icon svg {
+      width: 32px;
+      height: 32px;
+      fill: white;
+    }
+
+    /* PIN input */
+    .pin-input {
+      padding: 12px;
+      border-radius: 8px;
+      width: 160px;
+      background: var(--glass);
+      border: 1px solid rgba(255,255,255,0.03);
+      color: var(--text);
+      font-family: inherit;
+      font-size: 16px;
+      letter-spacing: 4px;
+      text-align: center;
+    }
+    .pin-input:focus {
+      outline: 2px solid rgba(124,92,255,0.3);
+      outline-offset: 2px;
+    }
+
+    /* Responsive */
+    @media (max-width: 520px) {
+      .header-logo {
+        height: 28px;
+      }
+      .header-inner {
+        padding: 8px 12px;
+      }
+      .card {
+        padding: 16px;
+      }
+      h1 {
+        font-size: 20px;
+      }
+    }
+
+    /* Print */
+    @media print {
+      body * { visibility: hidden; }
+      #receiptPrintable,
+      #receiptPrintable * { visibility: visible; }
+      #receiptPrintable {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="site-header" role="banner">
+    <div class="header-inner">
+      <a class="header-brand" href="dashboard.html" aria-label="CITI Dashboard">
+        <img class="header-logo" src="assets/citi_logo.png" alt="CITI" />
+      </a>
+      <nav class="header-nav" aria-label="Primary">
+        <a class="header-nav-link" href="dashboard.html">Dashboard</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Card -->
+  <div class="card" id="page">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+      <div>
+        <h1 id="heading">Confirm transfer</h1>
+        <div class="muted" id="sub">Enter your transaction PIN to complete the transfer</div>
+      </div>
+      <div class="muted" id="balanceTop"></div>
+    </div>
+
+    <!-- PIN Step -->
+    <div id="pinStep" style="margin-top:24px">
+      <label class="muted" for="pin">Transaction PIN</label>
+      <input id="pin" type="password" inputmode="numeric" maxlength="6" class="pin-input" placeholder="••••••" />
+      <div style="display:flex;gap:12px;margin-top:16px;flex-wrap:wrap">
+        <button id="verifyBtn" class="btn">Verify PIN & Complete</button>
+        <button id="cancelBtn" class="btn-ghost">Cancel</button>
+      </div>
+    </div>
+
+    <!-- Success Step -->
+    <div id="successStep" style="display:none;margin-top:24px">
+      <div class="success-icon">
+        <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+      </div>
+
+      <div style="text-align:center;margin-bottom:20px">
+        <div style="font-weight:700;font-size:20px" id="successTitle">Transfer completed</div>
+        <div class="muted" id="successMeta" style="margin-top:6px">Transaction recorded and added to your history</div>
+      </div>
+
+      <div style="display:flex;justify-content:center;gap:12px;margin-bottom:20px;flex-wrap:wrap">
+        <button id="printReceiptBtn" class="btn">Print receipt</button>
+        <button id="backDashboard" class="btn-ghost">Go to Dashboard</button>
+      </div>
+
+      <div class="receipt" id="receiptPrintable" aria-hidden="false">
+        <!-- Populated dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+  (function () {
+    'use strict';
+
+    // ── Constants ──
+    var BALANCE_KEY = 'balance';
+    var TX_KEY = 'transactions';
+    var CURRENCY = 'NZD';
+    var VALID_PIN = '346795';
+
+    // ── Helpers ──
+    function safeParse(key, fallback) {
+      try {
+        var val = localStorage.getItem(key);
+        return val ? JSON.parse(val) : fallback;
+      } catch (e) {
+        return fallback;
+      }
+    }
+
+    function formatCurrency(a) {
+      try {
+        return new Intl.NumberFormat(undefined, {
+          style: 'currency',
+          currency: CURRENCY
+        }).format(a);
+      } catch (e) {
+        return CURRENCY + ' ' + Number(a).toFixed(2);
+      }
+    }
+
+    function findTxById(id) {
+      var txs = safeParse(TX_KEY, []);
+      return txs.find(function (t) { return t.id === id; });
+    }
+
+    function getBalance() {
+      var b = safeParse(BALANCE_KEY, { amount: 0, currency: CURRENCY });
+      return {
+        amount: Number(b.amount) || 0,
+        currency: b.currency || CURRENCY
+      };
+    }
+
+    function getQueryParam(name) {
+      var params = new URLSearchParams(window.location.search);
+      return params.get(name);
+    }
+
+    function escapeHtml(s) {
+      if (s == null) return '';
+      return String(s).replace(/[&<>"']/g, function (m) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m];
+      });
+    }
+
+    // ── Get Transaction ID ──
+    var txId = getQueryParam('tx') || localStorage.getItem('lastTxId');
+
+    if (!txId) {
+      alert('No transaction id found. Returning to transfer screen.');
+      window.location.href = 'transfer.html';
+      return;
+    }
+
+    var tx = findTxById(txId);
+    if (!tx) {
+      alert('Transaction not found. Returning to transfer screen.');
+      window.location.href = 'transfer.html';
+      return;
+    }
+
+    // ── UI Elements ──
+    var pinStep = document.getElementById('pinStep');
+    var successStep = document.getElementById('successStep');
+    var verifyBtn = document.getElementById('verifyBtn');
+    var cancelBtn = document.getElementById('cancelBtn');
+    var heading = document.getElementById('heading');
+    var sub = document.getElementById('sub');
+    var balanceTop = document.getElementById('balanceTop');
+    var receiptPrintable = document.getElementById('receiptPrintable');
+    var printReceiptBtn = document.getElementById('printReceiptBtn');
+    var backDashboard = document.getElementById('backDashboard');
+    var pinInput = document.getElementById('pin');
+
+    // ── Render Balance ──
+    function renderTopBalance() {
+      var b = getBalance();
+      balanceTop.textContent = 'Available ' + formatCurrency(b.amount);
+    }
+    renderTopBalance();
+
+    // Show transaction summary
+    sub.textContent = 'Transfer ' + formatCurrency(tx.amount) + ' to ' + escapeHtml(tx.recipientName) + '. Enter PIN to complete.';
+
+    // ── PIN Verification ──
+    verifyBtn.addEventListener('click', function () {
+      var pin = pinInput.value.trim();
+
+      if (pin.length < 6) {
+        alert('Please enter your 6-digit PIN');
+        pinInput.focus();
+        return;
+      }
+
+      if (pin !== VALID_PIN) {
+        alert('Incorrect PIN. Please try again.');
+        pinInput.value = '';
+        pinInput.focus();
+        return;
+      }
+
+      completeTransfer();
+    });
+
+    // Allow Enter key to submit PIN
+    pinInput.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        verifyBtn.click();
+      }
+    });
+
+    cancelBtn.addEventListener('click', function () {
+      window.location.href = 'transfer.html';
+    });
+
+    // ── Complete Transfer ──
+    function completeTransfer() {
+      // Show success UI
+      pinStep.style.display = 'none';
+      successStep.style.display = 'block';
+      heading.textContent = 'Transfer success';
+      sub.textContent = 'You can print the receipt or go back to dashboard';
+
+      // Populate receipt
+      receiptPrintable.innerHTML =
+        '<div style="font-weight:700;font-size:18px;margin-bottom:12px;text-align:center">Transaction Receipt</div>' +
+        '<div style="font-size:12px;color:#666;margin-bottom:16px;text-align:center">Transaction ID: ' + escapeHtml(tx.id) + '</div>' +
+        '<div class="receipt-row"><div class="receipt-label">Recipient</div><div class="receipt-value">' + escapeHtml(tx.recipientName) + '</div></div>' +
+        '<div class="receipt-row"><div class="receipt-label">Account</div><div class="receipt-value">' + escapeHtml(tx.toAccount) + '</div></div>' +
+        '<div class="receipt-row"><div class="receipt-label">Bank code</div><div class="receipt-value">' + escapeHtml(tx.bankCode || '—') + '</div></div>' +
+        '<div class="receipt-row"><div class="receipt-label">Amount</div><div class="receipt-value receipt-amount">' + formatCurrency(tx.amount) + '</div></div>' +
+        '<div class="receipt-row"><div class="receipt-label">Note</div><div class="receipt-value">' + escapeHtml(tx.description || '—') + '</div></div>' +
+        '<div class="receipt-row"><div class="receipt-label">Date</div><div class="receipt-value">' + new Date(tx.timestamp).toLocaleString() + '</div></div>' +
+        '<div class="receipt-row"><div class="receipt-label">Status</div><div class="receipt-value" style="color:#3bd671;font-weight:700">' + (tx.success ? 'Completed' : 'Failed') + '</div></div>';
+
+      renderTopBalance();
+
+      // Focus on print button for accessibility
+      printReceiptBtn.focus();
+    }
+
+    // ── Print Receipt ──
+    printReceiptBtn.addEventListener('click', function () {
+      window.print();
+    });
+
+    // ── Back to Dashboard ──
+    backDashboard.addEventListener('click', function () {
+      window.location.href = 'dashboard.html';
+    });
+
+    // ── Auto-focus PIN input ──
+    pinInput.focus();
+
+  })();
+  </script>
+
+</body>
+</html>
+
