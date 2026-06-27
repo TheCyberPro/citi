@@ -2,17 +2,20 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Login – CITI</title>
+
+  <!-- Fontsource Inter -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/css/inter@latest/index.css" />
+
+  <!-- Styles -->
   <link rel="stylesheet" href="styles.css" />
-  <!-- Favicon -->
   <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
 </head>
 <body>
   <header class="site-header">
     <nav class="nav container">
-    <!-- Logo -->
-     <a href="/" class="nav__logo" aria-label="CITI Home">
+      <a href="/" class="nav__logo" aria-label="CITI Home">
         <img src="assets/citi_logo.png" alt="CITI Logo" />
       </a>
       <ul class="menu">
@@ -20,7 +23,7 @@
         <li><a href="index.html#pricing" class="menu-link">Pricing</a></li>
         <li><a href="index.html#about" class="menu-link">About</a></li>
         <li><a href="login.html" class="btn btn-secondary">Login</a></li>
-        <li><a href="dashboard.html" class="btn btn-primary">Open Account</a></li>
+        <li><a href="signup.html" class="btn btn-primary">Open Account</a></li>
       </ul>
     </nav>
   </header>
@@ -28,152 +31,93 @@
   <main class="container">
     <section class="login-section">
       <h1>Login to Your Account</h1>
-      <form id="login-form" class="login-form">
+      <form id="login-form" class="login-form" autocomplete="off">
         <label for="email">Email Address</label>
-        <input id="email" type="email" placeholder="you@example.com" required />
+        <input id="email" type="email" placeholder="you@example.com" required autocomplete="off" />
 
-        <label for="password">Password</label>
-        <input id="password" type="password" placeholder="••••••••" required />
+        <label for="passport">Passport Number</label>
+        <input id="passport" type="text" placeholder="Enter passport number" required autocomplete="off" />
 
+        <div id="login-msg" role="alert" aria-live="polite" style="min-height:1.4em;font-size:0.95rem;margin-top:4px;"></div>
 
-<button type="button" id="dashboard-btn" class="btn btn-link" aria-label="Login and go to dashboard">
-  Login
-</button>
+        <button type="submit" id="dashboard-btn" class="btn btn-primary" style="margin-top:12px;">
+          Login
+        </button>
 
-
-
-
-<script>
-(function () {
-  const ALLOWED_EMAIL = 'engineerhartgijs@gmail.com';
-  const ALLOWED_PASSPORT = 'HARTGIJS';
-
-  const btn = document.getElementById('dashboard-btn');
-  const msgEl = document.getElementById('login-msg');
-  const emailInput = document.getElementById('email');
-  const passportInput = document.getElementById('passport');
-
-  if (!btn || !emailInput || !passportInput || !msgEl) return;
-
-  // Ensure autocomplete is disabled (best-effort; browsers may ignore)
-  const form = document.getElementById('login-form');
-  if (form) form.setAttribute('autocomplete','off');
-  emailInput.setAttribute('autocomplete','off');
-  passportInput.setAttribute('autocomplete','off');
-
-  // Simple attempt limiter to deter rapid guessing
-  let attempts = 0;
-  const MAX_ATTEMPTS = 6;
-  let lockUntil = 0;
-
-  function showMessage(text, color) {
-    msgEl.textContent = text;
-    msgEl.style.color = color || 'black';
-  }
-
-  function isLocked() {
-    return Date.now() < lockUntil;
-  }
-
-  btn.addEventListener('click', function (e) {
-    e.preventDefault();
-
-    if (isLocked()) {
-      showMessage('Too many attempts. Try again later.', 'crimson');
-      return;
-    }
-
-    const email = (emailInput.value || '').trim();
-    const passport = (passportInput.value || '').trim();
-
-    if (!email || !passport) {
-      showMessage('Please enter both email and passport number.', 'crimson');
-      return;
-    }
-
-    // Exact-match checks (email case-insensitive, passport case-sensitive)
-    const emailMatches = email.toLowerCase() === ALLOWED_EMAIL.toLowerCase();
-    const passportMatches = passport === ALLOWED_PASSPORT;
-
-    if (emailMatches && passportMatches) {
-      showMessage('Correct credentials. Redirecting…', 'green');
-      // small delay so user can see success message
-      setTimeout(() => { window.location.href = '/dashboard.html'; }, 450);
-      return;
-    }
-
-    // incorrect
-    attempts += 1;
-    if (attempts >= MAX_ATTEMPTS) {
-      // lock for 30s after too many attempts
-      lockUntil = Date.now() + 30000;
-      showMessage('Incorrect email or passport. Too many attempts — locked for 30 seconds.', 'crimson');
-      return;
-    }
-
-    showMessage('Incorrect email or passport. Login denied.', 'crimson');
-
-    // optional: clear only the passport field to require re-entry (reduces shoulder-surfing)
-    passportInput.value = '';
-    passportInput.focus();
-  });
-
-  // Pressing Enter in either field triggers the same check
-  [emailInput, passportInput].forEach(inp => {
-    inp.addEventListener('keydown', function (ev) {
-      if (ev.key === 'Enter') {
-        ev.preventDefault();
-        btn.click();
-      }
-    });
-  });
-})();
-</script>
-
-
-
-
-        <p>Don’t have an account? 
-          <a href="index.html#get-started" class="link">Open Account</a>
+        <p style="margin-top:16px;">Don't have an account?
+          <a href="signup.html" class="link">Open Account</a>
         </p>
       </form>
     </section>
   </main>
 
   <script>
-    document
-      .getElementById('login-form')
-      .addEventListener('submit', function(e) {
-        e.preventDefault();
-        // TODO: Replace this redirect with your real auth logic
-        window.location.href = 'dashboard.html';
-      });
+  (function () {
+    const ALLOWED_EMAIL = 'engineerhartgijs@gmail.com';
+    const ALLOWED_PASSPORT = 'HARTGIJS';
+
+    const form = document.getElementById('login-form');
+    const btn = document.getElementById('dashboard-btn');
+    const msgEl = document.getElementById('login-msg');
+    const emailInput = document.getElementById('email');
+    const passportInput = document.getElementById('passport');
+
+    if (!form || !btn || !emailInput || !passportInput || !msgEl) return;
+
+    let attempts = 0;
+    const MAX_ATTEMPTS = 6;
+    let lockUntil = 0;
+
+    function showMessage(text, color) {
+      msgEl.textContent = text;
+      msgEl.style.color = color || 'inherit';
+    }
+
+    function isLocked() {
+      return Date.now() < lockUntil;
+    }
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      if (isLocked()) {
+        showMessage('Too many attempts. Try again later.', 'crimson');
+        return;
+      }
+
+      const email = (emailInput.value || '').trim();
+      const passport = (passportInput.value || '').trim();
+
+      if (!email || !passport) {
+        showMessage('Please enter both email and passport number.', 'crimson');
+        return;
+      }
+
+      const emailMatches = email.toLowerCase() === ALLOWED_EMAIL.toLowerCase();
+      const passportMatches = passport === ALLOWED_PASSPORT;
+
+      if (emailMatches && passportMatches) {
+        showMessage('Correct credentials. Redirecting…', 'green');
+        setTimeout(function () {
+          window.location.href = '/dashboard.html';
+        }, 450);
+        return;
+      }
+
+      attempts += 1;
+      if (attempts >= MAX_ATTEMPTS) {
+        lockUntil = Date.now() + 30000;
+        showMessage('Too many failed attempts — locked for 30 seconds.', 'crimson');
+        attempts = 0;
+        return;
+      }
+
+      showMessage('Incorrect email or passport. Login denied. (' + (MAX_ATTEMPTS - attempts) + ' attempts remaining)', 'crimson');
+      passportInput.value = '';
+      passportInput.focus();
+    });
+  })();
   </script>
 
-
-<script>
-  (function () {
-    const btn = document.getElementById('dashboard-btn');
-    if (!btn) return;
-    btn.addEventListener('click', function (e) {
-      e.preventDefault(); // prevents any enclosing form from submitting
-      // If you need to perform credential validation first, do it here,
-      // then on success navigate to /dashboard.html
-      window.location.href = '/dashboard.html';
-    });
-  })();
-</script>
-
-<script>
-  (function () {
-    const btn = document.getElementById('dashboard-btn');
-    if (!btn) return;
-    btn.addEventListener('click', function (e) {
-      e.preventDefault(); // prevents any enclosing form from submitting
-      // Redirect to account deactivation page
-      window.location.href = '/account-deactivation.html';
-    });
-  })();
-</script>
 </body>
 </html>
