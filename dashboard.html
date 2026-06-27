@@ -583,8 +583,8 @@
   (function () {
     'use strict';
 
-    // ── Transaction Data ──
-    window.transactions = [
+    // ── Static transaction seed data ──
+    var STATIC_TRANSACTIONS = [
       { date: 'Nov 4, 2025',  time: '11:44 PM', desc: 'Credit',  amount: 50000.00,  balance: 114345.67, status: 'Successful' },
       { date: 'Oct 28, 2025', time: '11:44 PM', desc: 'Credit',  amount: 500.00,    balance: 62315.67,  status: 'Successful' },
       { date: 'Oct 16, 2025', time: '09:57 AM', desc: 'Debit',   amount: -750.00,   balance: 62345.67,  status: 'Successful' },
@@ -641,6 +641,94 @@
       };
     }
 
+    // ── Parse a date string like "Nov 4, 2025" into a Date object ──
+    function parseTxDate(dateStr) {
+      var d = new Date(dateStr);
+      if (!isNaN(d.getTime())) return d;
+      // Fallback: try to parse manually
+      var months = { jan:0, feb:1, mar:2, apr:3, may:4, jun:5, jul:6, aug:7, sep:8, sept:8, oct:9, nov:10, dec:11 };
+      var match = dateStr.match(/^(\w+)\s+(\d{1,2}),?\s+(\d{4})/i);
+      if (match) {
+        var mon = months[match[1].toLowerCase().replace('t','')];
+        if (mon === undefined) mon = months[match[1].toLowerCase()];
+        return new Date(parseInt(match[3]), mon, parseInt(match[2]));
+      }
+      return new Date(0);
+    }
+
+    // ── Convert transfer.html localStorage tx to dashboard format ──
+    function convertStoredTx(storedTx) {
+      var ts = storedTx.timestamp ? new Date(storedTx.timestamp) : new Date();
+      var dateOpts = { month: 'short', day: 'numeric', year: 'numeric' };
+      var timeOpts = { hour: 'numeric', minute: '2-digit', hour12: true };
+
+      var dateStr = new Intl.DateTimeFormat('en-US', dateOpts).format(ts);
+      var timeStr = new Intl.DateTimeFormat('en-US', timeOpts).format(ts);
+
+      var desc = storedTx.type === 'credit' ? 'Credit' : 'Debit';
+      if (storedTx.description && storedTx.description !== 'Transfer') {
+        desc = storedTx.description;
+      }
+
+      var amount = storedTx.amount || 0;
+      if (storedTx.type === 'debit' && amount > 0) amount = -amount;
+
+      return {
+        date: dateStr,
+        time: timeStr,
+        desc: desc,
+        amount: amount,
+        balance: storedTx.balance || 0,
+        status: storedTx.success ? 'Successful' : 'Failed',
+        _sortTime: ts.getTime(),
+        _fromStorage: true
+      };
+    }
+
+    // ── Build the full merged transaction list ──
+    function buildMergedTransactions() {
+      // Start with static transactions (assign sort times)
+      var merged = STATIC_TRANSACTIONS.map(function (tx, i) {
+        return {
+          date: tx.date,
+          time: tx.time,
+          desc: tx.desc,
+          amount: tx.amount,
+          balance: tx.balance,
+          status: tx.status,
+          _sortTime: parseTxDate(tx.date).getTime() + i, // stable sort
+          _fromStorage: false
+        };
+      });
+
+      // Read stored transactions from localStorage (from transfer.html)
+      var storedTxs = [];
+      try {
+        var raw = localStorage.getItem('transactions');
+        if (raw) {
+          var parsed = JSON.parse(raw);
+          if (Array.isArray(parsed)) storedTxs = parsed;
+        }
+      } catch (e) { /* ignore */ }
+
+      // Convert and add stored transactions
+      storedTxs.forEach(function (stx) {
+        merged.push(convertStoredTx(stx));
+      });
+
+      // Sort by timestamp descending (most recent first)
+      merged.sort(function (a, b) {
+        return (b._sortTime || 0) - (a._sortTime || 0);
+      });
+
+      return merged;
+    }
+
+    // ── Get the current merged transaction list ──
+    function getAllTransactions() {
+      return buildMergedTransactions();
+    }
+
     // ── Footer Year ──
     var footerYear = document.getElementById('footer-year');
     if (footerYear) footerYear.textContent = new Date().getFullYear();
@@ -657,9 +745,9 @@
       try { localStorage.setItem(key, now.toISOString()); } catch (e) { /* noop */ }
     })();
 
-    // ── Render Recent Transactions ──
+    // ── Render Recent Transactions (top 3 in table, top 6 in cards) ──
     function renderRecent() {
-      var list = window.transactions || [];
+      var list = getAllTransactions();
       var tbody = document.getElementById('tx-tbody');
       if (tbody) {
         tbody.innerHTML = list.slice(0, 3).map(function (tx) {
@@ -692,7 +780,7 @@
       miniSearch.addEventListener('input', function () {
         var q = this.value.toLowerCase().trim();
         document.querySelectorAll('table.transactions tbody tr').forEach(function (tr) {
-          tr.style.display = (!q || tr.textContent.toLowerCase().includes(q)) ? '' : 'none';
+          tr.style.display = (!q || tr.textContent.toLowerCase().indexOf(q) !== -1) ? '' : 'none';
         });
       });
     }
@@ -732,7 +820,7 @@
           if (type === 'debit' && item.amount > 0) return false;
           if (type === 'pending' && !(item.status && item.status.toLowerCase().indexOf('pending') !== -1)) return false;
           if (from || to) {
-            var parsed = new Date(item.date);
+            var parsed = parseTxDate(item.date);
             if (from && parsed < from) return false;
             if (to && parsed > new Date(to.getTime() + 86400000)) return false;
           }
@@ -762,7 +850,7 @@
       }
 
       function refresh() {
-        filtered = applyFilters(window.transactions || []);
+        filtered = applyFilters(getAllTransactions());
         page = 1;
         renderPage();
       }
@@ -860,6 +948,29 @@
     if (overlayBackdrop) overlayBackdrop.addEventListener('click', closeMenu);
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape' && menuOverlay && menuOverlay.classList.contains('open')) closeMenu();
+    });
+
+    // ── Listen for storage changes (auto-refresh when transfer.html updates localStorage) ──
+    window.addEventListener('storage', function (e) {
+      if (e.key === 'transactions' || e.key === 'balance') {
+        renderRecent();
+        // Also refresh drawer if it's open
+        if (typeof window.refreshTxDrawer === 'function') {
+          window.refreshTxDrawer();
+        }
+      }
+    });
+
+    // ── Also refresh on page visibility change (coming back from transfer page) ──
+    document.addEventListener('visibilitychange', function () {
+      if (!document.hidden) {
+        renderRecent();
+      }
+    });
+
+    // ── Refresh transactions when window gets focus (user returns from transfer page) ──
+    window.addEventListener('focus', function () {
+      renderRecent();
     });
 
     // ── Initial Render ──
