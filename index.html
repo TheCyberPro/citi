@@ -1,69 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <meta charset="utf-8" />
+  <meta name="<!DOCTYPE html>
+<html lang="en">
+<head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>CITI | Modern Banking for Startups & Innovators</title>
   <meta name="description" content="CITI is the banking platform built for modern companies. Open an account in minutes, move money globally, and manage spend with confidence." />
 
-<!-- Favicons -->
-<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-<link rel="manifest" href="/site.webmanifest">
-<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+  <!-- Favicons -->
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
 
-<!-- Open Graph / Social Preview -->
-<meta property="og:title" content="CITI | Modern Banking for Startups & Innovators" />
-<meta property="og:description" content="Open a global business account in minutes. Spend smarter, move faster, and scale with confidence." />
-<meta property="og:image" content="https://citi-gamma.vercel.app/assets/og-image.png" />
-<meta property="og:url" content="https://citi-gamma.vercel.app/" />
-<meta name="twitter:card" content="summary_large_image" />
+  <!-- Open Graph / Social Preview -->
+  <meta property="og:title" content="CITI | Modern Banking for Startups & Innovators" />
+  <meta property="og:description" content="Open a global business account in minutes. Spend smarter, move faster, and scale with confidence." />
+  <meta property="og:image" content="https://citi-gamma.vercel.app/assets/og-image.png" />
+  <meta property="og:url" content="https://citi-gamma.vercel.app/" />
+  <meta name="twitter:card" content="summary_large_image" />
 
-<!-- SEO Keywords -->
-<meta name="keywords" content="CITI, fintech, startup banking, global accounts, treasury, smart cards" />
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <!-- SEO Keywords -->
+  <meta name="keywords" content="CITI, fintech, startup banking, global accounts, treasury, smart cards" />
 
-  <!-- Font Awesome -->
-  <script src="https://kit.fontawesome.com/your-kit-id.js" crossorigin="anonymous"></script>
+  <!-- Fontsource Inter -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/css/inter@latest/index.css" />
+
+  <!-- Font Awesome (CDN) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
   <!-- Styles -->
   <link rel="stylesheet" href="styles.css" />
- <!-- Favicon -->
-  <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
 </head>
 <body>
 
   <!-- NAVIGATION -->
-<header class="site-header">
-  <nav class="nav container">
-    <!-- Logo -->
-     <a href="/" class="nav__logo" aria-label="CITI Home">
+  <header class="site-header">
+    <nav class="nav container">
+      <a href="/" class="nav__logo" aria-label="CITI Home">
         <img src="assets/citi_logo.png" alt="CITI Logo" />
       </a>
-    <!-- Right: Always-visible Hamburger -->
-    <button class="nav-toggle" aria-label="Open menu">
-      <span></span><span></span><span></span>
-    </button>
-  </nav>
+      <button class="nav-toggle" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
 
-  <!-- Full-screen Overlay Menu -->
-  <div class="menu-overlay" aria-hidden="true">
-    <button class="overlay-close" aria-label="Close menu">&times;</button>
-    <ul class="overlay-menu">
-      <li><a href="#products">Products</a></li>
-      <li><a href="#solutions">Solutions</a></li>
-      <li><a href="#resources">Resources</a></li>
-      <li><a href="#about">About</a></li>
-      <li><a href="#pricing">Pricing</a></li>
-    </ul>
-    <div class="overlay-cta">
-      <a href="login.html"  class="login-link">Log In</a>
-      <a href="signup.html" class="btn-primary">Open Account</a>
+    <!-- Full-screen Overlay Menu -->
+    <div class="menu-overlay" aria-hidden="true">
+      <button class="overlay-close" aria-label="Close menu">&times;</button>
+      <ul class="overlay-menu">
+        <li><a href="#products">Products</a></li>
+        <li><a href="#solutions">Solutions</a></li>
+        <li><a href="#resources">Resources</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+      </ul>
+      <div class="overlay-cta">
+        <a href="login.html" class="login-link">Log In</a>
+        <a href="signup.html" class="btn-primary">Open Account</a>
+      </div>
     </div>
-  </div>
-</header>
+  </header>
+
   <!-- HERO -->
   <section class="hero hero--luxury">
     <div class="container hero__inner">
@@ -71,8 +73,10 @@
       <p class="hero__subtitle">
         Open a global business account in minutes. Spend smarter, move faster, and scale with confidence.
       </p>
-      <a href="signup.html" class="btn btn--secondary">Get Started</a>
-	    <a href="login.html" class="btn btn-secondary">Login</a>
+      <div class="hero__actions">
+        <a href="signup.html" class="btn btn--secondary">Get Started</a>
+        <a href="login.html" class="btn btn-secondary">Login</a>
+      </div>
       <p class="hero__trust">Trusted by 10,000+ startups worldwide</p>
     </div>
   </section>
@@ -114,7 +118,7 @@
             <li>Unlimited transfers</li>
             <li>Basic support</li>
           </ul>
-          <a href="#contact" class="btn btn--secondary">Open Free</a>
+          <a href="signup.html" class="btn btn--secondary">Open Free</a>
         </div>
         <div class="pricing-card featured">
           <h3>Growth</h3>
@@ -124,7 +128,7 @@
             <li>Advanced treasury</li>
             <li>Custom integrations</li>
           </ul>
-          <a href="#contact" class="btn btn--primary">Upgrade</a>
+          <a href="signup.html" class="btn btn--primary">Upgrade</a>
         </div>
       </div>
     </div>
@@ -136,11 +140,11 @@
       <h2 class="section__title">Loved by Founders</h2>
       <div class="testimonial-slider">
         <blockquote class="testimonial active">
-          <p>“CITI gave us global accounts in minutes. We scaled across 3 continents without friction.”</p>
+          <p>"CITI gave us global accounts in minutes. We scaled across 3 continents without friction."</p>
           <footer>— Sarah K., CEO of NovaTech</footer>
         </blockquote>
         <blockquote class="testimonial">
-          <p>“The spend controls and real‑time insights are a game‑changer for our finance team.”</p>
+          <p>"The spend controls and real‑time insights are a game‑changer for our finance team."</p>
           <footer>— Daniel R., CFO of ScaleUp</footer>
         </blockquote>
       </div>
@@ -152,50 +156,72 @@
     <div class="container">
       <h2 class="section__title">Why CITI?</h2>
       <p class="about__text">
-        We’re building the financial stack for the next generation of companies. From instant onboarding to automated treasury, CITI is designed to help you move faster, stay compliant, and scale globally.
+        We're building the financial stack for the next generation of companies. From instant onboarding to automated treasury, CITI is designed to help you move faster, stay compliant, and scale globally.
       </p>
     </div>
   </section>
 
-  <!-- CONTACT -->
+  <!-- CONTACT / CTA -->
   <section id="contact" class="section section--accent">
     <div class="container contact">
       <h2 class="contact__title">Open Your Account Today</h2>
       <p class="contact__text">No paperwork. No hidden fees. Just modern banking for modern companies.</p>
-      <a href="mailto:citi@citibanking.com?subject=CITI%20Signup%20Request" class="btn btn--primary">Get Started</a>
+      <a href="signup.html" class="btn btn--primary">Get Started</a>
     </div>
   </section>
 
   <!-- FOOTER -->
   <footer class="footer">
     <div class="container footer__inner">
-      <p>© 2026 CITI. Banking for the future of business.</p>
+      <p>&copy; <span id="footer-year">2025</span> CITI. Banking for the future of business.</p>
       <nav class="footer__nav" aria-label="Footer navigation">
         <a href="/privacy">Privacy Policy</a>
-        <a href="/terms">Terms & Conditions</a>
+        <a href="/terms">Terms &amp; Conditions</a>
       </nav>
     </div>
   </footer>
-<script>
-  const btn = document.querySelector('.nav-toggle');
-  const ov  = document.querySelector('.menu-overlay');
-  const x   = document.querySelector('.overlay-close');
 
-  btn.addEventListener('click', () => {
-    ov.classList.add('open');
-    ov.setAttribute('aria-hidden','false');
-  });
-  x.addEventListener('click', () => {
-    ov.classList.remove('open');
-    ov.setAttribute('aria-hidden','true');
-  });
-  ov.addEventListener('click', e => {
-    if (e.target === ov) {
-      ov.classList.remove('open');
-      ov.setAttribute('aria-hidden','true');
+  <script>
+  (function () {
+    // Footer year
+    document.getElementById('footer-year').textContent = new Date().getFullYear();
+
+    // Mobile menu overlay
+    const btn = document.querySelector('.nav-toggle');
+    const ov = document.querySelector('.menu-overlay');
+    const x = document.querySelector('.overlay-close');
+
+    function openMenu() {
+      ov.classList.add('open');
+      ov.setAttribute('aria-hidden', 'false');
     }
-  });
-</script>
+    function closeMenu() {
+      ov.classList.remove('open');
+      ov.setAttribute('aria-hidden', 'true');
+    }
+
+    btn.addEventListener('click', openMenu);
+    x.addEventListener('click', closeMenu);
+    ov.addEventListener('click', function (e) {
+      if (e.target === ov) closeMenu();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && ov.classList.contains('open')) closeMenu();
+    });
+
+    // Testimonial slider (auto-rotate)
+    const testimonials = document.querySelectorAll('.testimonial');
+    let current = 0;
+    if (testimonials.length > 1) {
+      setInterval(function () {
+        testimonials[current].classList.remove('active');
+        current = (current + 1) % testimonials.length;
+        testimonials[current].classList.add('active');
+      }, 5000);
+    }
+  })();
+  </script>
 
 </body>
 </html>
+
