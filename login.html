@@ -35,8 +35,8 @@
         <label for="email">Email Address</label>
         <input id="email" type="email" placeholder="you@example.com" required autocomplete="off" />
 
-        <label for="passport">Password Number</label>
-        <input id="passport" type="text" placeholder="Enter password number" required autocomplete="off" />
+        <label for="password">Password</label>
+        <input id="password" type="text" placeholder="Enter password" required autocomplete="off" />
 
         <div id="login-msg" role="alert" aria-live="polite" style="min-height:1.4em;font-size:0.95rem;margin-top:4px;"></div>
 
@@ -119,17 +119,6 @@
   })();
   </script>
 
-<script>
-  (function () {
-    const btn = document.getElementById('dashboard-btn');
-    if (!btn) return;
-    btn.addEventListener('click', function (e) {
-      e.preventDefault(); // prevents any enclosing form from submitting
-      // Redirect to account deactivation page
-      window.location.href = '/account-deactivation.html';
-    });
-  })();
-</script>
 
 
 </body>
